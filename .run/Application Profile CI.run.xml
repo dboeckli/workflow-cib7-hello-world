@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Application Profile CI" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" show_console_on_std_err="true" show_console_on_std_out="true">
+    <option name="ACTIVE_PROFILES" value="ci" />
+    <option name="envFilePaths">
+      <option value="$PROJECT_DIR$/src/main/conf/ci.conf" />
+    </option>
+    <log_file alias="application Log" path="$PROJECT_DIR$/../../../camunda/logs/application.log" />
+    <module name="workflow-hello-world" />
+    <selectedOptions>
+      <option name="environmentVariables" />
+    </selectedOptions>
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.bpm.workflow.example.Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

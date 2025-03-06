@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" strict="true" name="XMLConfigTest"
+               packages="org.apache.logging.log4j.test">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %X - %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <logger name="ch.bpm.workflow" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <logger name="org.hibernate" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <logger name="org.camunda" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>

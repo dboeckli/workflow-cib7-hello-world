@@ -1,0 +1,26 @@
+###
+GET {{host}}/{{context}}/engine-rest/engine
+Accept: application/json
+
+###
+GET {{host}}/{{context}}/engine-rest/process-definition
+Accept: application/json
+
+###
+POST {{host}}/{{context}}/engine-rest/process-definition/key/hello-world-process/start
+Accept: application/json
+Content-Type: application/json
+
+{
+  "variables": {
+    "aVariable": {
+      "value": "aStringValue",
+      "type": "String"
+    },
+    "anotherVariable": {
+      "value": true,
+      "type": "Boolean"
+    }
+  },
+  "businessKey": "myBusinessKey"
+}

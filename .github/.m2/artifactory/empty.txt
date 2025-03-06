@@ -1,0 +1,1 @@
+do not place any files here. this directory is a place holder for the settings.xml file created by github and is not under source control.

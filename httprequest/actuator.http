@@ -1,0 +1,82 @@
+### actuator
+GET {{host}}/{{context}}/actuator
+Accept: application/json
+
+### actuator info
+GET {{host}}/{{context}}/actuator/info
+Accept: application/json
+
+### actuator health
+GET {{host}}/{{context}}/actuator/health
+Accept: application/json
+
+### actuator diskSpace
+GET {{host}}/{{context}}/actuator/health/diskSpace
+Accept: application/json
+
+### actuator ping
+GET {{host}}/{{context}}/actuator/health/ping
+Accept: application/json
+
+### actuator health
+GET {{host}}/{{context}}/actuator/health/liveness
+Accept: application/json
+
+### actuator readiness
+GET {{host}}/{{context}}/actuator/health/readiness
+Accept: application/json
+
+### actuator sbom
+GET {{host}}/{{context}}/actuator/sbom
+Accept: application/json
+
+### actuator sbom application
+GET {{host}}/{{context}}/actuator/sbom/application
+Accept: application/octet-stream
+
+### actuator metrics
+GET {{host}}/{{context}}/actuator/metrics
+Accept: application/json
+
+### actuator prometheus
+GET {{host}}/{{context}}/actuator/prometheus
+
+### actuator env
+GET {{host}}/{{context}}/actuator/env
+Accept: application/json
+
+### actuator env
+GET {{host}}/{{context}}/actuator/configprops
+Accept: application/json
+
+### actuator beans
+GET {{host}}/{{context}}/actuator/beans
+Accept: application/json
+
+### actuator caches
+GET {{host}}/{{context}}/actuator/caches
+Accept: application/json
+
+### actuator get loggers
+GET {{host}}/{{context}}/actuator/loggers
+
+### actuator set loggers ("OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE")
+POST {{host}}/{{context}}/actuator/loggers/org.springframework.security
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{ "configuredLevel" : "DEBUG" }
+
+### actuator set loggers ("OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE")
+POST {{host}}/actuator/{{context}}/loggers/org.springframework.security
+Accept: application/json
+Content-Type: application/json; charset=utf-8
+
+{ "configuredLevel" : "DEBUG" }
+
+### actuator restart
+POST {{host}}/{{context}}/actuator/restart
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+

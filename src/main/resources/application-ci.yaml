@@ -1,0 +1,93 @@
+spring:
+  jpa:
+    defer-datasource-initialization: true
+  datasource:
+    hikari:
+      username: camunda_ci
+      password: ${camunda.db.password}
+      registerMbeans: true
+      schema: workflow_hello_world
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+    url: jdbc:postgresql://swp74.xxx.ch:5432/camunda_ci
+
+  docker:
+    compose:
+      enabled: true
+      stop:
+        command: down
+
+server:
+  servlet:
+    context-path: /bpm
+  port: 8081
+
+camunda:
+  bpm:
+    authorization:
+      enabled: true
+    admin-user:
+      id: camunda-admin
+    filter:
+      create: All Tasks
+    metrics:
+      enabled: true
+      db-reporter-activate: true
+    generic-properties:
+      properties:
+        telemetry-reporter-activate: false
+
+camunda-ldap-plugin:
+  url: ldap://localhost:389
+  sslEnabled: false
+  user: cn=admin,dc=example,dc=ch
+  password: password
+  base-dn: dc=example,dc=ch
+  users:
+    user-search-base: "ou=users"
+    user-search-filter: "(objectClass=inetOrgPerson)"
+    user-id-attribute: uid
+    user-firstname-attribute: givenName
+    user-lastname-attribute: sn
+    user-email-attribute: mail
+    user-password-attribute: userPassword
+  groups:
+    group-search-base: "ou=groups"
+    group-search-filter: "(objectClass=groupOfNames)"
+    group-id-attribute: cn
+    group-name-attribute: cn
+    group-member-attribute: member
+camunda-authorization-plugin:
+  admin-group: "camunda-admins"
+  admin-user: "camunda-admin"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+logging:
+  config: "classpath:logging/log4j2-ci.xml"
+
+springdoc:
+  show-actuator: true
+  api-docs:
+    path: /swagger/v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    show-extensions: true
+
+application:
+  jtt:
+    protocol: "http"
+    host: "192.168.3.47"
+    port: "8080"
+    context: "swp-jtt"

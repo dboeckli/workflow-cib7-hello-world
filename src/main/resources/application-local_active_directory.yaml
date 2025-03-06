@@ -1,0 +1,83 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    defer-datasource-initialization: true
+  datasource:
+    url: jdbc:h2:mem:workflow-hello-world
+
+server:
+  servlet:
+    context-path: /bpm
+  port: 8081
+
+camunda:
+  bpm:
+    admin-user:
+      id: ldapbind-dev
+      password: ${ldap.password}
+    filter:
+      create: All Tasks
+    metrics:
+      enabled: true
+      db-reporter-activate: true
+    generic-properties:
+      properties:
+        telemetry-reporter-activate: false
+
+camunda-ldap-plugin:
+  url: ldaps://ldaps.swpds.ch
+  sslEnabled: false
+  user: "CN=ldapbind-dev,OU=AADDC Users,DC=swpds,DC=ch"
+  password: ${ldap.password}
+  base-dn: "dc=swpds,dc=ch"
+  users:
+    user-search-base: "OU=AADDC Users"
+    user-search-filter: "(&(objectClass=person)(objectClass=user)(!(cn=*EXT))(!(cn=adm*))(!(cn=zoom*))(!(cn=test*))(!(cn=zoom*))(!(cn=test*))(sAMAccountName=*))"
+    user-id-attribute: sAMAccountName
+    user-firstname-attribute: givenName
+    user-lastname-attribute: sn
+    user-email-attribute: mail
+    user-password-attribute: userpassword
+  groups:
+    group-search-base: "OU=AADDC Users"
+    group-search-filter: "(&(objectclass=group)(!(cn=SAG*)))"
+    group-id-attribute: "cn"
+    group-name-attribute: "name"
+    group-member-attribute: "memberOf"
+camunda-authorization-plugin:
+  admin-group: "SWP-IT"
+  admin-user: "ldapbind-dev"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+logging:
+  config: "classpath:logging/log4j2-local.xml"
+
+springdoc:
+  show-actuator: true
+  api-docs:
+    path: /swagger/v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    show-extensions: true
+
+application:
+  jtt:
+    protocol: "http"
+    host: "localhost"
+    port: "8080"
+    context: "swp-jtt"

@@ -1,0 +1,11 @@
+###
+GET {{host}}/{{context}}/restapi/ping
+Accept: application/json
+
+###
+GET {{host}}/{{context}}/restapi/camunda
+Accept: application/json
+
+###
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
