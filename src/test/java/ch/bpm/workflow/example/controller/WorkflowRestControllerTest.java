@@ -1,8 +1,8 @@
 package ch.bpm.workflow.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.impl.RuntimeServiceImpl;
-import org.camunda.bpm.engine.impl.persistence.entity.ExecutionEntity;
+import org.cibseven.bpm.engine.impl.RuntimeServiceImpl;
+import org.cibseven.bpm.engine.impl.persistence.entity.ExecutionEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
