@@ -121,9 +121,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.camunda.bpm</groupId>
-                <artifactId>camunda-bom</artifactId>
-                <version>${camunda.spring.boot.starter.version}</version>
+                <groupId>org.cibseven.bpm</groupId>
+                <artifactId>cibseven-bom</artifactId>
+                <version>${cib7.spring.boot.starter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -146,30 +146,25 @@
         <dependency>
             <groupId>org.cibseven.bpm.springboot</groupId>
             <artifactId>cibseven-bpm-spring-boot-starter</artifactId>
-            <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.cibseven.bpm.springboot</groupId>
             <artifactId>cibseven-bpm-spring-boot-starter-webapp</artifactId>
-            <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.cibseven.bpm.springboot</groupId>
             <artifactId>cibseven-bpm-spring-boot-starter-external-task-client</artifactId>
-            <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.cibseven.bpm</groupId>
             <artifactId>cibseven-engine-plugin-spin</artifactId>
-            <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.cibseven.spin</groupId>
             <artifactId>cibseven-spin-dataformat-all</artifactId>
-            <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
 
         <dependency>
@@ -276,8 +271,20 @@
 
         <!-- Test dependencies -->
         <dependency>
-            <groupId>org.camunda.bpm.springboot</groupId>
-            <artifactId>camunda-bpm-spring-boot-starter-test</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cibseven.bpm</groupId>
+            <artifactId>cibseven-bpm-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cibseven.bpm</groupId>
+            <artifactId>cibseven-bpm-junit5</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -316,18 +323,6 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mockserver</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-bpm-assert</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-bpm-junit5</artifactId>
             <scope>test</scope>
         </dependency>
 

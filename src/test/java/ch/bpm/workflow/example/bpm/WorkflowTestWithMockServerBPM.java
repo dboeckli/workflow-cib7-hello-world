@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.UUID;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.camunda.bpm.engine.test.Deployment;
+import org.cibseven.bpm.engine.ProcessEngine;
+import org.cibseven.bpm.engine.RuntimeService;
+import org.cibseven.bpm.engine.runtime.ProcessInstance;
+import org.cibseven.bpm.engine.test.Deployment;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.init;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
+import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
+
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 

@@ -1,7 +1,7 @@
 package ch.bpm.workflow.example.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
+import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

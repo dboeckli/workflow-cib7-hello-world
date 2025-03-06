@@ -3,13 +3,14 @@ package ch.bpm.workflow.example.common;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Objects;
-import org.camunda.bpm.engine.ManagementService;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.management.Metrics;
-import org.camunda.bpm.engine.management.MetricsQuery;
-import org.camunda.bpm.engine.query.Query;
-import org.camunda.bpm.engine.runtime.Job;
-import org.camunda.bpm.engine.runtime.JobQuery;
+
+import org.cibseven.bpm.engine.ManagementService;
+import org.cibseven.bpm.engine.ProcessEngine;
+import org.cibseven.bpm.engine.management.Metrics;
+import org.cibseven.bpm.engine.management.MetricsQuery;
+import org.cibseven.bpm.engine.query.Query;
+import org.cibseven.bpm.engine.runtime.Job;
+import org.cibseven.bpm.engine.runtime.JobQuery;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

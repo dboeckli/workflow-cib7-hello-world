@@ -1,8 +1,8 @@
 package ch.bpm.workflow.example.controller;
 
 import lombok.Builder;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.cibseven.bpm.engine.RuntimeService;
+import org.cibseven.bpm.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
