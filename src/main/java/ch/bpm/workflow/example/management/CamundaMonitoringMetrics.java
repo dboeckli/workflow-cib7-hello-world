@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.common;
+package ch.bpm.workflow.example.management;
 
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;

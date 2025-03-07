@@ -1,11 +1,14 @@
 ###
 GET {{host}}/{{context}}/restapi/ping
+Authorization: Basic {{username}} {{password}}
 Accept: application/json
 
 ###
 GET {{host}}/{{context}}/restapi/camunda
+Authorization: Basic {{username}} {{password}}
 Accept: application/json
 
 ###
 POST {{host}}/{{context}}/restapi/workflow
+Authorization: Basic {{username}} {{password}}
 Accept: application/json

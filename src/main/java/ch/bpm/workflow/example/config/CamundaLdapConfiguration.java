@@ -1,15 +1,22 @@
 package ch.bpm.workflow.example.config;
 
 import java.lang.reflect.Field;
+
+import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cibseven.bpm.engine.impl.plugin.AdministratorAuthorizationPlugin;
+import org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthenticationFilter;
+import org.cibseven.bpm.engine.rest.security.auth.impl.HttpBasicAuthenticationProvider;
 import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import static org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthenticationFilter.AUTHENTICATION_PROVIDER_PARAM;
 
 @Configuration
 @Slf4j
@@ -113,6 +120,26 @@ public class CamundaLdapConfiguration {
         plugin.setAdministratorUserName(adminUser);
 
         return plugin;
+    }
+
+    @Bean
+    public FilterRegistrationBean<Filter> processEngineAuthenticationFilter() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
+        registration.setName("camunda-auth");
+        registration.setFilter(getProcessEngineAuthenticationFilter());
+
+        registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, HttpBasicAuthenticationProvider.class.getName());
+
+        registration.addUrlPatterns("/restapi/*");
+        registration.addUrlPatterns("/engine-rest/*");
+
+        registration.setOrder(1);
+        return registration;
+    }
+
+    @Bean
+    public Filter getProcessEngineAuthenticationFilter() {
+        return new ProcessEngineAuthenticationFilter();
     }
 
     public static String printLdapIdentityProviderPlugin(LdapIdentityProviderPlugin ldapIdentityProviderPlugin) {

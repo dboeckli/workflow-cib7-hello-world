@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
+
 @RestController
 @RequestMapping(value = "/restapi/workflow", produces = "application/json")
 public class WorkflowRestController {
@@ -23,10 +25,8 @@ public class WorkflowRestController {
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<HelloWorldWorklfowResponse> getInfo() {
-
-        String processDefinitionKey = "hello-world-process";
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
         return ResponseEntity.ok().body(createResponse(processInstance));
     }
 
