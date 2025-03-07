@@ -17,4 +17,5 @@
      |     |
      |_____|
 
-:: Built with Spring Boot :: ${spring-boot.version}
+::  Spring-Boot: ${spring-boot.formatted-version}
+::  CIB seven: ${camunda.bpm.formatted-version}
