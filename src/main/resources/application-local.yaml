@@ -38,6 +38,10 @@ camunda:
     metrics:
       enabled: true
       db-reporter-activate: true
+    generic-properties:
+      ignore-unknown-fields: false
+      properties:
+        javaSerializationFormatEnabled: true
 
 camunda-ldap-plugin:
   url: ldap://localhost:389
