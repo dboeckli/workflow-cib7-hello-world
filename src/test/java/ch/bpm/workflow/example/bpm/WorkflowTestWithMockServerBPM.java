@@ -29,6 +29,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
 import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 import static org.mockserver.model.HttpRequest.request;
@@ -36,8 +37,6 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-        //"spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerBPM;DB_CLOSE_ON_EXIT=FALSE",
-        //"spring.datasource.hikari.pool-name=WorkflowTestWithMockServerBPM",
         "camunda.bpm.job-execution.enabled=false",
         "camunda.bpm.generate-unique-process-engine-name=true",
         "camunda.bpm.generate-unique-process-application-name=true",
@@ -95,12 +94,8 @@ class WorkflowTestWithMockServerBPM {
     @Test
     void shouldExecuteHappyPath() {
         createExpectedMockserverResponse();
-
-        // given
-        String processDefinitionKey = "hello-world-process";
-
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
 
         // then
         assertThat(processInstance).isStarted().task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();

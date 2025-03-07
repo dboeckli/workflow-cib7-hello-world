@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
 import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
 
@@ -53,11 +54,8 @@ class WorkflowTestBPM {
 
     @Test
     void shouldExecuteHappyPath() {
-        // given
-        String processDefinitionKey = "hello-world-process";
-
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
 
         // then
         assertThat(processInstance).isStarted().task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();

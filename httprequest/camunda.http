@@ -5,10 +5,12 @@ Accept: application/json
 ###
 GET {{host}}/{{context}}/engine-rest/process-definition
 Accept: application/json
+Authorization: Basic {{username}} {{password}}
 
 ###
 POST {{host}}/{{context}}/engine-rest/process-definition/key/hello-world-process/start
 Accept: application/json
+Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
 
 {
