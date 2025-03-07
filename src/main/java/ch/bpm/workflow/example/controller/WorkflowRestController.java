@@ -24,7 +24,7 @@ public class WorkflowRestController {
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<HelloWorldWorklfowResponse> getInfo() {
+    public ResponseEntity<HelloWorldWorklfowResponse> startProcess() {
         // when
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
         return ResponseEntity.ok().body(createResponse(processInstance));

@@ -18,12 +18,16 @@ Write your own description here
   - http://localhost:8081/bpm/swagger/v3/api-docs
   - http://localhost:8081/bpm/swagger/v3/api-docs.yaml
   - http://localhost:8081/bpm/swagger-ui/index.html
+  
 - H2 Console: http://localhost:8081/bpm/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
+- Rest Api:
+  - http://localhost:8081/bpm/restapi/camunda
+  - http://localhost:8081/bpm/restapi/ping
+  - http://localhost:8081/bpm/restapi/workflow
 
 ### Servers
 
 - local: localhost, database on h2 locally
-- ci: swp71.xxx.ch (192.168.3.71), postgres swp74.swissperform.ch
 
 
 ## Prerequisites
@@ -44,6 +48,3 @@ Write your own description here
 | Build project | mvn package |
 | Test project  | mvn test    |
 
-## Usage
-
-Write your own usage here

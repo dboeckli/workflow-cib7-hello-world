@@ -8,6 +8,7 @@ import org.cibseven.bpm.engine.ProcessEngineConfiguration;
 import org.cibseven.bpm.engine.spring.SpringProcessEngineConfiguration;
 import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
 import org.cibseven.bpm.spring.boot.starter.property.CamundaBpmProperties;
+import org.cibseven.bpm.spring.boot.starter.rest.CamundaJerseyResourceConfig;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,8 @@ public class InitializingBeanImpl implements InitializingBean {
 
     private final CamundaBpmProperties camundaBpmProperties;
 
+    private final CamundaJerseyResourceConfig camundaJerseyResourceConfig;
+
     @Override
     public void afterPropertiesSet() {
         log.info(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(), printLdapIdentityProviderPlugin(ldapIdentityProviderPlugin));
@@ -39,6 +42,13 @@ public class InitializingBeanImpl implements InitializingBean {
 
         log.info(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), printCamundaBpmProperties(camundaBpmProperties));
         log.info(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), "---------------------------------------------------------------------------");
+
+        log.info(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), printCamundaBpmProperties(camundaBpmProperties));
+        log.info(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), "---------------------------------------------------------------------------");
+
+        log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
+        log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), "---------------------------------------------------------------------------");
+
     }
 
     private static String printSpringProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
@@ -57,6 +67,17 @@ public class InitializingBeanImpl implements InitializingBean {
     private static String printCamundaBpmProperties(CamundaBpmProperties camundaBpmProperties) {
         ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
             camundaBpmProperties, ToStringStyle.MULTI_LINE_STYLE) {
+            @Override
+            protected boolean accept(Field field) {
+                return !field.getName().equals("managerPassword");
+            }
+        };
+        return builder.toString();
+    }
+
+    private static String printCamundaJerseyResourceConfig(CamundaJerseyResourceConfig camundaJerseyResourceConfig) {
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
+            camundaJerseyResourceConfig, ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
                 return !field.getName().equals("managerPassword");

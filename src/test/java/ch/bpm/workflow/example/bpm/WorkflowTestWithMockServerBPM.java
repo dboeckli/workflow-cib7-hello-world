@@ -37,8 +37,6 @@ import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestPropertySource(properties = {
-        //"spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerBPM;DB_CLOSE_ON_EXIT=FALSE",
-        //"spring.datasource.hikari.pool-name=WorkflowTestWithMockServerBPM",
         "camunda.bpm.job-execution.enabled=false",
         "camunda.bpm.generate-unique-process-engine-name=true",
         "camunda.bpm.generate-unique-process-application-name=true",
