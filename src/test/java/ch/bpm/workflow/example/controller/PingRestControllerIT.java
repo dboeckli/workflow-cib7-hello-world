@@ -1,6 +1,7 @@
 package ch.bpm.workflow.example.controller;
 
 import com.google.gson.Gson;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -10,6 +11,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(value = "test")
+@ActiveProfiles(value = "local")
 class PingRestControllerIT {
 
     @Autowired
@@ -28,7 +30,30 @@ class PingRestControllerIT {
 
     @Test
     void testGetInfo() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping")).andExpect(status().isOk()).andExpect(content().json(new Gson().toJson(createResponse())));
+        this.mockMvc.perform(get("/restapi/ping")
+            .with(httpBasic("camunda-admin", "camunda-admin-password")))
+            .andExpect(status().isOk()).andExpect(content().json(new Gson().toJson(createResponse())));
+    }
+
+    @Test
+    void testGetInfoWithoutCredentials() throws Exception {
+        this.mockMvc.perform(get("/restapi/ping"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testGetInfoWithWrongPassword() throws Exception {
+        this.mockMvc.perform(get("/restapi/ping")
+                .with(httpBasic("camunda-admin", "wrong-password-here")))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Disabled("currently disabled. role base authentication is not implemented yet")
+    void testGetInfoNotAllowed() throws Exception {
+        this.mockMvc.perform(get("/restapi/ping")
+                .with(httpBasic("user01", "user01-password")))
+            .andExpect(status().isForbidden());
     }
 
     private PingRestController.PingResponse createResponse() {
