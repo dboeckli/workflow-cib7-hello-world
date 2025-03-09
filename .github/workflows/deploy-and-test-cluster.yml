@@ -52,7 +52,10 @@ jobs:
         run: |
           echo "Deployment Information:"
           kubectl get pods -o wide
-          echo "::notice::$(kubectl get pods -o wide)"
+          echo "Deployment Information:"
+          kubectl get pods -o wide | while IFS= read -r line; do
+            echo "::notice::$line"
+          done
           
           
 
