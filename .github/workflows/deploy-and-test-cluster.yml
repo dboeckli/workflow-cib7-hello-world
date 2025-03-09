@@ -1,0 +1,57 @@
+name: Deploy and Test Cluster
+run-name: >
+  ${{ github.workflow }}: ${{ github.event_name }} for ${{ github.ref_name }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: 'Version to deploy'
+        required: true
+      deployed-by-build:
+        type: string
+        description: 'Build number of trigger build'
+        required: true
+        default: 'None'
+      deployed-by-workflow:
+        type: string
+        description: 'Name of trigger workflow'
+        required: true
+        default: 'None'
+
+jobs:
+  deploy-and-test-cluster:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show Version
+        run: |
+          echo "Deploying Version: ${{ inputs.version }}"
+          echo "Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}"
+
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.12.0
+
+      - name: Deploy application
+        run: |
+          # Replace the version placeholder in the deployment manifest
+          sed -i 's/workflow-cib7-hello-world:1.0.0-SNAPSHOT/workflow-cib7-hello-world:${{ inputs.version }}/g' k8s/workflow-cib7-hello-world.yml
+          kubectl apply -f k8s/
+
+      - name: Wait for Pods to be ready
+        run: |
+          kubectl wait --for=condition=ready pod -l app=workflow-cib7-hello-world --timeout=180s
+          BUILD_LINK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.deployed-by-build }}"
+          echo "::notice:: ### Deployed Version: ${{ inputs.version }}"
+          echo "::notice:: ### Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}: $BUILD_LINK"
+
+      - name: Display Deployment Information
+        run: |
+          echo "Deployment Information:"
+          kubectl get deployment workflow-cib7-hello-world -o yaml
+          
+          
+
