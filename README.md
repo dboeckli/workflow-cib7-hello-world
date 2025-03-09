@@ -48,3 +48,11 @@ Write your own description here
 | Build project | mvn package |
 | Test project  | mvn test    |
 
+## Kubernetes
+
+Start all: kubectl apply -f k8s/
+Stop all: kubectl delete all --all
+
+Camunda ist reachable on port: 30081
+http://localhost:30081/bpm/camunda/app/welcome/default/#!/welcome
+
