@@ -6,7 +6,8 @@
   ],
   "enabledManagers": [
     "docker-compose",
-    "maven-wrapper"
+    "maven-wrapper",
+    "kubernetes"
   ],
 
   "maven-wrapper": {
@@ -17,9 +18,15 @@
     ],
     "versioning": "maven"
   },
+
   "docker-compose": {
     "enabled": true
   },
+
+  "kubernetes": {
+    "fileMatch": ["k8s/.+\\.yml$"]
+  },
+
   "docker": {
     "registryUrls": ["https://index.docker.io"]
   },
