@@ -51,6 +51,6 @@ jobs:
       - name: Display Deployment Information
         run: |
           echo "Deployment Information:"
-          kubectl get deployments -o wide         
+          echo "::notice::$(kubectl get pods -o wide)"         
           
 
