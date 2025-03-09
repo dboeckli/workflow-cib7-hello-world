@@ -2,9 +2,8 @@
 
 - [Description](#description)
 - [Prerequisites](#prerequisites)
-    - [Eclipse specific](#eclipse-specific)
 - [Build](#build)
-- [Usage](#usage)
+- [Kubernetes](#kubernetes)
 
 ## Description
 
@@ -50,9 +49,34 @@ Write your own description here
 
 ## Kubernetes
 
-Start all: kubectl apply -f k8s/
-Stop all: kubectl delete all --all
+### Deployment
 
-Camunda ist reachable on port: 30081
-http://localhost:30081/bpm/camunda/app/welcome/default/#!/welcome
+To deploy all resources:
+```bash
+kubectl apply -f k8s/
+```
 
+To remove all resources:
+```bash
+kubectl delete -f k8s/
+```
+
+Check
+```bash
+kubectl get deployments -o wide
+kubectl get pods -o wide
+```
+
+### Accessing Services
+
+#### LDAP Database
+
+- URL: ldap://localhost:30389
+- User: cn=admin,dc=example,dc=ch
+- Password: password
+
+#### Camunda
+
+- URL: http://localhost:30081/bpm/camunda/app/welcome/default/#!/welcome
+
+All rest services can be executed via the httprequest folder using the k8s environment setting
