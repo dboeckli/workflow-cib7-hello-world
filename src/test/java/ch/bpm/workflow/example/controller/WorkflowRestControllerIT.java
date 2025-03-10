@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -44,6 +45,53 @@ class WorkflowRestControllerIT {
     }
 
     @Test
+    void startProcessWithEmptyInput() throws Exception {
+        WorkflowRestController.InfoRequest infoRequest = new WorkflowRestController.InfoRequest("");
+        String jsonRequest = objectMapper.writeValueAsString(infoRequest);
+
+        this.mockMvc
+                .perform(post("/restapi/workflow")
+                        .with(httpBasic("camunda-admin", "camunda-admin-password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(result -> {
+                    log.info("Response: {}", result.getResponse().getContentAsString());
+                });
+    }
+
+    @Test
+    void startProcessWithBadCredentials() throws Exception {
+        WorkflowRestController.InfoRequest infoRequest = new WorkflowRestController.InfoRequest("Test Input");
+        String jsonRequest = objectMapper.writeValueAsString(infoRequest);
+
+        MvcResult result = this.mockMvc
+                .perform(post("/restapi/workflow")
+                        .with(httpBasic("camunda-admin", "camunda-admin-password1"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                )
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn();
+        log.info("Response: {}", result.getResponse().getContentAsString());
+    }
+
+    @Test
+    void startProcessWithUserWithoutPermission() throws Exception {
+        WorkflowRestController.InfoRequest infoRequest = new WorkflowRestController.InfoRequest("Test Input");
+        String jsonRequest = objectMapper.writeValueAsString(infoRequest);
+
+        MvcResult result = this.mockMvc
+                .perform(post("/restapi/workflow")
+                        .with(httpBasic("user02", "user02-password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                )
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
+                .andReturn();
+        assertEquals("403 FORBIDDEN \"The user with id 'user02' does not have 'CREATE' permission on resource 'ProcessInstance'.\"", result.getResolvedException().getMessage());
+    }
+
+    @Test
     void startProcess() throws Exception {
         WorkflowRestController.InfoRequest infoRequest = new WorkflowRestController.InfoRequest("Test Input");
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
@@ -53,7 +101,7 @@ class WorkflowRestControllerIT {
                     .with(httpBasic("camunda-admin", "camunda-admin-password"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonRequest))
-
+            .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.caseInstanceId").value(nullValue()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.processDefinitionId").value(matchesPattern("hello-world-process:1:[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.rootProcessInstanceId").value(matchesPattern("[a-f0-9-]+")))

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.cibseven.bpm.engine.AuthorizationException;
 import org.cibseven.bpm.engine.RuntimeService;
 import org.cibseven.bpm.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class WorkflowRestController {
         try {
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, infoRequest.input));
             return ResponseEntity.ok().body(createResponse(processInstance));
+        } catch (AuthorizationException ex) {
+            log.error("Failed to authorize user: {}", ex.getMessage());
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
         } catch (WorkflowException ex) {
             log.error("Failed to process request: {}", infoRequest, ex);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -66,9 +70,4 @@ public class WorkflowRestController {
         @JsonProperty(required = true)
         String input
     ) implements Serializable {}
-
-    @Builder
-    public record ErrorResponse(int status, String message) {
-    }
-
 }
