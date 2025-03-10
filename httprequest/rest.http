@@ -8,7 +8,29 @@ GET {{host}}/{{context}}/restapi/camunda
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 
-###
+
+
+### Start a new process instance
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": "hallo"
+}
+
+### Start a new process instance. Shoud fail. no input field
 POST {{host}}/{{context}}/restapi/workflow
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
+
+### Start a new process instance. Shoud fail. empty input field
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": ""
+}

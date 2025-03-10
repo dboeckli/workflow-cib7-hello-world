@@ -7,22 +7,34 @@ GET {{host}}/{{context}}/engine-rest/process-definition
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 
-###
+### Start a new process instance
 POST {{host}}/{{context}}/engine-rest/process-definition/key/hello-world-process/start
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
 
 {
-  "variables": {
-    "aVariable": {
-      "value": "aStringValue",
-      "type": "String"
+    "variables": {
+        "input": {
+            "value": "hello world",
+            "type": "String"
+        }
     },
-    "anotherVariable": {
-      "value": true,
-      "type": "Boolean"
-    }
-  },
-  "businessKey": "myBusinessKey"
+    "businessKey": "myBusinessKey"
+}
+
+### Start a new process instance. shoud fail. missing input variable
+POST {{host}}/{{context}}/engine-rest/process-definition/key/hello-world-process/start
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "variables": {
+        "gugus": {
+            "value": "hello world",
+            "type": "String"
+        }
+    },
+    "businessKey": "myBusinessKey"
 }
