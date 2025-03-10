@@ -6,9 +6,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cibseven.bpm.engine.AuthorizationService;
 import org.cibseven.bpm.engine.ProcessEngineConfiguration;
-import org.cibseven.bpm.engine.authorization.Authorization;
-import org.cibseven.bpm.engine.authorization.Permissions;
-import org.cibseven.bpm.engine.authorization.Resources;
 import org.cibseven.bpm.engine.spring.SpringProcessEngineConfiguration;
 import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
 import org.cibseven.bpm.spring.boot.starter.property.CamundaBpmProperties;
@@ -20,9 +17,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 import static ch.bpm.workflow.example.common.LogMessage.READING_CONFIG_CLASS;
-import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
 import static ch.bpm.workflow.example.config.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
-import static org.cibseven.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
 
 @Component
 @Slf4j
@@ -56,30 +51,6 @@ public class InitializingBeanImpl implements InitializingBean {
 
         log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
         log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), "---------------------------------------------------------------------------");
-
-        setPermissions();
-
-
-    }
-
-    // TODO: ADD CONFIGURABLE PERMISSIONS HERE (user01, user02,...)
-    private void setPermissions() {
-        Authorization authProcessDefinition = authorizationService.createNewAuthorization(AUTH_TYPE_GRANT);
-        Authorization authProcessInstance = authorizationService.createNewAuthorization(AUTH_TYPE_GRANT);
-
-        authProcessDefinition.setResource(Resources.PROCESS_DEFINITION);
-        authProcessInstance.setResource(Resources.PROCESS_INSTANCE);
-
-        authProcessDefinition.setUserId("user01");
-        authProcessInstance.setUserId("user01");
-
-        authProcessDefinition.setResourceId(PROCESS_DEFINITION_KEY);
-        authProcessInstance.setResourceId("*");
-        authProcessDefinition.addPermission(Permissions.CREATE_INSTANCE);
-        authProcessInstance.addPermission(Permissions.CREATE);
-
-        authorizationService.saveAuthorization(authProcessDefinition);
-        authorizationService.saveAuthorization(authProcessInstance);
     }
 
     private static String printSpringProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
