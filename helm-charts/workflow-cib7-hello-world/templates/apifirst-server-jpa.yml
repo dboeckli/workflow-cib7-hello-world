@@ -1,0 +1,60 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apifirst-server-jpa
+spec:
+  selector:
+    app: apifirst-server-jpa
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apifirst-server-jpa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apifirst-server-jpa
+  template:
+    metadata:
+      labels:
+        app: apifirst-server-jpa
+    spec:
+      containers:
+        - name: apifirst-server-jpa
+          image: domboeckli/apifirst-server-jpa:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SERVER_PORT
+              value: "8085"
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8085
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8085
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+
+  

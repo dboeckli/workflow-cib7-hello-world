@@ -75,6 +75,8 @@ class WorkflowTestBPM {
         assertThat(processInstance).isWaitingAt("Activity_validate_input");
         execute(job()); // push forwward
 
+        assertThat(processInstance).hasPassed("Service_for_Script");
+
         assertThat(processInstance).isWaitingAt("say-hello");
         assertThat(processInstance).task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
 

@@ -45,6 +45,7 @@ camunda:
       ignore-unknown-fields: false
       properties:
         javaSerializationFormatEnabled: true
+        historyTimeToLive: 5
 
 camunda-ldap-plugin:
   url: ldap://localhost:389
