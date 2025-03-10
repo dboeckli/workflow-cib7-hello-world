@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.cibseven.bpm.engine.AuthorizationService;
 import org.cibseven.bpm.engine.ProcessEngineConfiguration;
 import org.cibseven.bpm.engine.spring.SpringProcessEngineConfiguration;
 import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 import static ch.bpm.workflow.example.common.LogMessage.READING_CONFIG_CLASS;
-import static ch.bpm.workflow.example.config.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
+import static ch.bpm.workflow.example.config.security.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
 
 @Component
 @Slf4j
@@ -32,8 +31,6 @@ public class InitializingBeanImpl implements InitializingBean {
     private final CamundaBpmProperties camundaBpmProperties;
 
     private final CamundaJerseyResourceConfig camundaJerseyResourceConfig;
-
-    private final AuthorizationService authorizationService;
 
     @Override
     public void afterPropertiesSet() {

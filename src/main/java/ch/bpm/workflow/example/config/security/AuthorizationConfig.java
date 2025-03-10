@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.config;
+package ch.bpm.workflow.example.config.security;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
