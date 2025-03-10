@@ -43,6 +43,7 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.8.5</springdoc-openapi-starter-webmvc-ui.version>
 
         <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
+        <nashorn-core.version>15.6</nashorn-core.version>
 
         <logbook.version>3.11.0</logbook.version>
         <logstash-logback.version>8.0</logstash-logback.version>
@@ -170,6 +171,18 @@
         <dependency>
             <groupId>org.cibseven.spin</groupId>
             <artifactId>cibseven-spin-dataformat-all</artifactId>
+        </dependency>
+
+        <!-- for javascript support -->
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>${nashorn-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cibseven.bpm</groupId>
+            <artifactId>cibseven-engine-plugin-connect</artifactId>
         </dependency>
 
         <dependency>
