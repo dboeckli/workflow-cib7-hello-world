@@ -32,14 +32,15 @@ class WorkflowRestControllerIT {
     private ObjectMapper objectMapper;
 
     @Test
-    // TODO: dieser Test sollte scheitern, weil kein input object mitgeben wird. Dies ist aber nicht der Fall.
-    //  Das eine Exception auftritt, ist im globalen GlobalExceptionHandler ersichtlich.
     void startProcessWithoutInput() throws Exception {
-        MvcResult result = this.mockMvc
+        this.mockMvc
                 .perform(post("/restapi/workflow")
-                        .with(httpBasic("camunda-admin", "camunda-admin-password")))
-                .andReturn();
-        log.info("Response: {}", result.getResponse().getContentAsString());
+                        .with(httpBasic("camunda-admin", "camunda-admin-password"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(result -> {
+                    log.info("Response: {}", result.getResponse().getContentAsString());
+                });
     }
 
     @Test

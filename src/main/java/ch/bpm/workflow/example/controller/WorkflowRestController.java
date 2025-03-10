@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -35,17 +36,13 @@ public class WorkflowRestController {
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> startProcess(@RequestBody @Valid InfoRequest infoRequest) {
+    public ResponseEntity<HelloWorldWorklfowResponse> startProcess(@RequestBody @Valid InfoRequest infoRequest) {
         try {
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, infoRequest.input));
             return ResponseEntity.ok().body(createResponse(processInstance));
         } catch (WorkflowException ex) {
-            log.error("Failed to process request: {}", infoRequest);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(ex.getMessage())
-                    .build());
+            log.error("Failed to process request: {}", infoRequest, ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
