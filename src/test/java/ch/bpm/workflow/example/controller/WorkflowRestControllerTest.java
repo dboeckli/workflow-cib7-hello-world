@@ -9,12 +9,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Map;
+
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(value = "test")
@@ -38,17 +43,24 @@ class WorkflowRestControllerTest {
         givenExecution.setRootProcessInstanceId("rootProcessInstanceId");
         givenExecution.setProcessDefinitionId("processDefinitionId");
 
+        final String givenInput = "hallo";
         Mockito.when(runtimeServiceMock.startProcessInstanceByKey(any())).thenReturn(givenExecution);
+        Mockito.when(runtimeServiceMock.startProcessInstanceByKey(eq(PROCESS_DEFINITION_KEY), eq(PROCESS_DEFINITION_KEY), eq(Map.of(INPUT_VARIABLE_NAME, givenInput)))).thenReturn(givenExecution);
 
-        ResponseEntity<WorkflowRestController.HelloWorldWorklfowResponse> entity = workflowRestController.startProcess();
-
+        ResponseEntity<?> response = workflowRestController.startProcess(WorkflowRestController.InfoRequest.builder().input(givenInput).build());
         assertAll(
-                () -> assertEquals(givenExecution.getId(), entity.getBody().id()),
-                () -> assertEquals(givenExecution.getCaseInstanceId(), entity.getBody().caseInstanceId()),
-                () -> assertEquals(givenExecution.getProcessInstanceId(), entity.getBody().processInstanceId()),
-                () -> assertEquals(givenExecution.getRootProcessInstanceId(), entity.getBody().rootProcessInstanceId()),
-                () -> assertEquals(givenExecution.getProcessDefinitionId(), entity.getBody().processDefinitionId())
+            () -> assertNotNull(response),
+            () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
+            () -> assertInstanceOf(WorkflowRestController.HelloWorldWorklfowResponse.class, response.getBody())
         );
 
+        WorkflowRestController.HelloWorldWorklfowResponse responseBody = (WorkflowRestController.HelloWorldWorklfowResponse) response.getBody();
+        assertAll(
+            () -> assertEquals(givenExecution.getId(), responseBody.id()),
+            () -> assertEquals(givenExecution.getCaseInstanceId(), responseBody.caseInstanceId()),
+            () -> assertEquals(givenExecution.getProcessInstanceId(), responseBody.processInstanceId()),
+            () -> assertEquals(givenExecution.getRootProcessInstanceId(), responseBody.rootProcessInstanceId()),
+            () -> assertEquals(givenExecution.getProcessDefinitionId(), responseBody.processDefinitionId())
+        );
     }
 }
