@@ -1,7 +1,5 @@
 package ch.bpm.workflow.example.config;
 
-import java.lang.reflect.Field;
-
 import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -16,13 +14,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.lang.reflect.Field;
+
 import static org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthenticationFilter.AUTHENTICATION_PROVIDER_PARAM;
 
 @Configuration
 @Slf4j
 @Profile({"local", "ci"})
 public class CamundaLdapConfiguration {
-
     @Value("${camunda-ldap-plugin.url}")
     private String ldapUrl;
 
