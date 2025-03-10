@@ -19,6 +19,7 @@ import static org.cibseven.bpm.engine.authorization.Authorization.AUTH_TYPE_GRAN
 @RequiredArgsConstructor
 @Slf4j
 // TODO: ADD CONFIGURABLE PERMISSIONS HERE FOR USERS (user01, user02,...) AND GROUPS
+// SEE: https://docs.camunda.org/manual/latest/user-guide/process-engine/authorization-service/
 public class AuthorizationConfig {
 
     private final AuthorizationService authorizationService;
