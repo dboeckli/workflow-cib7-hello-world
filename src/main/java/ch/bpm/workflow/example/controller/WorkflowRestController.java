@@ -2,6 +2,8 @@ package ch.bpm.workflow.example.controller;
 
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.cibseven.bpm.engine.RuntimeService;
@@ -33,7 +35,7 @@ public class WorkflowRestController {
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<?> startProcess(@RequestBody InfoRequest infoRequest) {
+    public ResponseEntity<?> startProcess(@RequestBody @Valid InfoRequest infoRequest) {
         try {
             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, infoRequest.input));
             return ResponseEntity.ok().body(createResponse(processInstance));
@@ -62,8 +64,11 @@ public class WorkflowRestController {
     }
 
     @Builder
-    public record InfoRequest(@JsonProperty(required = true) String input) implements Serializable {
-    }
+    public record InfoRequest(
+        @NotNull(message = "Input must not be null")
+        @JsonProperty(required = true)
+        String input
+    ) implements Serializable {}
 
     @Builder
     public record ErrorResponse(int status, String message) {
