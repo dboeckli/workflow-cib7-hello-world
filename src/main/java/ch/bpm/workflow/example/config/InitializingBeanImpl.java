@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 import static ch.bpm.workflow.example.common.LogMessage.READING_CONFIG_CLASS;
-import static ch.bpm.workflow.example.config.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
+import static ch.bpm.workflow.example.config.security.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
 
 @Component
 @Slf4j
@@ -48,7 +48,6 @@ public class InitializingBeanImpl implements InitializingBean {
 
         log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
         log.info(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), "---------------------------------------------------------------------------");
-
     }
 
     private static String printSpringProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {

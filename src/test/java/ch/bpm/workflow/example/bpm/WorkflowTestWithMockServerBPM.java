@@ -1,5 +1,6 @@
 package ch.bpm.workflow.example.bpm;
 
+import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,13 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static java.util.Map.entry;
 import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -77,7 +83,8 @@ class WorkflowTestWithMockServerBPM {
     @BeforeEach
     void setup() {
         init(processEngine);
-        log.info("### ProcessEngine started: {}", processEngine.getName());
+        log.info("### ProcessEngine started: {} with datasource {}", processEngine.getName(), dataSource);
+
         mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
         customerApi.getApiClient()
                   .setBasePath(restApiConfiguration.getProtocol() + "://" +
@@ -88,22 +95,40 @@ class WorkflowTestWithMockServerBPM {
 
     @AfterEach
     void tearDown() {
-        log.info("DataSource after test: {}", dataSource);
+        reset();
+        log.info("### ProcessEngine ended: {} with datasource {}", processEngine.getName(), dataSource);
     }
 
     @Test
     void shouldExecuteHappyPath() {
         createExpectedMockserverResponse();
+
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "hello-variable"));
 
         // then
-        assertThat(processInstance).isStarted().task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
+        assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "hello-variable"));
+        TokenVariable tokenVariable = (TokenVariable) runtimeService.getVariable(processInstance.getId(), TOKEN_VARIABLE_NAME);
+        assertEquals("hello-variable", tokenVariable.getInput().inputVariable());
+        assertEquals("STARTED", tokenVariable.getStatus());
+
+        // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
+        assertThat(processInstance).hasPassed("Activity_validate_input");
+        assertThat(processInstance).isWaitingAt("Activity_validate_input");
+        execute(job()); // push forwward
+
         assertThat(processInstance).isWaitingAt("say-hello");
+        assertThat(processInstance).task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
 
         complete(task());
 
         assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate");
+        assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
+        tokenVariable = (TokenVariable) runtimeService.getVariable(processInstance.getId(), TOKEN_VARIABLE_NAME);
+        assertEquals("hello-variable", tokenVariable.getInput().inputVariable());
+        assertEquals("DONE", tokenVariable.getStatus());
+        execute(job());
+
         assertThat(processInstance).isEnded();
     }
 
