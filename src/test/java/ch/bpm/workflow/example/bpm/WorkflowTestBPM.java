@@ -1,7 +1,5 @@
 package ch.bpm.workflow.example.bpm;
 
-import javax.sql.DataSource;
-
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
 import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +7,16 @@ import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.RuntimeService;
 import org.cibseven.bpm.engine.runtime.ProcessInstance;
 import org.cibseven.bpm.engine.test.Deployment;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import javax.sql.DataSource;
 import java.util.Map;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
@@ -66,9 +68,8 @@ class WorkflowTestBPM {
 
         // then
         assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "hello-variable"));
-        TokenVariable tokenVariable = (TokenVariable) runtimeService.getVariable(processInstance.getId(), TOKEN_VARIABLE_NAME);
-        assertEquals("hello-variable", tokenVariable.getInput().inputVariable());
-        assertEquals("STARTED", tokenVariable.getStatus());
+        assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().inputVariable());
+        assertEquals(TokenVariable.STATUS.STARTED, this.getTokenVariable(processInstance).getStatus());
 
         // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
         assertThat(processInstance).hasPassed("Activity_validate_input");
@@ -78,15 +79,21 @@ class WorkflowTestBPM {
         assertThat(processInstance).hasPassed("Service_for_Script");
 
         assertThat(processInstance).isWaitingAt("say-hello");
+        assertEquals(TokenVariable.STATUS.STARTED, this.getTokenVariable(processInstance).getStatus());
         assertThat(processInstance).task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
-
+        claim(task(), "admin");
+        assertEquals("admin", task().getAssignee());
         complete(task());
+        execute(job());
 
-        assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate");
+        // is waiting before this activity
         assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
-        tokenVariable = (TokenVariable) runtimeService.getVariable(processInstance.getId(), TOKEN_VARIABLE_NAME);
-        assertEquals("hello-variable", tokenVariable.getInput().inputVariable());
-        assertEquals("DONE", tokenVariable.getStatus());
+        assertEquals(TokenVariable.STATUS.COMPLETED, this.getTokenVariable(processInstance).getStatus());
+        execute(job());
+        assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate");
+        // is waiting after this activity
+        assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
+        assertEquals(TokenVariable.STATUS.FINISHED, this.getTokenVariable(processInstance).getStatus());
         execute(job());
 
         assertThat(processInstance).isEnded();
@@ -106,6 +113,10 @@ class WorkflowTestBPM {
         WorkflowException thrown = Assertions.assertThrows(WorkflowException.class, () -> runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "")));
 
         Assertions.assertEquals("Variable " + INPUT_VARIABLE_NAME + " not found or empty", thrown.getMessage());
+    }
+
+    private TokenVariable getTokenVariable(ProcessInstance processInstance) {
+        return (TokenVariable) runtimeService.getVariable(processInstance.getId(), TOKEN_VARIABLE_NAME);
     }
 
 }

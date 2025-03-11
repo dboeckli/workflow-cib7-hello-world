@@ -12,7 +12,13 @@ public class TokenVariable implements Serializable {
 
     public static final String TOKEN_VARIABLE_NAME = "tokenVariable";
 
-    private String status;
+    private STATUS status;
+
+    public enum STATUS {
+        STARTED,
+        COMPLETED,
+        FINISHED
+    }
 
     @Setter(AccessLevel.NONE)
     private Input input;

@@ -24,7 +24,7 @@ public class ValidateInputDelegate implements JavaDelegate {
             throw new WorkflowException("Variable " + INPUT_VARIABLE_NAME + " not found or empty");
         } else {
             TokenVariable tokenVariable = new TokenVariable(new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()));
-            tokenVariable.setStatus("STARTED");
+            tokenVariable.setStatus(TokenVariable.STATUS.STARTED);
             delegateExecution.setVariable(TOKEN_VARIABLE_NAME, tokenVariable);
         }
     }

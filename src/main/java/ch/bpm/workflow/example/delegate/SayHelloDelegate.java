@@ -23,13 +23,13 @@ public class SayHelloDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
-        log.info("executing sayHelloDelegate: {}", delegateExecution);
+        TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
+        log.info("executing sayHelloDelegate: {}. Variable status: {}", delegateExecution, tokenVariable.getStatus());
         try {
             List<CustomerDto> customers = customerApi.listCustomers();
             log.info("Got response from apifirst. Customers: \n {}", customers);
 
-            TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
-            tokenVariable.setStatus("DONE");
+            tokenVariable.setStatus(TokenVariable.STATUS.FINISHED);
         } catch (Exception ex) {
             log.error("Failed to call apifirst", ex);
             throw new WorkflowException("Failed to call apifirst", ex);

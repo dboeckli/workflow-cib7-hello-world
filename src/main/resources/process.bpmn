@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_0fr9mxs" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.33.1">
   <bpmn:process id="hello-world-process" name="Hello World Process" isExecutable="true" camunda:historyTimeToLive="180">
-    <bpmn:userTask id="say-hello" name="Say hello to&#10;admin" camunda:candidateUsers="admin">
+    <bpmn:userTask id="say-hello" name="Say hello to&#10;admin" camunda:asyncAfter="true" camunda:exclusive="false" camunda:candidateUsers="admin">
+      <bpmn:extensionElements>
+        <camunda:executionListener class="ch.bpm.workflow.example.execution.listener.HelloExecutionListener" event="end" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1h0gerg</bpmn:incoming>
       <bpmn:outgoing>Flow_03vi6h2</bpmn:outgoing>
     </bpmn:userTask>
@@ -10,7 +13,7 @@
       <bpmn:incoming>Flow_0rp5bi3</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0rp5bi3" sourceRef="Activity_say_hello-via_delegate" targetRef="Event_1sva7ey" />
-    <bpmn:serviceTask id="Activity_say_hello-via_delegate" name="Service-For-Delegate" camunda:asyncAfter="true" camunda:exclusive="false" camunda:class="ch.bpm.workflow.example.delegate.SayHelloDelegate">
+    <bpmn:serviceTask id="Activity_say_hello-via_delegate" name="Service-For-Delegate" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" camunda:class="ch.bpm.workflow.example.delegate.SayHelloDelegate">
       <bpmn:incoming>Flow_03vi6h2</bpmn:incoming>
       <bpmn:outgoing>Flow_0rp5bi3</bpmn:outgoing>
     </bpmn:serviceTask>
