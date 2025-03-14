@@ -38,6 +38,12 @@ camunda:
       id: camunda-admin
     filter:
       create: All Tasks
+    client:
+      base-url: http://localhost:8081/bpm/engine-rest
+      worker-id: spring-boot-worker
+      basic-auth:
+        username: camunda-admin
+        password: camunda-admin-password
     metrics:
       enabled: true
       db-reporter-activate: true

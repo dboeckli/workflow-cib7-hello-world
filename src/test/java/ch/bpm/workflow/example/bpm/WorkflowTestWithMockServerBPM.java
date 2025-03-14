@@ -2,6 +2,7 @@ package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
+import ch.bpm.workflow.example.util.config.CamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
 import ch.guru.springframework.apifirst.model.CustomerDto;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MockServerContainer;
@@ -33,24 +35,29 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
+import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.*;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 import static java.util.Map.entry;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
-        "camunda.bpm.job-execution.enabled=false",
-        "camunda.bpm.generate-unique-process-engine-name=true",
-        "camunda.bpm.generate-unique-process-application-name=true",
-        "spring.datasource.generate-unique-name=true"
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.generate-unique-process-engine-name=true",
+    "camunda.bpm.generate-unique-process-application-name=true",
+    "spring.datasource.generate-unique-name=true"
 })
 @Testcontainers
 @Deployment(resources = "process.bpmn")
 @Slf4j
 @ActiveProfiles(value = "local")
+@Import(CamundaClientConfiguration.class)
 class WorkflowTestWithMockServerBPM {
 
     @Autowired
@@ -108,17 +115,30 @@ class WorkflowTestWithMockServerBPM {
         // then
         assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "hello-variable"));
         assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().inputVariable());
-        assertEquals(TokenVariable.STATUS.STARTED, this.getTokenVariable(processInstance).getStatus());
+        assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus());
 
         // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
         assertThat(processInstance).hasPassed("Activity_validate_input");
         assertThat(processInstance).isWaitingAt("Activity_validate_input");
-        execute(job()); // push forwward
+        execute(job()); // push forward
 
         assertThat(processInstance).hasPassed("Service_for_Script");
 
+        assertThat(processInstance).isWaitingAt("External_Task");
+        execute(job());
+        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
+        await().atMost(5, SECONDS)
+            .pollInterval(500, MILLISECONDS)
+            .until(() -> {
+                TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
+                log.info("Current status: {}", currentTokenVariable.getStatus());
+                return currentTokenVariable.getStatus() == RUNNING;
+            });
+        assertThat(processInstance).hasPassed("External_Task");
+        execute(job());
+
         assertThat(processInstance).isWaitingAt("say-hello");
-        assertEquals(TokenVariable.STATUS.STARTED, this.getTokenVariable(processInstance).getStatus());
+        assertEquals(RUNNING, this.getTokenVariable(processInstance).getStatus());
         assertThat(processInstance).task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
         claim(task(), "admin");
         assertEquals("admin", task().getAssignee());
@@ -127,12 +147,12 @@ class WorkflowTestWithMockServerBPM {
 
         // is waiting before this activity
         assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
-        assertEquals(TokenVariable.STATUS.COMPLETED, this.getTokenVariable(processInstance).getStatus());
+        assertEquals(COMPLETED, this.getTokenVariable(processInstance).getStatus());
         execute(job());
         assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate");
         // is waiting after this activity
         assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
-        assertEquals(TokenVariable.STATUS.FINISHED, this.getTokenVariable(processInstance).getStatus());
+        assertEquals(FINISHED, this.getTokenVariable(processInstance).getStatus());
         execute(job());
 
         assertThat(processInstance).isEnded();

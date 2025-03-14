@@ -5,7 +5,7 @@
       <bpmn:extensionElements>
         <camunda:executionListener class="ch.bpm.workflow.example.execution.listener.HelloExecutionListener" event="end" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1h0gerg</bpmn:incoming>
+      <bpmn:incoming>Flow_0rylm6g</bpmn:incoming>
       <bpmn:outgoing>Flow_03vi6h2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_03vi6h2" sourceRef="say-hello" targetRef="Activity_say_hello-via_delegate" />
@@ -27,23 +27,36 @@
     </bpmn:startEvent>
     <bpmn:scriptTask id="Service_for_Script" name="Service-For-Script" scriptFormat="javascript">
       <bpmn:incoming>Flow_10us4hw</bpmn:incoming>
-      <bpmn:outgoing>Flow_1h0gerg</bpmn:outgoing>
-      <bpmn:script>print('Hello - I am a script');
-print('Token Variable: ' + execution.getVariable("tokenVariable"));
-print('Status: ' + execution.getVariable("tokenVariable").getStatus());
-print('Business key:' + execution.processBusinessKey);</bpmn:script>
+      <bpmn:outgoing>Flow_18g0wou</bpmn:outgoing>
+      <bpmn:script>print('[Service_for_Script] Hello - I am a script');
+print('[Service_for_Script] Token Variable: ' + execution.getVariable("tokenVariable"));
+print('[Service_for_Script] Status: ' + execution.getVariable("tokenVariable").getStatus());
+print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="Flow_10us4hw" sourceRef="Activity_validate_input" targetRef="Service_for_Script" />
-    <bpmn:sequenceFlow id="Flow_1h0gerg" sourceRef="Service_for_Script" targetRef="say-hello" />
+    <bpmn:serviceTask id="External_Task" name="External Task" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" camunda:type="external" camunda:topic="sayHelloTopic">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_18g0wou</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rylm6g</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_18g0wou" sourceRef="Service_for_Script" targetRef="External_Task" />
+    <bpmn:sequenceFlow id="Flow_0rylm6g" sourceRef="External_Task" targetRef="say-hello" />
   </bpmn:process>
   <bpmn:message id="Message_20eg37q" name="fff" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="hello-world-process">
+      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
+        <dc:Bounds x="950" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1sva7ey_di" bpmnElement="Event_1sva7ey">
-        <dc:Bounds x="1192" y="99" width="36" height="36" />
+        <dc:Bounds x="1302" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
+        <dc:Bounds x="1120" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0oj4n24_di" bpmnElement="Activity_validate_input">
-        <dc:Bounds x="380" y="77" width="100" height="80" />
+        <dc:Bounds x="370" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0h3urni_di" bpmnElement="Receive_Input_Message">
@@ -52,36 +65,37 @@ print('Business key:' + execution.processBusinessKey);</bpmn:script>
           <dc:Bounds x="197" y="142" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
-        <dc:Bounds x="1000" y="77" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
-        <dc:Bounds x="790" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0war18k_di" bpmnElement="Service_for_Script">
         <dc:Bounds x="580" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03r1vmb_di" bpmnElement="External_Task">
+        <dc:Bounds x="760" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_03vi6h2_di" bpmnElement="Flow_03vi6h2">
-        <di:waypoint x="890" y="117" />
-        <di:waypoint x="1000" y="117" />
+        <di:waypoint x="1050" y="117" />
+        <di:waypoint x="1120" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rp5bi3_di" bpmnElement="Flow_0rp5bi3">
-        <di:waypoint x="1100" y="117" />
-        <di:waypoint x="1192" y="117" />
+        <di:waypoint x="1220" y="117" />
+        <di:waypoint x="1302" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02mbibh_di" bpmnElement="Flow_02mbibh">
         <di:waypoint x="248" y="117" />
-        <di:waypoint x="380" y="117" />
+        <di:waypoint x="370" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_10us4hw_di" bpmnElement="Flow_10us4hw">
-        <di:waypoint x="480" y="117" />
+        <di:waypoint x="470" y="117" />
         <di:waypoint x="580" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1h0gerg_di" bpmnElement="Flow_1h0gerg">
+      <bpmndi:BPMNEdge id="Flow_18g0wou_di" bpmnElement="Flow_18g0wou">
         <di:waypoint x="680" y="117" />
-        <di:waypoint x="790" y="117" />
+        <di:waypoint x="760" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rylm6g_di" bpmnElement="Flow_0rylm6g">
+        <di:waypoint x="860" y="117" />
+        <di:waypoint x="950" y="117" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -22,6 +22,10 @@ camunda:
     admin-user:
       id: admin
       password: admin
+    client:
+      base-url: http://localhost:8081/bpm/engine-rest
+      lock-duration: 10000 # defines how many milliseconds the External Tasks are locked until they can be fetched again
+      worker-id: spring-boot-worker
     generic-properties:
       ignore-unknown-fields: false
       properties:

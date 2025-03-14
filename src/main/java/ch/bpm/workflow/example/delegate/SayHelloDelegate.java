@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.FINISHED;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class SayHelloDelegate implements JavaDelegate {
             List<CustomerDto> customers = customerApi.listCustomers();
             log.info("Got response from apifirst. Customers: \n {}", customers);
 
-            tokenVariable.setStatus(TokenVariable.STATUS.FINISHED);
+            tokenVariable.setStatus(FINISHED);
         } catch (Exception ex) {
             log.error("Failed to call apifirst", ex);
             throw new WorkflowException("Failed to call apifirst", ex);
