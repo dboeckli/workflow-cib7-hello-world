@@ -2,8 +2,9 @@ package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
 import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
-import ch.bpm.workflow.example.util.config.CamundaClientConfiguration;
+import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import lombok.extern.slf4j.Slf4j;
+import org.cibseven.bpm.client.spring.impl.client.ClientConfiguration;
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.RuntimeService;
 import org.cibseven.bpm.engine.runtime.ProcessInstance;
@@ -14,9 +15,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.SocketUtils;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -33,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 @TestPropertySource(properties = {
         "camunda.bpm.job-execution.enabled=false",
         "camunda.bpm.generate-unique-process-engine-name=true",
@@ -42,8 +49,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Deployment(resources = "process.bpmn")
 @Slf4j
 @ActiveProfiles(value = "local")
-@Import(CamundaClientConfiguration.class)
+@Import(TestCamundaClientConfiguration.class)
 class WorkflowTestBPM {
+
+    @LocalServerPort
+    private int localServerPort;
 
     @Autowired
     public RuntimeService runtimeService;
@@ -55,6 +65,9 @@ class WorkflowTestBPM {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    ClientConfiguration clientConfiguration;
+
     @BeforeEach
     void setUp() {
         init(processEngine);
@@ -65,6 +78,13 @@ class WorkflowTestBPM {
     void tearDown() {
         reset();
         log.info("### ProcessEngine ended: {} with datasource {}", processEngine.getName(), dataSource);
+    }
+
+    @DynamicPropertySource
+    static void dynamicProperties(DynamicPropertyRegistry registry) {
+        int randomPort = SocketUtils.findAvailableTcpPort(49152, 65535);
+        log.info("### Reserving randomPort: " + randomPort);
+        registry.add("server.port", () -> randomPort);
     }
 
     @Test

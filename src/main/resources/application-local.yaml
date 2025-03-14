@@ -39,7 +39,7 @@ camunda:
     filter:
       create: All Tasks
     client:
-      base-url: http://localhost:8081/bpm/engine-rest
+      base-url: http://localhost:8081/${server.servlet.context-path}/engine-rest
       worker-id: spring-boot-worker
       basic-auth:
         username: camunda-admin

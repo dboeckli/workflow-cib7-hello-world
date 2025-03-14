@@ -2,7 +2,7 @@ package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
-import ch.bpm.workflow.example.util.config.CamundaClientConfiguration;
+import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
 import ch.guru.springframework.apifirst.model.CustomerDto;
@@ -20,9 +20,14 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.client.MockServerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.util.SocketUtils;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -47,6 +52,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 @TestPropertySource(properties = {
     "camunda.bpm.job-execution.enabled=false",
     "camunda.bpm.generate-unique-process-engine-name=true",
@@ -57,8 +63,11 @@ import static org.mockserver.model.HttpResponse.response;
 @Deployment(resources = "process.bpmn")
 @Slf4j
 @ActiveProfiles(value = "local")
-@Import(CamundaClientConfiguration.class)
+@Import(TestCamundaClientConfiguration.class)
 class WorkflowTestWithMockServerBPM {
+
+    @LocalServerPort
+    private int localServerPort;
 
     @Autowired
     public RuntimeService runtimeService;
@@ -103,6 +112,13 @@ class WorkflowTestWithMockServerBPM {
     void tearDown() {
         reset();
         log.info("### ProcessEngine ended: {} with datasource {}", processEngine.getName(), dataSource);
+    }
+
+    @DynamicPropertySource
+    static void dynamicProperties(DynamicPropertyRegistry registry) {
+        int randomPort = SocketUtils.findAvailableTcpPort(49152, 65535);
+        log.info("### Reserving randomPort: " + randomPort);
+        registry.add("server.port", () -> randomPort);
     }
 
     @Test
