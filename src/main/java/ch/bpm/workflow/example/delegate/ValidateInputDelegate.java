@@ -9,6 +9,7 @@ import org.cibseven.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.STARTED;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j
@@ -24,7 +25,12 @@ public class ValidateInputDelegate implements JavaDelegate {
             throw new WorkflowException("Variable " + INPUT_VARIABLE_NAME + " not found or empty");
         } else {
             TokenVariable tokenVariable = new TokenVariable(new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()));
-            tokenVariable.setStatus("STARTED");
+            tokenVariable.setStatus(STARTED);
+
+            // TODO:
+            //VariableMap variableMap = Variables.createVariables();
+            //variableMap.put(TOKEN_VARIABLE_NAME, tokenVariable);
+
             delegateExecution.setVariable(TOKEN_VARIABLE_NAME, tokenVariable);
         }
     }

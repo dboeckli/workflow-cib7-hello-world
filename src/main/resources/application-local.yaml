@@ -38,6 +38,12 @@ camunda:
       id: camunda-admin
     filter:
       create: All Tasks
+    client:
+      base-url: http://localhost:8081/${server.servlet.context-path}/engine-rest
+      worker-id: spring-boot-worker
+      basic-auth:
+        username: camunda-admin
+        password: camunda-admin-password
     metrics:
       enabled: true
       db-reporter-activate: true
@@ -45,6 +51,7 @@ camunda:
       ignore-unknown-fields: false
       properties:
         javaSerializationFormatEnabled: true
+        historyTimeToLive: 5
 
 camunda-ldap-plugin:
   url: ldap://localhost:389

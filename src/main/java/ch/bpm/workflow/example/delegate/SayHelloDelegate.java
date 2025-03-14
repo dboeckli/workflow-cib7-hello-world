@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.FINISHED;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j
@@ -23,13 +24,13 @@ public class SayHelloDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
-        log.info("executing sayHelloDelegate: {}", delegateExecution);
+        TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
+        log.info("executing sayHelloDelegate: {}. Variable status: {}", delegateExecution, tokenVariable.getStatus());
         try {
             List<CustomerDto> customers = customerApi.listCustomers();
             log.info("Got response from apifirst. Customers: \n {}", customers);
 
-            TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
-            tokenVariable.setStatus("DONE");
+            tokenVariable.setStatus(FINISHED);
         } catch (Exception ex) {
             log.error("Failed to call apifirst", ex);
             throw new WorkflowException("Failed to call apifirst", ex);

@@ -7,8 +7,6 @@
 
 ## Description
 
-Write your own description here
-
 ### URLS
 
 - Camunda: http://localhost:8081/bpm/camunda/app/welcome/default/#!/welcome

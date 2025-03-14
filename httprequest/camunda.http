@@ -7,6 +7,11 @@ GET {{host}}/{{context}}/engine-rest/process-definition
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 
+### gleich wie oben, aber mit engine name default
+GET {{host}}/{{context}}/engine-rest/engine/default/process-definition
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+
 ### Start a new process instance
 POST {{host}}/{{context}}/engine-rest/process-definition/key/hello-world-process/start
 Accept: application/json
