@@ -27,7 +27,7 @@ public class HelloTaskHandler implements ExternalTaskHandler {
         log.info("### Received external task: {} with variables {}", externalTask.getId(), externalTask.getAllVariables());
 
         TokenVariable tokenVariable = externalTask.getVariable(TOKEN_VARIABLE_NAME);
-        tokenVariable.setStatus(RUNNING);
+        tokenVariable.setStatus(RUNNING.name());
 
         externalTaskService.complete(externalTask, Collections.singletonMap(TOKEN_VARIABLE_NAME, tokenVariable));
      }

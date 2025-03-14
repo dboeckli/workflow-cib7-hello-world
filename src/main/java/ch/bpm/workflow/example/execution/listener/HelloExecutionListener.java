@@ -18,7 +18,7 @@ public class HelloExecutionListener implements ExecutionListener {
         log.info("executing HelloExecutionListener: {}", delegateExecution.getCurrentActivityName());
 
         TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
-        tokenVariable.setStatus(COMPLETED);
+        tokenVariable.setStatus(COMPLETED.name());
 
         log.info("executing HelloExecutionListener. Status has been set to: {}", tokenVariable.getStatus());
     }

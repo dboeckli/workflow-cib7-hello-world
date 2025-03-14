@@ -6,6 +6,8 @@ import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
 import lombok.extern.slf4j.Slf4j;
 import org.cibseven.bpm.engine.delegate.DelegateExecution;
 import org.cibseven.bpm.engine.delegate.JavaDelegate;
+import org.cibseven.bpm.engine.variable.Variables;
+import org.cibseven.bpm.engine.variable.value.ObjectValue;
 import org.springframework.stereotype.Component;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
@@ -24,14 +26,15 @@ public class ValidateInputDelegate implements JavaDelegate {
         if (!delegateExecution.getVariables().containsKey(INPUT_VARIABLE_NAME) || delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString().isEmpty()) {
             throw new WorkflowException("Variable " + INPUT_VARIABLE_NAME + " not found or empty");
         } else {
-            TokenVariable tokenVariable = new TokenVariable(new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()));
-            tokenVariable.setStatus(STARTED);
+            TokenVariable tokenVariable = new TokenVariable(new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()), STARTED.name());
 
-            // TODO:
-            //VariableMap variableMap = Variables.createVariables();
-            //variableMap.put(TOKEN_VARIABLE_NAME, tokenVariable);
+            ObjectValue tokenVariableValue = Variables
+                .objectValue(tokenVariable)
+                .serializationDataFormat(Variables.SerializationDataFormats.JAVA)
+                .serializationDataFormat(Variables.SerializationDataFormats.JSON)
+                .create();
 
-            delegateExecution.setVariable(TOKEN_VARIABLE_NAME, tokenVariable);
+            delegateExecution.setVariable(TOKEN_VARIABLE_NAME, tokenVariableValue);
         }
     }
 }

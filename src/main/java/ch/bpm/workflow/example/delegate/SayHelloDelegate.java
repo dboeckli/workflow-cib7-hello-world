@@ -30,7 +30,7 @@ public class SayHelloDelegate implements JavaDelegate {
             List<CustomerDto> customers = customerApi.listCustomers();
             log.info("Got response from apifirst. Customers: \n {}", customers);
 
-            tokenVariable.setStatus(FINISHED);
+            tokenVariable.setStatus(FINISHED.name());
         } catch (Exception ex) {
             log.error("Failed to call apifirst", ex);
             throw new WorkflowException("Failed to call apifirst", ex);

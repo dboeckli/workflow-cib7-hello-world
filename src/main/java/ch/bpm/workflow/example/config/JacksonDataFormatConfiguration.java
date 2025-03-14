@@ -1,5 +1,6 @@
 package ch.bpm.workflow.example.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -32,6 +33,8 @@ public class JacksonDataFormatConfiguration {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.findAndRegisterModules().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.findAndRegisterModules().disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+        objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+        objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
 
         List<Module> modules = ObjectMapper.findModules();
         modules.forEach(module -> log.info(JACKSON_CONFIG_MODULES.getMessage(), module, module.version()));
