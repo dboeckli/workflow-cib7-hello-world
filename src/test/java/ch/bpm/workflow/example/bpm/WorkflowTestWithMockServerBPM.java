@@ -1,6 +1,6 @@
 package ch.bpm.workflow.example.bpm;
 
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
@@ -27,7 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.SocketUtils;
+import org.springframework.test.util.TestSocketUtils;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -40,8 +40,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.*;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -64,6 +64,7 @@ import static org.mockserver.model.HttpResponse.response;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
+@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or 'Tests'"
 class WorkflowTestWithMockServerBPM {
 
     @LocalServerPort
@@ -116,7 +117,7 @@ class WorkflowTestWithMockServerBPM {
 
     @DynamicPropertySource
     static void dynamicProperties(DynamicPropertyRegistry registry) {
-        int randomPort = SocketUtils.findAvailableTcpPort(49152, 65535);
+        int randomPort = TestSocketUtils.findAvailableTcpPort();
         log.info("### Reserving randomPort: " + randomPort);
         registry.add("server.port", () -> randomPort);
     }
@@ -130,7 +131,7 @@ class WorkflowTestWithMockServerBPM {
 
         // then
         assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "hello-variable"));
-        assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().inputVariable());
+        assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().getInputVariable());
         assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus());
 
         // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
@@ -138,7 +139,10 @@ class WorkflowTestWithMockServerBPM {
         assertThat(processInstance).isWaitingAt("Activity_validate_input");
         execute(job()); // push forward
 
+        assertThat(processInstance).isWaitingAt("Service_for_Script");
+        execute(job());
         assertThat(processInstance).hasPassed("Service_for_Script");
+        execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());

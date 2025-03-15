@@ -25,7 +25,7 @@
     <bpmn:startEvent id="Receive_Input_Message" name="Receive Input Message">
       <bpmn:outgoing>Flow_02mbibh</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:scriptTask id="Service_for_Script" name="Service-For-Script" scriptFormat="javascript">
+    <bpmn:scriptTask id="Service_for_Script" name="Service-For-Script" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" scriptFormat="javascript">
       <bpmn:incoming>Flow_10us4hw</bpmn:incoming>
       <bpmn:outgoing>Flow_18g0wou</bpmn:outgoing>
       <bpmn:script>print('[Service_for_Script] Hello - I am a script');

@@ -1,6 +1,6 @@
 package ch.bpm.workflow.example.external.task;
 
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import lombok.extern.slf4j.Slf4j;
 import org.cibseven.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.cibseven.bpm.client.task.ExternalTask;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.RUNNING;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.RUNNING;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Component
 @ExternalTaskSubscription(

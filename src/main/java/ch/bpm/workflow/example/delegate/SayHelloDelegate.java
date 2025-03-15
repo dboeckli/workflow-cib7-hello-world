@@ -1,7 +1,7 @@
 package ch.bpm.workflow.example.delegate;
 
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.CustomerDto;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.FINISHED;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.FINISHED;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j
 @RequiredArgsConstructor
