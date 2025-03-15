@@ -139,7 +139,10 @@ class WorkflowTestWithMockServerBPM {
         assertThat(processInstance).isWaitingAt("Activity_validate_input");
         execute(job()); // push forward
 
+        assertThat(processInstance).isWaitingAt("Service_for_Script");
+        execute(job());
         assertThat(processInstance).hasPassed("Service_for_Script");
+        execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
