@@ -6,7 +6,7 @@ import org.cibseven.bpm.engine.delegate.DelegateExecution;
 import org.cibseven.bpm.engine.delegate.ExecutionListener;
 import org.springframework.stereotype.Component;
 
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.COMPLETED;
+import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.COMPLETED;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j

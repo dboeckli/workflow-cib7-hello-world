@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.RUNNING;
+import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.RUNNING;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Component

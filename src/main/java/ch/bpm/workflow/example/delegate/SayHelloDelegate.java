@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.FINISHED;
+import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.FINISHED;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j

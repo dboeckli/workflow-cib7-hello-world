@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="local" />
-    <module name="workflow-cib7-hello-world" />
+    <module name="workflow-hello-world" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ch.bpm.workflow.example.Application" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -22,13 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.SocketUtils;
+import org.springframework.test.util.TestSocketUtils;
 
 import javax.sql.DataSource;
 import java.util.Map;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.Status.*;
+import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.*;
 import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -50,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
+@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or 'Tests'"
 class WorkflowTestBPM {
 
     @LocalServerPort
@@ -65,9 +66,6 @@ class WorkflowTestBPM {
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    ClientConfiguration clientConfiguration;
-
     @BeforeEach
     void setUp() {
         init(processEngine);
@@ -82,7 +80,7 @@ class WorkflowTestBPM {
 
     @DynamicPropertySource
     static void dynamicProperties(DynamicPropertyRegistry registry) {
-        int randomPort = SocketUtils.findAvailableTcpPort(49152, 65535);
+        int randomPort = TestSocketUtils.findAvailableTcpPort();
         log.info("### Reserving randomPort: " + randomPort);
         registry.add("server.port", () -> randomPort);
     }
@@ -94,7 +92,7 @@ class WorkflowTestBPM {
 
         // then
         assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "hello-variable"));
-        assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().inputVariable());
+        assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().getInputVariable());
         assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus());
 
         // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
@@ -102,7 +100,10 @@ class WorkflowTestBPM {
         assertThat(processInstance).isWaitingAt("Activity_validate_input");
         execute(job()); // push forward
 
+        assertThat(processInstance).isWaitingAt("Service_for_Script");
+        execute(job());
         assertThat(processInstance).hasPassed("Service_for_Script");
+        execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
