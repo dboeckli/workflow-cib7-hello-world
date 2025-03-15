@@ -1,6 +1,6 @@
 package ch.bpm.workflow.example.bpm;
 
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
@@ -40,8 +40,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.*;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;

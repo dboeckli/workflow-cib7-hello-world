@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.common.bpm.token;
+package ch.bpm.workflow.example.common.bpm.variable.token;
 
 import lombok.*;
 import spinjar.com.fasterxml.jackson.annotation.JsonCreator;

@@ -1,8 +1,8 @@
 package ch.bpm.workflow.example.delegate;
 
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
-import ch.bpm.workflow.example.common.bpm.token.Input;
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.Input;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import lombok.extern.slf4j.Slf4j;
 import org.cibseven.bpm.engine.delegate.DelegateExecution;
 import org.cibseven.bpm.engine.delegate.JavaDelegate;
@@ -11,8 +11,8 @@ import org.cibseven.bpm.engine.variable.value.ObjectValue;
 import org.springframework.stereotype.Component;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
-import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.STARTED;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.STARTED;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Slf4j
 @Component

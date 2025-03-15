@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.common.bpm.token;
+package ch.bpm.workflow.example.common.bpm.variable.token;
 
 import lombok.Getter;
 import lombok.ToString;

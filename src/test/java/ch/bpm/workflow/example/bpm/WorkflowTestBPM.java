@@ -1,10 +1,9 @@
 package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
-import ch.bpm.workflow.example.common.bpm.token.TokenVariable;
+import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import lombok.extern.slf4j.Slf4j;
-import org.cibseven.bpm.client.spring.impl.client.ClientConfiguration;
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.RuntimeService;
 import org.cibseven.bpm.engine.runtime.ProcessInstance;
@@ -28,8 +27,8 @@ import javax.sql.DataSource;
 import java.util.Map;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenStatus.*;
-import static ch.bpm.workflow.example.common.bpm.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.*;
+import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
