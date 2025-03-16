@@ -5,7 +5,7 @@
       <bpmn:extensionElements>
         <camunda:executionListener class="ch.bpm.workflow.example.execution.listener.HelloExecutionListener" event="end" />
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0rylm6g</bpmn:incoming>
+      <bpmn:incoming>Flow_0enan5j</bpmn:incoming>
       <bpmn:outgoing>Flow_03vi6h2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_03vi6h2" sourceRef="say-hello" targetRef="Activity_say_hello-via_delegate" />
@@ -40,21 +40,24 @@ print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpm
       <bpmn:outgoing>Flow_0rylm6g</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_18g0wou" sourceRef="Service_for_Script" targetRef="External_Task" />
-    <bpmn:sequenceFlow id="Flow_0rylm6g" sourceRef="External_Task" targetRef="say-hello" />
+    <bpmn:sequenceFlow id="Flow_0rylm6g" sourceRef="External_Task" targetRef="Gateway_1siie33" />
+    <bpmn:boundaryEvent id="Error_in_delegate" name="Error_in_delegate" attachedToRef="Activity_say_hello-via_delegate">
+      <bpmn:outgoing>Flow_0ul3r7d</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_06vphnt" errorRef="Error_16t5dm0" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_0ul3r7d" sourceRef="Error_in_delegate" targetRef="Gateway_1siie33" />
+    <bpmn:exclusiveGateway id="Gateway_1siie33">
+      <bpmn:incoming>Flow_0rylm6g</bpmn:incoming>
+      <bpmn:incoming>Flow_0ul3r7d</bpmn:incoming>
+      <bpmn:outgoing>Flow_0enan5j</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0enan5j" sourceRef="Gateway_1siie33" targetRef="say-hello" />
   </bpmn:process>
   <bpmn:message id="Message_20eg37q" name="fff" />
+  <bpmn:error id="Error_1qqjzec" name="Test" errorCode="BUSINESS_EXCEPTION" />
+  <bpmn:error id="Error_16t5dm0" name="Business Exception" errorCode="BUSINESS_EXCEPTION" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="hello-world-process">
-      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
-        <dc:Bounds x="950" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1sva7ey_di" bpmnElement="Event_1sva7ey">
-        <dc:Bounds x="1302" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
-        <dc:Bounds x="1120" y="77" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0oj4n24_di" bpmnElement="Activity_validate_input">
         <dc:Bounds x="370" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -73,13 +76,32 @@ print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpm
         <dc:Bounds x="760" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
+        <dc:Bounds x="1180" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sva7ey_di" bpmnElement="Event_1sva7ey">
+        <dc:Bounds x="1362" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
+        <dc:Bounds x="1020" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1siie33_di" bpmnElement="Gateway_1siie33" isMarkerVisible="true">
+        <dc:Bounds x="915" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0jz5cr1_di" bpmnElement="Error_in_delegate">
+        <dc:Bounds x="1212" y="139" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1186" y="182" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_03vi6h2_di" bpmnElement="Flow_03vi6h2">
-        <di:waypoint x="1050" y="117" />
         <di:waypoint x="1120" y="117" />
+        <di:waypoint x="1180" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rp5bi3_di" bpmnElement="Flow_0rp5bi3">
-        <di:waypoint x="1220" y="117" />
-        <di:waypoint x="1302" y="117" />
+        <di:waypoint x="1280" y="117" />
+        <di:waypoint x="1362" y="117" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_02mbibh_di" bpmnElement="Flow_02mbibh">
         <di:waypoint x="248" y="117" />
@@ -95,7 +117,17 @@ print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpm
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0rylm6g_di" bpmnElement="Flow_0rylm6g">
         <di:waypoint x="860" y="117" />
-        <di:waypoint x="950" y="117" />
+        <di:waypoint x="915" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ul3r7d_di" bpmnElement="Flow_0ul3r7d">
+        <di:waypoint x="1230" y="175" />
+        <di:waypoint x="1230" y="250" />
+        <di:waypoint x="940" y="250" />
+        <di:waypoint x="940" y="142" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0enan5j_di" bpmnElement="Flow_0enan5j">
+        <di:waypoint x="965" y="117" />
+        <di:waypoint x="1020" y="117" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

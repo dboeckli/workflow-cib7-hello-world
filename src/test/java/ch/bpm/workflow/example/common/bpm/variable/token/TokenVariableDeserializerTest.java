@@ -67,7 +67,7 @@ class TokenVariableDeserializerTest {
             deserializer.deserialize(jsonParser, ctxt);
         });
 
-        String expectedErrorMessage = "Invalid status: INVALID. Status should be one of STARTED, RUNNING, COMPLETED, FINISHED";
+        String expectedErrorMessage = "Invalid status: INVALID. Status should be one of STARTED, RUNNING, COMPLETED, BUSINESS_EXCEPTION, FINISHED";
         assertEquals(expectedErrorMessage, exception.getMessage());
     }
 }

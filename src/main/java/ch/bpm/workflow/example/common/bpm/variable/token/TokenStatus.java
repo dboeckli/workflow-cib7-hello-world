@@ -9,5 +9,6 @@ public enum TokenStatus implements Serializable {
     STARTED,
     RUNNING,
     COMPLETED,
+    BUSINESS_EXCEPTION,
     FINISHED
 }

@@ -139,6 +139,75 @@ class WorkflowTestBPM {
     }
 
     @Test
+    void test_shouldExecuteHappyPathWithFail()  {
+        // when
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "fail"));
+
+        // then
+        assertThat(processInstance).isStarted().hasBusinessKey(BUSINESS_KEY).hasVariables(INPUT_VARIABLE_NAME).variables().contains(entry(INPUT_VARIABLE_NAME, "fail"));
+        assertEquals("fail", this.getTokenVariable(processInstance).getInput().getInputVariable());
+        assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus());
+
+        // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
+        assertThat(processInstance).hasPassed("Activity_validate_input");
+        assertThat(processInstance).isWaitingAt("Activity_validate_input");
+        execute(job()); // push forward
+
+        assertThat(processInstance).isWaitingAt("Service_for_Script");
+        execute(job());
+        assertThat(processInstance).hasPassed("Service_for_Script");
+        execute(job());
+
+        assertThat(processInstance).isWaitingAt("External_Task");
+        execute(job());
+        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
+        await().atMost(5, SECONDS)
+            .pollInterval(500, MILLISECONDS)
+            .until(() -> {
+                TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
+                log.info("Current status: {}", currentTokenVariable.getStatus());
+                return currentTokenVariable.getStatus() == RUNNING;
+            });
+        assertThat(processInstance).hasPassed("External_Task");
+        execute(job());
+
+        assertThat(processInstance).isWaitingAt("say-hello");
+        assertEquals(RUNNING, this.getTokenVariable(processInstance).getStatus());
+        assertThat(processInstance).task().hasDefinitionKey("say-hello").hasCandidateUser("admin").isNotAssigned();
+        claim(task(), "admin");
+        assertEquals("admin", task().getAssignee());
+        complete(task());
+        execute(job());
+
+        // is waiting before this activity
+        assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
+        assertEquals(COMPLETED, this.getTokenVariable(processInstance).getStatus());
+        execute(job());
+        // Now it fails in the delegate
+
+        assertThat(processInstance).hasPassed("Error_in_delegate");
+
+        // is waiting again in say-hello
+        assertThat(processInstance).isWaitingAt("say-hello");
+        assertEquals(BUSINESS_EXCEPTION, this.getTokenVariable(processInstance).getStatus());
+        claim(task(), "admin");
+        complete(task());
+        execute(job());
+
+        // is waiting again in delegate
+        assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
+        assertEquals(COMPLETED, this.getTokenVariable(processInstance).getStatus());
+        execute(job());
+        assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate");
+        // is waiting after this activity
+        assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate");
+        assertEquals(FINISHED, this.getTokenVariable(processInstance).getStatus());
+        execute(job());
+
+        assertThat(processInstance).isEnded();
+    }
+
+    @Test
     void test_invalidInput_shoudFail() {
         // when
         WorkflowException thrown = Assertions.assertThrows(WorkflowException.class, () -> runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY));
