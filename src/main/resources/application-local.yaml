@@ -52,6 +52,7 @@ camunda:
       properties:
         javaSerializationFormatEnabled: true
         historyTimeToLive: 5
+        enableExceptionsAfterUnhandledBpmnError: true
 
 camunda-ldap-plugin:
   url: ldap://localhost:389
