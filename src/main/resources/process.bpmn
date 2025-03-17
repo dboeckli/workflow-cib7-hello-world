@@ -13,11 +13,11 @@
       <bpmn:incoming>Flow_0rp5bi3</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0rp5bi3" sourceRef="Activity_say_hello-via_delegate" targetRef="Event_1sva7ey" />
-    <bpmn:serviceTask id="Activity_say_hello-via_delegate" name="Service-For-Delegate" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" camunda:class="ch.bpm.workflow.example.delegate.SayHelloDelegate">
+    <bpmn:serviceTask id="Activity_say_hello-via_delegate" name="Service-For-Delegate" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" camunda:delegateExpression="${sayHelloDelegate}">
       <bpmn:incoming>Flow_03vi6h2</bpmn:incoming>
       <bpmn:outgoing>Flow_0rp5bi3</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_validate_input" name="Activity Validate Input" camunda:asyncAfter="true" camunda:exclusive="false" camunda:class="ch.bpm.workflow.example.delegate.ValidateInputDelegate">
+    <bpmn:serviceTask id="Activity_validate_input" name="Activity Validate Input" camunda:asyncAfter="true" camunda:exclusive="false" camunda:delegateExpression="${validateInputDelegate}">
       <bpmn:incoming>Flow_02mbibh</bpmn:incoming>
       <bpmn:outgoing>Flow_10us4hw</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -25,13 +25,10 @@
     <bpmn:startEvent id="Receive_Input_Message" name="Receive Input Message">
       <bpmn:outgoing>Flow_02mbibh</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:scriptTask id="Service_for_Script" name="Service-For-Script" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" scriptFormat="javascript">
+    <bpmn:scriptTask id="Service_for_Script" name="Service-For-Script" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" scriptFormat="javascript" camunda:resultVariable="User01" camunda:resource="camunda-task-scripts/script-for-task.js">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_10us4hw</bpmn:incoming>
       <bpmn:outgoing>Flow_18g0wou</bpmn:outgoing>
-      <bpmn:script>print('[Service_for_Script] Hello - I am a script');
-print('[Service_for_Script] Token Variable: ' + execution.getVariable("tokenVariable"));
-print('[Service_for_Script] Status: ' + execution.getVariable("tokenVariable").getStatus());
-print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:sequenceFlow id="Flow_10us4hw" sourceRef="Activity_validate_input" targetRef="Service_for_Script" />
     <bpmn:serviceTask id="External_Task" name="External Task" camunda:asyncBefore="true" camunda:asyncAfter="true" camunda:exclusive="false" camunda:type="external" camunda:topic="sayHelloTopic">
@@ -58,6 +55,16 @@ print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpm
   <bpmn:error id="Error_16t5dm0" name="Business Exception" errorCode="BUSINESS_EXCEPTION" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="hello-world-process">
+      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
+        <dc:Bounds x="1020" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sva7ey_di" bpmnElement="Event_1sva7ey">
+        <dc:Bounds x="1362" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
+        <dc:Bounds x="1180" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0oj4n24_di" bpmnElement="Activity_validate_input">
         <dc:Bounds x="370" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -75,16 +82,6 @@ print('[Service_for_Script] Business key:' + execution.processBusinessKey);</bpm
       <bpmndi:BPMNShape id="Activity_03r1vmb_di" bpmnElement="External_Task">
         <dc:Bounds x="760" y="77" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0p18p5y_di" bpmnElement="Activity_say_hello-via_delegate">
-        <dc:Bounds x="1180" y="77" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1sva7ey_di" bpmnElement="Event_1sva7ey">
-        <dc:Bounds x="1362" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="UserTask_08mft2c_di" bpmnElement="say-hello">
-        <dc:Bounds x="1020" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1siie33_di" bpmnElement="Gateway_1siie33" isMarkerVisible="true">
         <dc:Bounds x="915" y="92" width="50" height="50" />
