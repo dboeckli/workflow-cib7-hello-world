@@ -30,7 +30,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.TestSocketUtils;
 
 import javax.sql.DataSource;
-import java.security.SecureRandom;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -195,7 +194,7 @@ class WorkflowTestBPM {
     }
 
     @Test
-    void test_shouldExecuteHappyPathWithFail() {
+    void test_shouldExecuteHappyPathWithFail() throws JsonProcessingException {
         // when
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "fail"));
 
@@ -212,6 +211,17 @@ class WorkflowTestBPM {
         assertThat(processInstance).isWaitingAt("Service_for_Script");
         execute(job());
         assertThat(processInstance).hasPassed("Service_for_Script");
+        execute(job());
+
+        assertThat(processInstance).isWaitingAt("Set_User03_To_Default");
+        execute(job());
+        assertThat(processInstance).hasPassed("Set_User03_To_Default");
+        String user3 = (String)runtimeService.getVariable(processInstance.getId(), "User03");
+        JsonNode user3Json = objectMapper.readTree(user3);
+        assertAll("User 3 JSON assertions",
+            () -> assertEquals(3, user3Json.get("id").asInt()),
+            () -> assertEquals("Default", user3Json.get("name").asText())
+        );
         execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
