@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
-class ApplicationInfoIT {
+class ApplicationInfoTest {
 
     @Autowired
     BuildProperties buildProperties;

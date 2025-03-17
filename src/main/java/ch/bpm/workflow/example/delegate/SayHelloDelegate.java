@@ -44,7 +44,6 @@ public class SayHelloDelegate implements JavaDelegate {
             log.error("Failed to call apifirst. Creating Business Error", ex);
             tokenVariable.setStatus(BUSINESS_EXCEPTION);
             throw new BpmnError(BUSINESS_EXCEPTION.name(), "Failed to call apifirst.");
-            //throw new WorkflowBusinessException(ex.getMessage(), 20000, ex);
         }
     }
 }
