@@ -180,6 +180,7 @@
             <version>${nashorn-core.version}</version>
         </dependency>
 
+        <!-- allows us to use connector service tasks -->
         <dependency>
             <groupId>org.cibseven.bpm</groupId>
             <artifactId>cibseven-engine-plugin-connect</artifactId>
