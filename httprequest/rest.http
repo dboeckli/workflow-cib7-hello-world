@@ -20,6 +20,26 @@ Content-Type: application/json
     "input": "hallo"
 }
 
+### Start a new process instance
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": "eder"
+}
+
+### Start a new process instance
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": "pumukel"
+}
+
 ### Start a new process instance which is failing in the delegate
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
