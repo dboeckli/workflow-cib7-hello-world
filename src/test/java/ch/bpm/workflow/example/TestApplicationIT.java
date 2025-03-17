@@ -8,8 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
 @ActiveProfiles(value = "test")
@@ -26,7 +25,9 @@ class TestApplicationIT {
     void contextLoads() {
         log.info("Testing Spring 6 Application {}", applicationContext.getApplicationName());
         log.info("### ProcessEngine started: {}", processEngine.getName());
-        assertNotNull(applicationContext, "Application context should not be null");
-        assertEquals( "default", processEngine.getName());
+        assertAll(
+            () -> assertNotNull(applicationContext),
+            () -> assertEquals("default", processEngine.getName())
+        );
     }
 }

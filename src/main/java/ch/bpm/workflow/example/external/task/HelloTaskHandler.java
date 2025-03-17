@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 
+import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.RUNNING;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Component
 @ExternalTaskSubscription(
     topicName = "sayHelloTopic",
-    processDefinitionKey = "hello-world-process",
+    processDefinitionKey = PROCESS_DEFINITION_KEY,
     includeExtensionProperties = true
 )
 @Slf4j

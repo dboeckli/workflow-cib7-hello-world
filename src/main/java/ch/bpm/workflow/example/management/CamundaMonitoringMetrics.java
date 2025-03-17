@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+// See: https://camunda.com/blog/2022/10/monitoring-camunda-platform-7-with-prometheus/
 public class CamundaMonitoringMetrics {
 
     private final ManagementService managementService;
