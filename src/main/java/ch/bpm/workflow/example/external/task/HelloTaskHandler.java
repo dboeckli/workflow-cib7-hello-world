@@ -16,12 +16,14 @@ import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TO
 
 @Component
 @ExternalTaskSubscription(
-    topicName = "sayHelloTopic",
+    topicName = HelloTaskHandler.TOPIC_NAME,
     processDefinitionKey = PROCESS_DEFINITION_KEY,
     includeExtensionProperties = true
 )
 @Slf4j
 public class HelloTaskHandler implements ExternalTaskHandler {
+
+    public static final String TOPIC_NAME = "sayHelloTopic";
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {

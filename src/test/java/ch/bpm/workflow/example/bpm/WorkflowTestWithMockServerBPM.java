@@ -47,6 +47,7 @@ import java.util.stream.Stream;
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.*;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.external.task.HelloTaskHandler.TOPIC_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -181,7 +182,7 @@ class WorkflowTestWithMockServerBPM {
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
-        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
+        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName(TOPIC_NAME);
         await().atMost(15, SECONDS)
             .pollInterval(500, MILLISECONDS)
             .until(() -> {
