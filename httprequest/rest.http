@@ -10,7 +10,7 @@ Accept: application/json
 
 
 
-### Start a new process instance
+### Start a new process instance check gateway in flow: is setting user03 to Default. Any input except eder and pumukel is taking the default path in gateway.
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
@@ -20,7 +20,27 @@ Content-Type: application/json
     "input": "hallo"
 }
 
-### Start a new process instance which is failing in the delegate
+### Start a new process instance. check gateway in flow: is setting user03 to Eder
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": "eder"
+}
+
+### Start a new process instance. check gateway in flow: is setting user03 to Pumukel
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+    "input": "pumukel"
+}
+
+### Start a new process instance which is failing in the delegate and takes the error intermediate event path.
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}

@@ -6,6 +6,7 @@ import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.RuntimeService;
 import org.cibseven.bpm.engine.runtime.ProcessInstance;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -27,10 +31,12 @@ import org.springframework.test.util.TestSocketUtils;
 
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.*;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.*;
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
+import static ch.bpm.workflow.example.external.task.HelloTaskHandler.TOPIC_NAME;
 import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -88,10 +94,11 @@ class WorkflowTestBPM {
         registry.add("server.port", () -> randomPort);
     }
 
-    @Test
-    void test_shouldExecuteHappyPath() throws JsonProcessingException {
+    @ParameterizedTest
+    @MethodSource("happyPathTestParameters")
+    void test_shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName) throws JsonProcessingException {
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "hello-variable"));
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, inputVariable));
 
         // then
         assertAll("Process instance initial state assertions",
@@ -99,11 +106,11 @@ class WorkflowTestBPM {
                 .hasBusinessKey(BUSINESS_KEY)
                 .hasVariables(INPUT_VARIABLE_NAME)
                 .variables()
-                .contains(entry(INPUT_VARIABLE_NAME, "hello-variable")),
-            () -> assertEquals("hello-variable", this.getTokenVariable(processInstance).getInput().getInputVariable(), "Input variable should be 'hello-variable'"),
-            () -> assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus(), "Initial token status should be STARTED")
+                .contains(entry(INPUT_VARIABLE_NAME, inputVariable)),
+            () -> assertEquals(inputVariable, this.getTokenVariable(processInstance).getInput().getInputVariable()),
+            () -> assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus())
         );
-        // token is wating at the end of the validate input activity because of the Asynchronous continuations After flag
+        // token is waiting at the end of the validate input activity because of the Asynchronous continuations After flag
         assertAll("Validate input activity assertions",
             () -> assertThat(processInstance).hasPassed("Activity_validate_input"),
             () -> assertThat(processInstance).isWaitingAt("Activity_validate_input")
@@ -117,17 +124,28 @@ class WorkflowTestBPM {
         String user2 = (String)runtimeService.getVariable(processInstance.getId(), "User02");
         JsonNode user1Json = objectMapper.readTree(user1);
         JsonNode user2Json = objectMapper.readTree(user2);
-        assertAll("User JSON assertions",
-            () -> assertEquals(1, user1Json.get("id").asInt(), "User1 id should be 1"),
-            () -> assertEquals("John Doe", user1Json.get("name").asText(), "User1 name should be 'John Doe'"),
-            () -> assertEquals(2, user2Json.get("id").asInt(), "User2 id should be 2"),
-            () -> assertEquals("Jane Smith", user2Json.get("name").asText(), "User2 name should be 'Jane Smith'")
+        assertAll("User 1/2 JSON assertions",
+            () -> assertEquals(1, user1Json.get("id").asInt()),
+            () -> assertEquals("John Doe", user1Json.get("name").asText()),
+            () -> assertEquals(2, user2Json.get("id").asInt()),
+            () -> assertEquals("Jane Smith", user2Json.get("name").asText())
+        );
+        execute(job());
+
+        assertThat(processInstance).isWaitingAt(expectedActivity);
+        execute(job());
+        assertThat(processInstance).hasPassed(expectedActivity);
+        String user3 = (String)runtimeService.getVariable(processInstance.getId(), "User03");
+        JsonNode user3Json = objectMapper.readTree(user3);
+        assertAll("User 3 JSON assertions",
+            () -> assertEquals(3, user3Json.get("id").asInt()),
+            () -> assertEquals(expectedName, user3Json.get("name").asText())
         );
         execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
-        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
+        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName(TOPIC_NAME);
         await().atMost(5, SECONDS)
             .pollInterval(500, MILLISECONDS)
             .until(() -> {
@@ -167,8 +185,17 @@ class WorkflowTestBPM {
         assertThat(processInstance).isEnded();
     }
 
+    static Stream<Arguments> happyPathTestParameters() {
+        String generatedName = RandomStringUtils.secure().nextAlphabetic(10);
+        return Stream.of(
+            Arguments.of(generatedName, "Set_User03_To_Default", "Default"),
+            Arguments.of("eder", "Set_User03_To_Eder", "Eder"),
+            Arguments.of("pumukel", "Set_User03_To_Pumukel", "Pumukel")
+        );
+    }
+
     @Test
-    void test_shouldExecuteHappyPathWithFail() {
+    void test_shouldExecuteHappyPathWithFail() throws JsonProcessingException {
         // when
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, "fail"));
 
@@ -187,10 +214,21 @@ class WorkflowTestBPM {
         assertThat(processInstance).hasPassed("Service_for_Script");
         execute(job());
 
+        assertThat(processInstance).isWaitingAt("Set_User03_To_Default");
+        execute(job());
+        assertThat(processInstance).hasPassed("Set_User03_To_Default");
+        String user3 = (String)runtimeService.getVariable(processInstance.getId(), "User03");
+        JsonNode user3Json = objectMapper.readTree(user3);
+        assertAll("User 3 JSON assertions",
+            () -> assertEquals(3, user3Json.get("id").asInt()),
+            () -> assertEquals("Default", user3Json.get("name").asText())
+        );
+        execute(job());
+
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
-        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
-        await().atMost(5, SECONDS)
+        assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName(TOPIC_NAME);
+        await().atMost(10, SECONDS)
             .pollInterval(500, MILLISECONDS)
             .until(() -> {
                 TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
