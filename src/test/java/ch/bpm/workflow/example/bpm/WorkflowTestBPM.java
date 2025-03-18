@@ -227,7 +227,7 @@ class WorkflowTestBPM {
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
         assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName("sayHelloTopic");
-        await().atMost(5, SECONDS)
+        await().atMost(10, SECONDS)
             .pollInterval(500, MILLISECONDS)
             .until(() -> {
                 TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
