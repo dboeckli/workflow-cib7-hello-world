@@ -1,10 +1,6 @@
 package ch.bpm.workflow.example.config;
 
 import ch.bpm.workflow.example.common.LogMessage;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -13,6 +9,11 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.StreamSupport;
 
 @Component
 @Slf4j

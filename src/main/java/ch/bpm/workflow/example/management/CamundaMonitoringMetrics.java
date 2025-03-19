@@ -2,8 +2,6 @@ package ch.bpm.workflow.example.management;
 
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import java.util.Objects;
-
 import org.cibseven.bpm.engine.ManagementService;
 import org.cibseven.bpm.engine.ProcessEngine;
 import org.cibseven.bpm.engine.management.Metrics;
@@ -13,6 +11,8 @@ import org.cibseven.bpm.engine.runtime.Job;
 import org.cibseven.bpm.engine.runtime.JobQuery;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Objects;
 
 @Configuration
 // See: https://camunda.com/blog/2022/10/monitoring-camunda-platform-7-with-prometheus/

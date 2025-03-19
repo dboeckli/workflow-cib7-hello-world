@@ -1,13 +1,11 @@
 package ch.bpm.workflow.example.ldap.model;
 
 import lombok.Data;
-
-import javax.naming.Name;
-
 import org.springframework.ldap.odm.annotations.Attribute;
-
 import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.ldap.odm.annotations.Id;
+
+import javax.naming.Name;
 
 @Entry(objectClasses = {"inetOrgPerson"}, base = "ou=users")
 @Data
