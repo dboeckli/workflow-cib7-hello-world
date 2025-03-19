@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.config.security;
+package ch.bpm.workflow.example.config.security.camunda;
 
 import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;

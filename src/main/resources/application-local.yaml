@@ -22,6 +22,12 @@ spring:
       skip:
         in-tests: false
 
+  ldap:
+    url: ldap://localhost:389
+    base-dn: dc=example,dc=ch
+    manager-dn: cn=admin,dc=example,dc=ch
+    manager-password: password
+
 server:
   servlet:
     context-path: /bpm
@@ -101,6 +107,7 @@ springdoc:
 logging:
   level:
     org.zalando.logbook: INFO
+    org.springframework.ldap: DEBUG
 
 logbook:
   filter:

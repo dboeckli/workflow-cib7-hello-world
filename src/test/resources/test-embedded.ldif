@@ -1,0 +1,73 @@
+dn: dc=example,dc=ch
+dc: example
+objectClass: dcObject
+objectClass: organization
+o: Example, Inc
+
+# groups
+dn: ou=groups,dc=example,dc=ch
+objectClass: organizationalUnit
+ou: groups
+
+# group: camunda-admins
+dn: cn=camunda-admins,ou=groups,dc=example,dc=ch
+objectClass: groupOfNames
+cn: camunda-admins
+member: uid=camunda-admin,ou=users,dc=example,dc=ch
+
+# group: readers
+dn: cn=readers,ou=groups,dc=example,dc=ch
+objectClass: groupOfNames
+cn: readers
+member: uid=user01,ou=users,dc=example,dc=ch
+
+# group: editors
+dn: cn=editors,ou=groups,dc=example,dc=ch
+objectClass: groupOfNames
+cn: editors
+member: uid=user02,ou=users,dc=example,dc=ch
+
+# users
+dn: ou=users,dc=example,dc=ch
+ou: users
+objectClass: organizationalunit
+
+# camunda admin
+dn: cn=camunda-admin,ou=users,dc=example,dc=ch
+objectClass: inetOrgPerson
+cn: camunda-admin
+uid: camunda-admin
+givenName: Admin
+sn: Admin User
+userpassword: camunda-admin-password
+mail: camunda-admin@example.ch
+
+# user01
+dn: cn=user01,ou=users,dc=example,dc=ch
+objectClass: inetOrgPerson
+cn: user01
+uid: user01
+givenName: John
+sn: Doe
+userPassword: user01-password
+mail: john.doe@example.com
+
+# user02
+dn: cn=user02,ou=users,dc=example,dc=ch
+objectClass: inetOrgPerson
+cn: user02
+uid: user02
+givenName: Jane
+sn: Smith
+userPassword: user02-password
+mail: jane.smith@example.com
+
+# user03
+dn: cn=user03,ou=users,dc=example,dc=ch
+objectClass: inetOrgPerson
+cn: user03
+uid: user03
+givenName: Bob
+sn: Johnson
+userPassword: user03-password
+mail: user03@example.ch

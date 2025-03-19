@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @JsonDeserialize(using = TokenVariableDeserializer.class)
 public class TokenVariable implements Serializable {
 
@@ -24,10 +25,6 @@ public class TokenVariable implements Serializable {
 
     public TokenVariable(Input input) {
         this.input = input;
-    }
-
-    @JsonCreator
-    public TokenVariable() {
     }
 
     @JsonCreator

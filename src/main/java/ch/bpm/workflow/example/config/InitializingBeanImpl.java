@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 import static ch.bpm.workflow.example.common.LogMessage.READING_CONFIG_CLASS;
-import static ch.bpm.workflow.example.config.security.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
+import static ch.bpm.workflow.example.config.security.camunda.CamundaLdapConfiguration.printLdapIdentityProviderPlugin;
 
 @Component
 @Slf4j

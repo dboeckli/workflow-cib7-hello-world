@@ -10,6 +10,12 @@ spring:
       skip:
         in-tests: true
 
+  ldap:
+    embedded:
+      ldif: "classpath:test-embedded.ldif"
+      base-dn: "dc=example,dc=ch"
+      port: 0
+
 server:
   servlet:
     context-path: /bpm
@@ -34,6 +40,7 @@ camunda:
 logging:
   level:
     org.zalando.logbook: INFO
+    org.springframework.ldap: DEBUG
 
 logbook:
   filter:
