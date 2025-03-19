@@ -4,10 +4,8 @@ import ch.bpm.workflow.example.ldap.model.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ldap.embedded.EmbeddedLdapProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.naming.InvalidNameException;
@@ -23,12 +21,6 @@ class PersonRepositoryTest {
 
     @Autowired
     PersonRepository personRepository;
-
-    @Autowired
-    EmbeddedLdapProperties embeddedLdapProperties;
-
-    @Autowired
-    LdapContextSource contextSource;
 
     @Autowired
     private LdapTemplate ldapTemplate;
