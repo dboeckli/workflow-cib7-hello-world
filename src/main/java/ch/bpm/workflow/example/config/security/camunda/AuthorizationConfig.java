@@ -14,7 +14,7 @@ import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFIN
 import static org.cibseven.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
 
 @Configuration
-@Profile({"local", "ci"})
+@Profile({"local"})
 @RequiredArgsConstructor
 @Slf4j
 // TODO: ADD CONFIGURABLE PERMISSIONS HERE FOR USERS (user01, user02,...) AND GROUPS

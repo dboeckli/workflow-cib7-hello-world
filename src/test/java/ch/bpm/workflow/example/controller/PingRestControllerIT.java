@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -16,8 +17,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DirtiesContext
 @SpringBootTest
+@TestPropertySource(properties = {
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.client.disable-auto-fetching=true",
+    "spring.docker.compose.file=compose-it.yaml",
+    "spring.docker.compose.stop.command=stop"
+})
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "local")
 class PingRestControllerIT {
@@ -31,13 +37,15 @@ class PingRestControllerIT {
     @Test
     void testGetInfo() throws Exception {
         this.mockMvc.perform(get("/restapi/ping")
-            .with(httpBasic("camunda-admin", "camunda-admin-password")))
+            .with(SecurityMockMvcRequestPostProcessors.httpBasic("camunda-admin", "camunda-admin-password")))
+            //.with(httpBasic("camunda-admin", "camunda-admin-password")))
             .andExpect(status().isOk()).andExpect(content().json(new Gson().toJson(createResponse())));
     }
 
     @Test
     void testGetInfoWithoutCredentials() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping"))
+        this.mockMvc.perform(get("/restapi/ping")
+            .with(SecurityMockMvcRequestPostProcessors.anonymous()))
             .andExpect(status().isUnauthorized());
     }
 

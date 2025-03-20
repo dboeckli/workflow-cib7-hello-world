@@ -1,0 +1,38 @@
+services:
+  ldap:
+    image: bitnami/openldap:2.6.9
+    container_name: ldap
+    environment:
+      BITNAMI_DEBUG: true
+      LDAP_LOGLEVEL: stats
+
+      LDAP_CONFIG_ADMIN_ENABLED: true
+      # cn=config-admin,cn=config
+      LDAP_CONFIG_ADMIN_USERNAME: config-admin
+      LDAP_CONFIG_ADMIN_PASSWORD: config-password
+
+
+      LDAP_ROOT: dc=example,dc=ch
+      # cn=admin,dc=example,dc=ch
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: password
+
+      LDAP_PORT_NUMBER: 389
+      # disable secure port
+      #LDAP_LDAPS_PORT_NUMBER: 636
+
+      LDAP_CUSTOM_LDIF_DIR: /ldifs
+      # LDAP_CUSTOM_LDIF_DIR is a replacement for the items below
+      # cn=camunda-admin,ou=users,dc=example,dc=ch
+      # LDAP_USERS: user01,user02,user03,camunda-admin
+      # LDAP_PASSWORDS: password1,password2,password3,camunda-admin-password
+    ports:
+      - 389:389
+      #- 636:636
+    healthcheck:
+      test: [ "CMD", "ldapsearch", "-x", "-H", "ldap://localhost:389", "-D", "cn=admin,dc=example,dc=ch", "-w", "password", "-b", "dc=example,dc=ch" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - './ldifs:/ldifs'

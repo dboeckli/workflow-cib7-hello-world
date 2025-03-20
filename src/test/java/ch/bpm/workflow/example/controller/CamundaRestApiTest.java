@@ -2,7 +2,6 @@ package ch.bpm.workflow.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.cibseven.bpm.engine.ProcessEngine;
-import org.cibseven.bpm.engine.test.Deployment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
@@ -25,15 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = {
     "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.generate-unique-process-engine-name=true",
-    "camunda.bpm.generate-unique-process-application-name=true",
-    "spring.datasource.generate-unique-name=true"
+    "camunda.bpm.client.disable-auto-fetching=true"
 })
-@DirtiesContext
-@ActiveProfiles(value = "local")
-@Deployment(resources = "process.bpmn")
+@ActiveProfiles(value = "test")
 @Slf4j
-class CamundaRestApiIT {
+class CamundaRestApiTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

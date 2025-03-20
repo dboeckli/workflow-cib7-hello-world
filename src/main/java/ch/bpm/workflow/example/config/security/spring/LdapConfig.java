@@ -10,7 +10,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 
 @Configuration
 @EnableLdapRepositories(basePackages = "ch.bpm.workflow.example.ldap.repository")
-@Profile("local")
+@Profile({"local"})
 public class LdapConfig {
 
     @Value("${spring.ldap.url}")

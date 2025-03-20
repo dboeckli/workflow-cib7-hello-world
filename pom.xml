@@ -698,6 +698,8 @@
                                 <argument>-Xmx1024m</argument>
                                 <argument>--server.port=${tomcat.http.port}</argument>
                                 <argument>--spring.cloud.kubernetes.enabled=false</argument>
+                                <argument>--camunda.bpm.job-execution.enabled=false</argument>
+                                <argument>--camunda.bpm.client.disable-auto-fetching=true</argument>
                             </arguments>
                             <jmxPort>${jmx.server.port}</jmxPort>
                         </configuration>

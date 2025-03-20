@@ -41,7 +41,7 @@ public class WorkflowRestController {
             log.error("Failed to authorize user: {}", ex.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
         } catch (WorkflowException ex) {
-            log.error("Failed to process request: {}", infoRequest, ex);
+            log.error("Failed to process request: {}", infoRequest);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }

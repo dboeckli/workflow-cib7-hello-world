@@ -24,8 +24,8 @@ public class ConfigChangeListener {
     @EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         final Environment env = event.getApplicationContext().getEnvironment();
-        log.info(LogMessage.RECEIVED_CONTEXT_REFRESH_EVENT.getMessage());
-        log.info("Active profiles: {}", Arrays.toString(env.getActiveProfiles()));
+        log.debug(LogMessage.RECEIVED_CONTEXT_REFRESH_EVENT.getMessage());
+        log.debug("Active profiles: {}", Arrays.toString(env.getActiveProfiles()));
         final MutablePropertySources sources = ((AbstractEnvironment) env).getPropertySources();
         StreamSupport.stream(sources.spliterator(), false)
                      .filter(EnumerablePropertySource.class::isInstance)
@@ -35,9 +35,9 @@ public class ConfigChangeListener {
                      .forEach(prop -> {
                          if (PASSWORD_KEY_LIST.stream().anyMatch(prop.toLowerCase()::contains) ||
                              PASSWORD_KEY_LIST.stream().anyMatch(Objects.requireNonNull(env.getProperty(prop)).toLowerCase()::contains)) {
-                             log.info("{}: {}", prop, "**************************");
+                             log.debug("{}: {}", prop, "**************************");
                          } else {
-                             log.info("{}: {}", prop, env.getProperty(prop));
+                             log.debug("{}: {}", prop, env.getProperty(prop));
                          }
                      });
     }
