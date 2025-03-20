@@ -38,9 +38,10 @@ public class ValidateInputDelegate implements JavaDelegate {
         log.info("executing ValidateInputDelegate. business key: {}", delegateExecution.getProcessBusinessKey());
         log.info("executing ValidateInputDelegate. variables: {}", delegateExecution.getVariables());
 
-        // TODO: add person and group logic here
         List<Person> persons = personService.getAllPersons();
+        log.info("### Persons from ldap: {}", persons);
         List<Group> groups = groupService.getAllGroups();
+        log.info("### Groups from ldap: {}", groups);
 
         if (!delegateExecution.getVariables().containsKey(INPUT_VARIABLE_NAME) || delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString().isEmpty()) {
             throw new WorkflowException("Variable " + INPUT_VARIABLE_NAME + " not found or empty");
