@@ -1,4 +1,4 @@
-package ch.bpm.workflow.example.config.security;
+package ch.bpm.workflow.example.config.security.camunda;
 
 import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import static org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthentica
 
 @Configuration
 @Slf4j
-@Profile({"local", "ci"})
+@Profile({"local"})
 public class CamundaLdapConfiguration {
     @Value("${camunda-ldap-plugin.url}")
     private String ldapUrl;

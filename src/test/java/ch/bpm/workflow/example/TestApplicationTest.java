@@ -7,13 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
 @ActiveProfiles(value = "test")
+@TestPropertySource(properties = {
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.client.disable-auto-fetching=true"
+})
 @Slf4j
-class TestApplicationIT {
+class TestApplicationTest {
 
     @Autowired
     ProcessEngine processEngine;

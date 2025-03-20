@@ -241,6 +241,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-ldap</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
@@ -358,6 +363,13 @@
             <artifactId>awaitility</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -686,6 +698,8 @@
                                 <argument>-Xmx1024m</argument>
                                 <argument>--server.port=${tomcat.http.port}</argument>
                                 <argument>--spring.cloud.kubernetes.enabled=false</argument>
+                                <argument>--camunda.bpm.job-execution.enabled=false</argument>
+                                <argument>--camunda.bpm.client.disable-auto-fetching=true</argument>
                             </arguments>
                             <jmxPort>${jmx.server.port}</jmxPort>
                         </configuration>

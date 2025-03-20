@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
@@ -22,6 +23,10 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(value = "test")
+@TestPropertySource(properties = {
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.client.disable-auto-fetching=true"
+})
 @Slf4j
 class WorkflowRestControllerTest {
 

@@ -10,6 +10,12 @@ spring:
       skip:
         in-tests: true
 
+  ldap:
+    embedded:
+      ldif: "classpath:test-embedded.ldif"
+      base-dn: "dc=example,dc=ch"
+      port: 0
+
 server:
   servlet:
     context-path: /bpm
@@ -19,9 +25,10 @@ server:
 
 camunda:
   bpm:
+    authorization:
+      enabled: true
     admin-user:
-      id: admin
-      password: admin
+      id: camunda-admin
     client:
       base-url: http://localhost:8081/bpm/engine-rest
       lock-duration: 10000 # defines how many milliseconds the External Tasks are locked until they can be fetched again
@@ -31,9 +38,34 @@ camunda:
       properties:
         javaSerializationFormatEnabled: true
 
+camunda-ldap-plugin:
+  url: ldap://localhost:389
+  sslEnabled: false
+  user: cn=admin,dc=example,dc=ch
+  password: password
+  base-dn: dc=example,dc=ch
+  users:
+    user-search-base: "ou=users"
+    user-search-filter: "(objectClass=inetOrgPerson)"
+    user-id-attribute: uid
+    user-firstname-attribute: givenName
+    user-lastname-attribute: sn
+    user-email-attribute: mail
+    user-password-attribute: userPassword
+  groups:
+    group-search-base: "ou=groups"
+    group-search-filter: "(objectClass=groupOfNames)"
+    group-id-attribute: cn
+    group-name-attribute: cn
+    group-member-attribute: member
+camunda-authorization-plugin:
+  admin-group: "camunda-admins"
+  admin-user: "camunda-admin"
+
 logging:
   level:
     org.zalando.logbook: INFO
+    org.springframework.ldap: DEBUG
 
 logbook:
   filter:

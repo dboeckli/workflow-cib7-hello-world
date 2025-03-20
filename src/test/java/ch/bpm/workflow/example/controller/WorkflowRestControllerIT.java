@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -19,8 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@DirtiesContext
 @SpringBootTest
+@TestPropertySource(properties = {
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.client.disable-auto-fetching=true",
+    "spring.docker.compose.file=compose-it.yaml",
+    "spring.docker.compose.stop.command=stop"
+})
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "local")
 @Slf4j

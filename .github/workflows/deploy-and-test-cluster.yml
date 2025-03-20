@@ -43,7 +43,15 @@ jobs:
 
       - name: Wait for Pods to be ready
         run: |
-          kubectl wait --for=condition=ready pod -l app=workflow-cib7-hello-world --timeout=180s
+          if ! kubectl wait --for=condition=ready pod -l app=workflow-cib7-hello-world --timeout=180s; then
+            echo "Pod did not become ready within 180 seconds. Displaying logs:"
+            kubectl get pods -l app=workflow-cib7-hello-world
+            POD_NAME=$(kubectl get pods -l app=workflow-cib7-hello-world -o jsonpath="{.items[0].metadata.name}")
+            kubectl logs $POD_NAME
+            echo "Describing the pod:"
+            kubectl describe pod $POD_NAME
+            exit 1
+          fi
           BUILD_LINK="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ inputs.deployed-by-build }}"
           echo "::notice:: ### Deployed Version: ${{ inputs.version }}"
           echo "::notice:: ### Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}: $BUILD_LINK"
