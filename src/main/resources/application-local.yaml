@@ -60,6 +60,14 @@ camunda:
         historyTimeToLive: 5
         enableExceptionsAfterUnhandledBpmnError: true
 
+cibseven:
+  webclient:
+    services:
+      basePath: /webapp/services/v1
+    # Engine rest
+    engineRest:
+      url: http://localhost:8081/bpm
+
 camunda-ldap-plugin:
   url: ldap://localhost:389
   sslEnabled: false
