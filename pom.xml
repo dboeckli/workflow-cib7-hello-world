@@ -658,7 +658,8 @@
                 <version>${spring.boot.version}</version>
 
                 <configuration>
-                    <jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
+                    <executable>true</executable>
+                    <jvmArguments>-Dspring.application.admin.enabled=true -Xms256m -Xmx2g</jvmArguments>
                     <!-- Consider to disable that in production environment  -->
                     <includeTools>true</includeTools>
                     <layers>
@@ -798,13 +799,6 @@
                     </execution>
                 </executions>
 
-                <configuration>
-                    <executable>true</executable>
-                    <jvmArguments>
-                        -Xms256m
-                        -Xmx2g
-                    </jvmArguments>
-                </configuration>
             </plugin>
 
             <plugin>
