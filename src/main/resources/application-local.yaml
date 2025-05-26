@@ -1,3 +1,11 @@
+server:
+  servlet:
+    context-path: /bpm
+  port: 8081
+  error:
+    include-message: always
+    include-binding-errors: always
+
 spring:
   application:
     name: workflow-hello-world
@@ -28,14 +36,6 @@ spring:
     manager-dn: cn=admin,dc=example,dc=ch
     manager-password: password
 
-server:
-  servlet:
-    context-path: /bpm
-  port: 8081
-  error:
-    include-message: always
-    include-binding-errors: always
-
 camunda:
   bpm:
     authorization:
@@ -59,6 +59,16 @@ camunda:
         javaSerializationFormatEnabled: true
         historyTimeToLive: 5
         enableExceptionsAfterUnhandledBpmnError: true
+
+# https://github.com/cibseven/cibseven-webclient
+# https://docs.cibseven.org/manual/latest/user-guide/cibseven-run/#choose-between-default-and-production-configuration
+cibseven:
+  webclient:
+    services:
+      basePath: /webapp/services/v1
+    # Engine rest
+    engineRest:
+      url: http://localhost:8081
 
 camunda-ldap-plugin:
   url: ldap://localhost:389
@@ -123,7 +133,29 @@ logbook:
       - password
   predicate:
     exclude:
+      # Exclude HTML-related calls and specific endpoints that Logbook doesn't handle correctly
       - path: /actuator/health/**
+      - path: /bpm/actuator/health/**
+
+      - path: /h2-console/**
+      - path: /bpm/h2-console/**
+
+      - path: /swagger-ui/**
+      - path: /v3/api-docs/**
+      - path: /bpm/swagger-ui/**
+      - path: /bpm/v3/api-docs/**
+
+      - path: /favicon.ico
+      - path: /bpm/favicon.ico
+
+      - path: /webapp
+      - path: /webapp/**
+      - path: /bpm/webapp
+      - path: /bpm/webapp/**
+
+      - path: /webjars/**
+      - path: /bpm/webjars/**
+      # Add more exclusions as needed
 
 application:
   apifirst-server-jpa:

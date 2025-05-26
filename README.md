@@ -9,7 +9,8 @@
 
 ### URLS
 
-- Camunda: http://localhost:8081/bpm/camunda/app/welcome/default/#!/welcome
+- Camunda Cockpit: http://localhost:8081/bpm/camunda/app/welcome/default/#!/welcome
+- CIB-7 Cockpit: http://localhost:8081/bpm/webapp
 - Actuator: http://localhost:8081/bpm/actuator
 - Openapi:
   - http://localhost:8081/bpm/swagger/v3/api-docs
