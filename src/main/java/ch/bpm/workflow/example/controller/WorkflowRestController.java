@@ -41,8 +41,11 @@ public class WorkflowRestController {
             log.error("Failed to authorize user: {}", ex.getMessage());
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
         } catch (WorkflowException ex) {
-            log.error("Failed to process request: {}", infoRequest);
+            log.error("WorkflowException caught in controller. Failed to process request: {}", infoRequest, ex);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            log.error("Unexpected exception caught in controller: ", ex);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", ex);
         }
     }
 

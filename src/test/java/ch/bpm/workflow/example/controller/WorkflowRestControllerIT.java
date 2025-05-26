@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 @TestPropertySource(properties = {
@@ -61,8 +62,8 @@ class WorkflowRestControllerIT {
                         .content(jsonRequest))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andDo(result -> {
-                    log.info("Response: {}", result.getResponse().getContentAsString());
-                });
+                    log.info("### Response: {}", result.getResponse().getContentAsString());
+                }).andDo(print());
     }
 
     @Test
