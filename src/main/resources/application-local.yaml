@@ -44,8 +44,8 @@ camunda:
       admin-auth:
         enabled: true # Switch to enable the Administrator Authorization plugin
       auth:
-        enabled: true # Switch to enable basic authentication for requests to the REST API
-        authentication: basic # Authentication method, currently only basic and composite is supported
+        enabled: true # Switch to enable authentication for requests to the REST API
+        authentication: composite # Authentication method, currently only basic and composite is supported
     admin-user:
       id: camunda-admin
     filter:
@@ -109,9 +109,6 @@ camunda-ldap-plugin:
     group-id-attribute: cn
     group-name-attribute: cn
     group-member-attribute: member
-camunda-authorization-plugin:
-  admin-group: "camunda-admins"
-  admin-user: "camunda-admin"
 
 management:
   health:
