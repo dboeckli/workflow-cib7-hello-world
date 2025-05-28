@@ -109,6 +109,9 @@ camunda-ldap-plugin:
     group-id-attribute: cn
     group-name-attribute: cn
     group-member-attribute: member
+camunda-authorization-plugin:
+  admin-group: "camunda-admins"
+  admin-user: "camunda-admin"
 
 management:
   health:
