@@ -112,7 +112,7 @@ public class CamundaLdapConfiguration {
     }
 
     @Bean
-    public AdministratorAuthorizationPlugin administratorAuthorizationPlugin(){
+    public AdministratorAuthorizationPlugin administratorAuthorizationPlugin() {
         AdministratorAuthorizationPlugin plugin = new AdministratorAuthorizationPlugin();
 
         plugin.setAdministratorGroupName(adminGroup);

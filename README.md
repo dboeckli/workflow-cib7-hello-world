@@ -9,19 +9,19 @@
 
 ### URLS
 
-- Camunda Cockpit: http://localhost:8081/bpm/camunda/app/welcome/default/#!/welcome
-- CIB-7 Cockpit: http://localhost:8081/bpm/webapp
-- Actuator: http://localhost:8081/bpm/actuator
+- Camunda Cockpit: http://localhost:8081/camunda/app/welcome/default/#!/welcome
+- CIB-7 Cockpit: http://localhost:8081/webapp
+- Actuator: http://localhost:8081/actuator
 - Openapi:
-  - http://localhost:8081/bpm/swagger/v3/api-docs
-  - http://localhost:8081/bpm/swagger/v3/api-docs.yaml
-  - http://localhost:8081/bpm/swagger-ui/index.html
+  - http://localhost:8081/swagger/v3/api-docs
+  - http://localhost:8081/swagger/v3/api-docs.yaml
+  - http://localhost:8081/swagger-ui/index.html
   
-- H2 Console: http://localhost:8081/bpm/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
+- H2 Console: http://localhost:8081/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
 - Rest Api:
-  - http://localhost:8081/bpm/restapi/camunda
-  - http://localhost:8081/bpm/restapi/ping
-  - http://localhost:8081/bpm/restapi/workflow
+  - http://localhost:8081/restapi/camunda
+  - http://localhost:8081/restapi/ping
+  - http://localhost:8081/restapi/workflow
 
 ### Servers
 

@@ -1,6 +1,4 @@
 server:
-  servlet:
-    context-path: /bpm
   port: 8081
   error:
     include-message: always
@@ -40,12 +38,20 @@ camunda:
   bpm:
     authorization:
       enabled: true
+    run:
+      ldap:
+        enabled: true # Switch to enable the LDAP identity service plugin
+      admin-auth:
+        enabled: true # Switch to enable the Administrator Authorization plugin
+      auth:
+        enabled: true # Switch to enable basic authentication for requests to the REST API
+        authentication: basic # Authentication method, currently only basic and composite is supported
     admin-user:
       id: camunda-admin
     filter:
       create: All Tasks
     client:
-      base-url: http://localhost:8081/${server.servlet.context-path}/engine-rest
+      base-url: http://localhost:8081/engine-rest
       worker-id: spring-boot-worker
       basic-auth:
         username: camunda-admin
@@ -62,6 +68,7 @@ camunda:
 
 # https://github.com/cibseven/cibseven-webclient
 # https://docs.cibseven.org/manual/latest/user-guide/cibseven-run/#choose-between-default-and-production-configuration
+# https://docs.cibseven.org/get-started/spring-boot/configuration/
 cibseven:
   webclient:
     services:
@@ -69,6 +76,18 @@ cibseven:
     # Engine rest
     engineRest:
       url: http://localhost:8081
+    authentication:
+      jwtSecret: RtURHZ7SQYfLoX902wcjlvduW2qe9g0bjMUczmffjiTjzU9phbv3mK54zHMqeGK6cqgoEBTIUE6RqwvemSqbpD40qUPXVRElvDHGhn4OAEfjeEP2ANah8GJejSA08E820mForcQHBmediqg2DzIrxnDXyf2
+    user:
+      provider: org.cibseven.webapp.auth.LdapUserProvider
+    ldap:
+      url: ldap://localhost:389
+      user: cn=admin,dc=example,dc=ch
+      password: password
+      folder: dc=example,dc=ch # BASE DN
+      userNameAttribute: uid
+      userDisplayNameAttribute: cn
+      followReferrals: follow
 
 camunda-ldap-plugin:
   url: ldap://localhost:389
@@ -95,15 +114,25 @@ camunda-authorization-plugin:
   admin-user: "camunda-admin"
 
 management:
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: "*,prometheus"
+        include: "*"
   endpoint:
+    configprops:
+      # WARNING: SECURITY RISK - DO NOT USE IN PRODUCTION ENVIRONMENT
+      # This configuration exposes sensitive data and should only be used for development or testing purposes.
+      # Ensure this is disabled in any environment where security is a concern.
+      show-values: ALWAYS
     health:
-      show-details: always
       probes:
         enabled: true
+      show-details: always
 
 springdoc:
   show-actuator: true
@@ -135,26 +164,20 @@ logbook:
     exclude:
       # Exclude HTML-related calls and specific endpoints that Logbook doesn't handle correctly
       - path: /actuator/health/**
-      - path: /bpm/actuator/health/**
 
       - path: /h2-console/**
-      - path: /bpm/h2-console/**
 
+      - path: /swagger/**
       - path: /swagger-ui/**
-      - path: /v3/api-docs/**
-      - path: /bpm/swagger-ui/**
-      - path: /bpm/v3/api-docs/**
 
       - path: /favicon.ico
-      - path: /bpm/favicon.ico
 
       - path: /webapp
       - path: /webapp/**
-      - path: /bpm/webapp
-      - path: /bpm/webapp/**
 
       - path: /webjars/**
-      - path: /bpm/webjars/**
+
+      - path: /restapi/camunda
       # Add more exclusions as needed
 
 application:
