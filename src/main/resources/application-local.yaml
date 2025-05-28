@@ -46,6 +46,7 @@ camunda:
       auth:
         enabled: true # Switch to enable authentication for requests to the REST API
         authentication: composite # Authentication method, currently only basic and composite is supported
+        # composite is using jwt, if it fails it use basic: CompositeAuthenticationProvider -> HttpBasicAuthenticationProvider, JwtTokenAuthenticationProvider
     admin-user:
       id: camunda-admin
     filter:
