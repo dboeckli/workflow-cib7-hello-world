@@ -122,9 +122,15 @@ management:
     camunda:
       enabled: true
   endpoints:
+    # we need this deprecated config because the cibseven-webclient-web dependency comes with its own application.yaml
+    # we need to overwrite it this way.
+    # see: https://github.com/cibseven/cibseven-webclient/blob/main/cibseven-webclient-web/src/main/resources/application.yaml
+    enabled-by-default: true
     web:
       exposure:
         include: "*"
+    #access:
+      #default: unrestricted
   endpoint:
     configprops:
       # WARNING: SECURITY RISK - DO NOT USE IN PRODUCTION ENVIRONMENT
