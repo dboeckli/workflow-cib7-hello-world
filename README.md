@@ -15,6 +15,16 @@
 - Openapi:
   - http://localhost:8081/swagger/v3/api-docs
   - http://localhost:8081/swagger/v3/api-docs.yaml
+  
+  - http://localhost:8081/swagger/v3/api-docs/camunda-engine-rest-api
+  - http://localhost:8081/swagger/v3/api-docs/camunda-engine-rest-api.yaml
+  
+  - http://localhost:8081/swagger/v3/api-docs/actuator
+  - http://localhost:8081/swagger/v3/api-docs/actuator.yaml
+  
+  - http://localhost:8081/swagger/v3/api-docs/restapi
+  - http://localhost:8081/swagger/v3/api-docs/restapi.yaml
+  
   - http://localhost:8081/swagger-ui/index.html
   
 - H2 Console: http://localhost:8081/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)

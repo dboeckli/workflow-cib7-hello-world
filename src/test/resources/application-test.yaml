@@ -31,6 +31,9 @@ camunda:
       base-url: http://localhost:8081/engine-rest
       lock-duration: 10000 # defines how many milliseconds the External Tasks are locked until they can be fetched again
       worker-id: spring-boot-worker
+      basic-auth:
+        username: camunda-admin
+        password: camunda-admin-password
     generic-properties:
       ignore-unknown-fields: false
       properties:
