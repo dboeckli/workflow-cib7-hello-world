@@ -180,6 +180,7 @@
             <groupId>org.cibseven.bpm</groupId>
             <artifactId>cibseven-engine-plugin-spin</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.cibseven.spin</groupId>
             <artifactId>cibseven-spin-dataformat-all</artifactId>
@@ -212,6 +213,7 @@
             <artifactId>cibseven-bpm-spring-boot-starter-security</artifactId>
             <version>${cib7.spring.boot.starter.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.cibseven.bpm.identity</groupId>
             <artifactId>cibseven-identity-ldap</artifactId>

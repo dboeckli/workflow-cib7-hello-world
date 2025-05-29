@@ -45,8 +45,8 @@ camunda:
         enabled: true # Switch to enable the Administrator Authorization plugin
       auth:
         enabled: true # Switch to enable authentication for requests to the REST API
+        # composite requires cibseven-webclient.properties
         authentication: composite # Authentication method, currently only basic and composite is supported
-        # composite is using jwt, if it fails it use basic: CompositeAuthenticationProvider -> HttpBasicAuthenticationProvider, JwtTokenAuthenticationProvider
     admin-user:
       id: camunda-admin
     filter:
@@ -77,8 +77,6 @@ cibseven:
     # Engine rest
     engineRest:
       url: http://localhost:8081
-    authentication:
-      jwtSecret: RtURHZ7SQYfLoX902wcjlvduW2qe9g0bjMUczmffjiTjzU9phbv3mK54zHMqeGK6cqgoEBTIUE6RqwvemSqbpD40qUPXVRElvDHGhn4OAEfjeEP2ANah8GJejSA08E820mForcQHBmediqg2DzIrxnDXyf2
     user:
       provider: org.cibseven.webapp.auth.LdapUserProvider
     ldap:
@@ -110,6 +108,7 @@ camunda-ldap-plugin:
     group-id-attribute: cn
     group-name-attribute: cn
     group-member-attribute: member
+
 camunda-authorization-plugin:
   admin-group: "camunda-admins"
   admin-user: "camunda-admin"
