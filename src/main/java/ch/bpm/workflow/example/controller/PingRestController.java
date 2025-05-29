@@ -1,6 +1,6 @@
 package ch.bpm.workflow.example.controller;
 
-import lombok.Builder;
+import ch.bpm.workflow.example.controller.dto.PingResponse;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +35,4 @@ public class PingRestController {
                            .gitCommitId(buildProperties.get("commit-id"))
                            .build();
     }
-
-    @Builder
-    public record PingResponse(String mavenGroupdId, String mavenArtifactId, String version, String vendor, String javaVersion, String mavenUser, String mavenTimeStamp,
-                               String gitCommitId) {
-
-    }
-
 }

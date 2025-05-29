@@ -1,5 +1,6 @@
 package ch.bpm.workflow.example.controller;
 
+import ch.bpm.workflow.example.controller.dto.PingResponse;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -64,16 +65,16 @@ class PingRestControllerIT {
             .andExpect(status().isForbidden());
     }
 
-    private PingRestController.PingResponse createResponse() {
-        return PingRestController.PingResponse.builder()
-                                              .mavenGroupdId(buildProperties.getGroup())
-                                              .mavenArtifactId(buildProperties.getArtifact())
-                                              .version(buildProperties.getVersion())
-                                              .vendor(buildProperties.get("javaVendor"))
-                                              .mavenTimeStamp(buildProperties.getTime().toString())
-                                              .mavenUser(buildProperties.get("mavenUser"))
-                                              .javaVersion(buildProperties.get("javaVersion"))
-                                              .gitCommitId(buildProperties.get("commit-id"))
+    private PingResponse createResponse() {
+        return PingResponse.builder()
+            .mavenGroupdId(buildProperties.getGroup())
+            .mavenArtifactId(buildProperties.getArtifact())
+            .version(buildProperties.getVersion())
+            .vendor(buildProperties.get("javaVendor"))
+            .mavenTimeStamp(buildProperties.getTime().toString())
+            .mavenUser(buildProperties.get("mavenUser"))
+            .javaVersion(buildProperties.get("javaVersion"))
+            .gitCommitId(buildProperties.get("commit-id"))
                                               .build();
     }
 

@@ -43,3 +43,39 @@ Content-Type: application/json
     },
     "businessKey": "myBusinessKey"
 }
+
+###
+POST {{host}}/{{context}}/engine-rest/identity/verify
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{username}} {{password}}
+
+{
+  "username": "camunda-admin",
+  "password": "camunda-admin-password"
+}
+
+###
+POST {{host}}/{{context}}/engine-rest/identity/verify
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{username}} {{password}}
+
+{
+    "username": "user01",
+    "password": "user01-password"
+}
+
+###
+POST {{host}}/{{context}}/engine-rest/identity/verify
+Accept: application/json
+Content-Type: application/json
+Authorization: Basic {{username}} {{password}}
+
+{
+    "username": "user02",
+    "password": "user02-password"
+}
+
+
+

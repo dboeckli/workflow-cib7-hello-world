@@ -28,6 +28,14 @@ camunda:
       properties:
         telemetry-reporter-activate: false
 
+cibseven:
+  webclient:
+    services:
+      basePath: /webapp/services/v1
+    # Engine rest
+    engineRest:
+      url: http://localhost:8081/bpm
+
 camunda-ldap-plugin:
   url: ldaps://ldaps.swpds.ch
   sslEnabled: false

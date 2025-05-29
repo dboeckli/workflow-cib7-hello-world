@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cibseven.bpm.engine.impl.plugin.AdministratorAuthorizationPlugin;
 import org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthenticationFilter;
+import org.cibseven.bpm.engine.rest.security.auth.impl.CompositeAuthenticationProvider;
 import org.cibseven.bpm.engine.rest.security.auth.impl.HttpBasicAuthenticationProvider;
 import org.cibseven.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,9 @@ import static org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthentica
 @Slf4j
 @Profile({"local"})
 public class CamundaLdapConfiguration {
+    @Value("${camunda.bpm.run.auth.authentication}")
+    private String authenticationProvider;
+
     @Value("${camunda-ldap-plugin.url}")
     private String ldapUrl;
 
@@ -112,12 +116,10 @@ public class CamundaLdapConfiguration {
     }
 
     @Bean
-    public AdministratorAuthorizationPlugin administratorAuthorizationPlugin(){
+    public AdministratorAuthorizationPlugin administratorAuthorizationPlugin() {
         AdministratorAuthorizationPlugin plugin = new AdministratorAuthorizationPlugin();
-
         plugin.setAdministratorGroupName(adminGroup);
         plugin.setAdministratorUserName(adminUser);
-
         return plugin;
     }
 
@@ -127,7 +129,16 @@ public class CamundaLdapConfiguration {
         registration.setName("camunda-auth");
         registration.setFilter(getProcessEngineAuthenticationFilter());
 
-        registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, HttpBasicAuthenticationProvider.class.getName());
+        // This is a workaround to set the authentication provider dynamically based on the provided configuration
+        if (authenticationProvider.equals("basic")) {
+            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, HttpBasicAuthenticationProvider.class.getName());
+            log.info("### Using basic authentication");
+        } else if (authenticationProvider.equals("composite")) {
+            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, CompositeAuthenticationProvider.class.getName());
+            log.info("### Using composite authentication");
+        } else {
+            throw new IllegalArgumentException("Invalid authentication provider: " + authenticationProvider);
+        }
 
         registration.addUrlPatterns("/restapi/*");
         registration.addUrlPatterns("/engine-rest/*");

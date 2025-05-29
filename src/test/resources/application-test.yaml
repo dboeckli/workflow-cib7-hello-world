@@ -17,8 +17,6 @@ spring:
       port: 0
 
 server:
-  servlet:
-    context-path: /bpm
   error:
     include-message: always
     include-binding-errors: always
@@ -30,9 +28,12 @@ camunda:
     admin-user:
       id: camunda-admin
     client:
-      base-url: http://localhost:8081/bpm/engine-rest
+      base-url: http://localhost:8081/engine-rest
       lock-duration: 10000 # defines how many milliseconds the External Tasks are locked until they can be fetched again
       worker-id: spring-boot-worker
+      basic-auth:
+        username: camunda-admin
+        password: camunda-admin-password
     generic-properties:
       ignore-unknown-fields: false
       properties:

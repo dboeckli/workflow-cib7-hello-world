@@ -19,19 +19,19 @@ data:
     dn: cn=camunda-admins,ou=groups,dc=example,dc=ch
     objectClass: groupOfNames
     cn: camunda-admins
-    member: uid=camunda-admin,ou=users,dc=example,dc=ch
+    member: cn=camunda-admin,ou=users,dc=example,dc=ch
 
     # group: readers
     dn: cn=readers,ou=groups,dc=example,dc=ch
     objectClass: groupOfNames
     cn: readers
-    member: uid=user01,ou=users,dc=example,dc=ch
+    member: cn=user01,ou=users,dc=example,dc=ch
 
     # group: editors
     dn: cn=editors,ou=groups,dc=example,dc=ch
     objectClass: groupOfNames
     cn: editors
-    member: uid=user02,ou=users,dc=example,dc=ch
+    member: cn=user02,ou=users,dc=example,dc=ch
 
     # users
     dn: ou=users,dc=example,dc=ch

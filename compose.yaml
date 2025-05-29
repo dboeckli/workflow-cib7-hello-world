@@ -61,8 +61,8 @@ services:
             wget -qO- http://apifirst-server-jpa:8085/actuator/health/readiness | grep -q '\"status\":\"UP\"'
           " ]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
     command: >
       /bin/sh -c '
       while true; do
