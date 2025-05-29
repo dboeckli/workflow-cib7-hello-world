@@ -119,6 +119,8 @@ management:
       enabled: true
     livenessstate:
       enabled: true
+    camunda:
+      enabled: true
   endpoints:
     web:
       exposure:
