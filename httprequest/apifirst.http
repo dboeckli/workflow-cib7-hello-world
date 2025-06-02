@@ -1,0 +1,22 @@
+### actuator info
+GET http://localhost:{{apifirst-port}}/actuator/info
+Accept: application/json
+
+### actuator health
+GET http://localhost:{{apifirst-port}}/actuator/health
+Accept: application/json
+
+###
+GET http://localhost:{{apifirst-port}}/v1/customers
+Accept: application/json
+Content-Type: application/json
+
+###
+GET http://localhost:{{apifirst-port}}/v1/orders
+Accept: application/json
+Content-Type: application/json
+
+###
+GET http://localhost:{{apifirst-port}}/v1/products
+Accept: application/json
+Content-Type: application/json

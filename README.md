@@ -9,29 +9,42 @@
 
 ### URLS
 
-- Camunda Cockpit: http://localhost:8081/camunda/app/welcome/default/#!/welcome
-- CIB-7 Cockpit: http://localhost:8081/webapp
-- Actuator: http://localhost:8081/actuator
+Use 8080 when started locally or 30080 in Kubernetes
+
+- Camunda Cockpit: http://localhost:8080/camunda/app/welcome/default/#!/welcome
+- CIB-7 Cockpit: http://localhost:8080/webapp
+- Actuator: http://localhost:8080/actuator
 - Openapi:
-  - http://localhost:8081/swagger/v3/api-docs
-  - http://localhost:8081/swagger/v3/api-docs.yaml
+  - http://localhost:8080/swagger/v3/api-docs
+  - http://localhost:8080/swagger/v3/api-docs.yaml
   
-  - http://localhost:8081/swagger/v3/api-docs/camunda-engine-rest-api
-  - http://localhost:8081/swagger/v3/api-docs/camunda-engine-rest-api.yaml
+  - http://localhost:8080/swagger/v3/api-docs/camunda-engine-rest-api
+  - http://localhost:8080/swagger/v3/api-docs/camunda-engine-rest-api.yaml
   
-  - http://localhost:8081/swagger/v3/api-docs/actuator
-  - http://localhost:8081/swagger/v3/api-docs/actuator.yaml
+  - http://localhost:8080/swagger/v3/api-docs/actuator
+  - http://localhost:8080/swagger/v3/api-docs/actuator.yaml
   
-  - http://localhost:8081/swagger/v3/api-docs/restapi
-  - http://localhost:8081/swagger/v3/api-docs/restapi.yaml
+  - http://localhost:8080/swagger/v3/api-docs/restapi
+  - http://localhost:8080/swagger/v3/api-docs/restapi.yaml
   
-  - http://localhost:8081/swagger-ui/index.html
+  - http://localhost:8080/swagger-ui/index.html
   
-- H2 Console: http://localhost:8081/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
+- H2 Console: http://localhost:8080/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
 - Rest Api:
-  - http://localhost:8081/restapi/camunda
-  - http://localhost:8081/restapi/ping
-  - http://localhost:8081/restapi/workflow
+  - http://localhost:8080/restapi/camunda
+  - http://localhost:8080/restapi/ping
+  - http://localhost:8080/restapi/workflow
+
+### Accessing Services
+
+#### LDAP Database
+
+- URL: ldap://localhost:30388 or ldap://localhost:388
+- User: cn=admin,dc=example,dc=ch
+- Password: password
+
+
+All rest services can be executed via the httprequest folder using the k8s environment setting
 
 ### Servers
 
@@ -58,16 +71,23 @@
 
 ## Kubernetes
 
-### Deployment
+To run maven filtering for destination target/k8s and destination target/helm run:
+```bash
+mvn clean install -DskipTests 
+```
+
+### Deployment with Kubernetes
+
+Deployment goes into the default namespace.
 
 To deploy all resources:
 ```bash
-kubectl apply -f k8s/
+kubectl apply -f target/k8s/
 ```
 
 To remove all resources:
 ```bash
-kubectl delete -f k8s/
+kubectl delete -f target/k8s/
 ```
 
 Check
@@ -76,16 +96,4 @@ kubectl get deployments -o wide
 kubectl get pods -o wide
 ```
 
-### Accessing Services
-
-#### LDAP Database
-
-- URL: ldap://localhost:30389
-- User: cn=admin,dc=example,dc=ch
-- Password: password
-
-#### Camunda
-
-- URL: http://localhost:30081/bpm/camunda/app/welcome/default/#!/welcome
-
-All rest services can be executed via the httprequest folder using the k8s environment setting
+You can use the actuator rest call to verify via port 30080
