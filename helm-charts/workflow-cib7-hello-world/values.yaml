@@ -4,6 +4,14 @@ global:
   springDebug: false
   namespace: workflow-cib7-hello-world
 
+spring:
+  profiles:
+    active: local
+
+ldap:
+  protocol: ldap
+  port: 389
+
 replicaCount: 1
 
 image:

@@ -27,24 +27,22 @@ spec:
             - name: JAVA_TIMEZONE
               value: "{{ .Values.global.timezone }}"
 
-            - name: SECURITY_AUTH_SERVER_HEALTH_URL
-              value: "http://{{ .Release.Name }}-spring-6-auth-server.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.authServer.port }}"
-            - name: WEBCLIENT_REACTIVE_MONGO_URL
-              value: "http://{{ .Release.Name }}-spring-6-reactive-mongo.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.reactiveMongo.port }}"
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.spring.profiles.active }}
+            - name: CAMUNDA_LDAP_PLUGIN_URL
+              value: "{{ .Values.ldap.port }}://{{ .Release.Name }}-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+            - name: SPRING_LDAP_URL
+              value: "{{ .Values.ldap.port }}://{{ .Release.Name }}-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+            - name: APPLICATION_APIFIRST_SERVER_JPA_HOST
+              value: "{{ .Release.Name }}-apifirst-server-jpa.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: CIBSEVEN_WEBCLIENT_LDAP_URL
+              value: "{{ .Values.ldap.port }}://{{ .Release.Name }}-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+            - name: CIBSEVEN_WEBCLIENT_ENGINEREST_URL
+              value: "http://localhost:{{ .Values.service.port }}"
+            - name: CAMUNDA_BPM_CLIENT_BASE_URL
+              value: "http://localhost:{{ .Values.service.port }}/engine-rest"
 
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
-              value: "http://{{ .Release.Name }}-spring-6-auth-server.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.authServer.port }}"
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SPRINGAUTH_AUTHORIZATION_URI
-              value: "http://{{ .Release.Name }}-spring-6-auth-server.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.authServer.port }}/oauth2/authorize"
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_SPRINGAUTH_TOKEN_URI
-              value: "http://{{ .Release.Name }}-spring-6-auth-server.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.authServer.port }}/oauth2/token"
 
-            - name: SECURITY_AUTHORIZATION_URL_FOR_OPENAPI
-              value: "{{ .Values.externalAccess.protocol }}://{{ .Values.externalAccess.host}}:{{ .Values.authServer.nodePort }}/oauth2/auth"
-            - name: SECURITY_TOKEN_URL_FOR_OPENAPI
-              value: "{{ .Values.externalAccess.protocol }}://{{ .Values.externalAccess.host}}:{{ .Values.authServer.nodePort }}/oauth2/token"
-            - name: SECURITY_REFRESH_URL_FOR_OPENAPI
-              value: "{{ .Values.externalAccess.protocol }}://{{ .Values.externalAccess.host}}:{{ .Values.authServer.nodePort }}/oauth2/refresh-token"
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
