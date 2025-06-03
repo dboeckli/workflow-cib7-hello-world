@@ -33,12 +33,19 @@ spec:
         - name: wait-for-ldap
           image: busybox:1.37.0
           command: [ 'sh', '-c', 'until nc -z ldap 389; do echo "Waiting for LDAP..."; sleep 3; done; echo "LDAP is now accessible!"; exit 0' ]
+        - name: wait-for-apifirst-server-jpa
+          image: busybox:1.37.0
+          command: [ 'sh', '-c', 'until nc -z apifirst-server-jpa 8082; do echo "[busybox: wait-for-apifirst-server-jpa] waiting for apifirst-server-jpa"; sleep 2; done; echo "[busybox: wait-for-apifirst-server-jpa] apifirst-server-jpa is available"' ]
       containers:
         - name: @project.artifactId@
           image: @docker.repo@/@project.artifactId@:@project.version@
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: local
+
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_LDAP_CORE_LDAPTEMPLATE
+              value: "DEBUG"
+
             - name: CAMUNDA_LDAP_PLUGIN_URL
               value: ldap://ldap:389
             - name: SPRING_LDAP_URL

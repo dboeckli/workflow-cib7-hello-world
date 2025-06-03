@@ -19,6 +19,9 @@ spec:
         - name: wait-for-ldap
           image: busybox:1.37.0
           command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}; do echo "[busybox: wait-for-ldap] waiting for ldap"; sleep 2; done; echo "[busybox: wait-for-ldap] ldap is available"' ]
+        - name: wait-for-apifirst-server-jpa
+          image: busybox:1.37.0
+          command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-apifirst-server-jpa.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.apifirstServerJpa.port }}; do echo "[busybox: wait-for-apifirst-server-jpa] waiting for apifirst-server-jpa"; sleep 2; done; echo "[busybox: wait-for-apifirst-server-jpa] apifirst-server-jpa is available"' ]
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -27,16 +30,19 @@ spec:
             - name: JAVA_TIMEZONE
               value: "{{ .Values.global.timezone }}"
 
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_LDAP_CORE_LDAPTEMPLATE
+              value: "DEBUG"
+
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.spring.profiles.active }}
             - name: CAMUNDA_LDAP_PLUGIN_URL
-              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.ldap.port }}"
             - name: SPRING_LDAP_URL
-              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.ldap.port }}"
             - name: APPLICATION_APIFIRST_SERVER_JPA_HOST
               value: "{{ .Release.Name }}-apifirst-server-jpa.{{ .Release.Namespace }}.svc.cluster.local"
             - name: CIBSEVEN_WEBCLIENT_LDAP_URL
-              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.ldap.port }}"
+              value: "{{ .Values.ldap.protocol }}://{{ .Release.Name }}-workflow-cib7-hello-world-ldap.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.ldap.port }}"
             - name: CIBSEVEN_WEBCLIENT_ENGINEREST_URL
               value: "http://localhost:{{ .Values.service.port }}"
             - name: CAMUNDA_BPM_CLIENT_BASE_URL

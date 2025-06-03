@@ -11,9 +11,15 @@
 
 Use 8080 when started locally or 30080 in Kubernetes
 
-- Camunda Cockpit: http://localhost:8080/camunda/app/welcome/default/#!/welcome
-- CIB-7 Cockpit: http://localhost:8080/webapp
-- Actuator: http://localhost:8080/actuator
+- Camunda Cockpit: 
+  - http://localhost:8080/camunda/app/welcome/default/#!/welcome
+  - http://localhost:30080/camunda/app/welcome/default/#!/welcome
+- CIB-7 Cockpit: 
+  - http://localhost:8080/webapp
+  - http://localhost:30080/webapp
+- Actuator: 
+  - http://localhost:8080/actuator
+  - http://localhost:30080/actuator
 - Openapi:
   - http://localhost:8080/swagger/v3/api-docs
   - http://localhost:8080/swagger/v3/api-docs.yaml
@@ -31,9 +37,9 @@ Use 8080 when started locally or 30080 in Kubernetes
   
 - H2 Console: http://localhost:8080/h2-console (in the connection jdbc url use: jdbc:h2:mem:workflow-hello-world)
 - Rest Api:
-  - http://localhost:8080/restapi/camunda
-  - http://localhost:8080/restapi/ping
-  - http://localhost:8080/restapi/workflow
+  - http://localhost:8080/restapi/camunda or http://localhost:30080/restapi/camunda
+  - http://localhost:8080/restapi/ping or http://localhost:30080/restapi/ping
+  - http://localhost:8080/restapi/workflow or http://localhost:30080/restapi/workflow
 
 ### Accessing Services
 
