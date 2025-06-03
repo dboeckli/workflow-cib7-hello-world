@@ -8,8 +8,6 @@ GET {{host}}/{{context}}/restapi/camunda
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 
-
-
 ### Start a new process instance check gateway in flow: is setting user03 to Default. Any input except eder and pumukel is taking the default path in gateway.
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json

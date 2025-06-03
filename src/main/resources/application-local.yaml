@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
   error:
     include-message: always
     include-binding-errors: always
@@ -52,7 +52,7 @@ camunda:
     filter:
       create: All Tasks
     client:
-      base-url: http://localhost:8081/engine-rest
+      base-url: http://localhost:8080/engine-rest
       worker-id: spring-boot-worker
       basic-auth:
         username: camunda-admin
@@ -76,7 +76,7 @@ cibseven:
       basePath: /webapp/services/v1
     # Engine rest
     engineRest:
-      url: http://localhost:8081
+      url: http://localhost:8080
     user:
       provider: org.cibseven.webapp.auth.LdapUserProvider
     ldap:
@@ -192,5 +192,5 @@ application:
   apifirst-server-jpa:
     protocol: "http"
     host: "localhost"
-    port: "8085"
+    port: "8082"
     context: "/"
