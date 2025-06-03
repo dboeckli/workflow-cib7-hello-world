@@ -1,0 +1,8 @@
+global:
+  namespace: workflow-cib7-hello-world
+
+service:
+  type: NodePort
+  port: 389
+  targetPort: 389
+  nodePort: 30389

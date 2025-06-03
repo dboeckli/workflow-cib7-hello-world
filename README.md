@@ -97,3 +97,57 @@ kubectl get pods -o wide
 ```
 
 You can use the actuator rest call to verify via port 30080
+
+### Deployment with Helm
+
+To run maven filtering for destination target/helm run:
+```bash
+mvn clean install -DskipTests 
+```
+
+Be aware that we are using a different namespace here (not default).
+
+Go to the directory where the tgz file has been created after 'mvn install'
+```powershell
+cd target/helm/repo
+```
+
+unpack
+```powershell
+$file = Get-ChildItem -Filter workflow-cib7-hello-world-v*.tgz | Select-Object -First 1
+tar -xvf $file.Name
+```
+
+install
+```powershell
+$APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -ge $file.LastWriteTime } | Select-Object -ExpandProperty Name
+helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace workflow-cib7-hello-world --create-namespace --wait --timeout 5m --debug
+```
+
+show logs and show event
+```powershell
+kubectl get pods -n workflow-cib7-hello-world
+```
+replace $POD with pods from the command above
+```powershell
+kubectl logs $POD -n workflow-cib7-hello-world --all-containers
+```
+
+Show Details and Event
+
+$POD_NAME can be: workflow-cib7-hello-world-mongodb, workflow-cib7-hello-world
+```powershell
+kubectl describe pod $POD_NAME -n workflow-cib7-hello-world
+```
+
+Show Endpoints
+```powershell
+kubectl get endpoints -n workflow-cib7-hello-world
+```
+
+uninstall
+```powershell
+helm uninstall $APPLICATION_NAME --namespace workflow-cib7-hello-world
+```
+
+You can use the actuator rest call to verify via port 30080

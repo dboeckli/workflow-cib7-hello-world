@@ -9,8 +9,13 @@ spring:
     active: local
 
 ldap:
+  enabled: true
+
   protocol: ldap
   port: 389
+
+ingress:
+  enabled: false
 
 replicaCount: 1
 

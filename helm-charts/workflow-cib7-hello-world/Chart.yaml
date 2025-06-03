@@ -8,6 +8,10 @@ version: @helm.chart.version@
 appVersion: @project.version@
 
 dependencies:
+  - name: workflow-cib7-hello-world-ldap
+    version: @helm.chart.version@
+    repository: file://charts/workflow-cib7-hello-world-ldap
+    condition: ldap.enabled
   - name: apifirst-server-jpa
     version: "v0.0.1-SNAPSHOT"
     repository: "oci://registry-1.docker.io/domboeckli"
