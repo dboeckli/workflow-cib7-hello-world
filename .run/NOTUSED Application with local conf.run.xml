@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Application with local conf" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="NOTUSED Application with local conf" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="local" />
     <option name="envFilePaths">
       <option value="$PROJECT_DIR$/src/main/conf/local.conf" />
     </option>
-    <module name="workflow-hello-world" />
+    <module name="workflow-cib7-hello-world" />
     <selectedOptions>
       <option name="environmentVariables" />
     </selectedOptions>

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "workflow-cib7-hello-world-ldap.fullname" . }}-test-connection"
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "workflow-cib7-hello-world-ldap.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-ldap-connection
+      image: alpine:3.14
+      command: [ '/bin/sh', '-c' ]
+      args:
+        - |
+          # Install LDAP client tools
+          apk add --no-cache openldap-clients
+
+          echo "### Test: LDAP Connection and Search using service short name: {{ include "workflow-cib7-hello-world-ldap.fullname" . }}"
+          ldapsearch -x -H ldap://{{ include "workflow-cib7-hello-world-ldap.fullname" . }}:{{ .Values.service.port }} \
+                     -b {{ .Values.ldap.baseDN }} \
+                     -D "{{ .Values.ldap.adminUsername }}" \
+                     -w "{{ .Values.ldap.adminPassword }}" \
+                     "(objectclass=*)"
+          echo "Exit code: $?"
+  restartPolicy: Never

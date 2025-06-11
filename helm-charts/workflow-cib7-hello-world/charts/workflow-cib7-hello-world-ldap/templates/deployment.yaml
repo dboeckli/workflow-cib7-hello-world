@@ -1,37 +1,29 @@
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ldap
-spec:
-  type: NodePort
-  selector:
-    app: ldap
-  ports:
-    - protocol: TCP
-      port: 389
-      targetPort: 389
-      nodePort: 30389
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ldap
+  name: {{ include "workflow-cib7-hello-world-ldap.fullname" . }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "workflow-cib7-hello-world-ldap.labels" . | nindent 4 }}
+    app.kubernetes.io/component: database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ldap
+      {{- include "workflow-cib7-hello-world-ldap.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: database
   template:
     metadata:
       labels:
-        app: ldap
+        {{- include "workflow-cib7-hello-world-ldap.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: database
     spec:
       containers:
         - name: ldap
           image: bitnami/openldap:2.6.9
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 389
+            - containerPort: {{ .Values.service.targetPort }}
           env:
             - name: BITNAMI_DEBUG
               value: "true"
@@ -50,7 +42,7 @@ spec:
             - name: LDAP_ADMIN_PASSWORD
               value: "password"
             - name: LDAP_PORT_NUMBER
-              value: "389"
+              value: "{{ .Values.service.targetPort }}"
             - name: LDAP_CUSTOM_LDIF_DIR
               value: "/ldifs"
           volumeMounts:
@@ -62,7 +54,9 @@ spec:
                 - ldapsearch
                 - -x
                 - -H
-                - ldap://localhost:389
+                - ldap://localhost
+                - p
+                - "{{ .Values.service.targetPort }}"
                 - -D
                 - cn=admin,dc=example,dc=ch
                 - -w
@@ -79,7 +73,9 @@ spec:
                 - ldapsearch
                 - -x
                 - -H
-                - ldap://localhost:389
+                - ldap://localhost
+                - p
+                - "{{ .Values.service.targetPort }}"
                 - -D
                 - cn=admin,dc=example,dc=ch
                 - -w
@@ -93,4 +89,4 @@ spec:
       volumes:
         - name: ldifs
           configMap:
-            name: ldap-config
+            name: {{ include "workflow-cib7-hello-world-ldap.fullname" . }}-config-map

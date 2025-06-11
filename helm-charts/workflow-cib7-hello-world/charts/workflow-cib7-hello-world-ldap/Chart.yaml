@@ -1,0 +1,6 @@
+apiVersion: v2
+name: workflow-cib7-hello-world-ldap
+description: A Helm subchart for Ldap used in workflow-cib7-hello-world application
+type: application
+version: @helm.chart.version@
+appVersion: "2.6.9"

@@ -6,11 +6,12 @@ metadata:
 spec:
   selector:
     app: apifirst-server-jpa
+  type: NodePort
   ports:
     - protocol: TCP
-      port: 8085
-      targetPort: 8085
-  type: ClusterIP
+      port: 8082
+      targetPort: 8082
+      nodePort: 30082
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,20 +31,20 @@ spec:
         - name: apifirst-server-jpa
           image: domboeckli/apifirst-server-jpa:0.0.1-SNAPSHOT
           ports:
-            - containerPort: 8085
+            - containerPort: 8082
           env:
             - name: SERVER_PORT
-              value: "8085"
+              value: "8082"
           startupProbe:
             httpGet:
               path: /actuator/health
-              port: 8085
+              port: 8082
             failureThreshold: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 8085
+              port: 8082
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
@@ -51,7 +52,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 8085
+              port: 8082
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5

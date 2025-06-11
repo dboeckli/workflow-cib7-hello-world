@@ -28,7 +28,7 @@ camunda:
     admin-user:
       id: camunda-admin
     client:
-      base-url: http://localhost:8081/engine-rest
+      base-url: http://localhost:8080/engine-rest
       lock-duration: 10000 # defines how many milliseconds the External Tasks are locked until they can be fetched again
       worker-id: spring-boot-worker
       basic-auth:
@@ -88,5 +88,5 @@ application:
   apifirst-server-jpa:
     protocol: "http"
     host: "localhost"
-    port: "8085"
+    port: "8082"
     context: "/"

@@ -1,0 +1,13 @@
+global:
+  namespace: workflow-cib7-hello-world
+
+service:
+  type: NodePort
+  port: 389
+  targetPort: 389
+  nodePort: 30389
+
+ldap:
+  baseDN: "dc=example,dc=ch"
+  adminUsername: "cn=admin,dc=example,dc=ch"
+  adminPassword: "password"
