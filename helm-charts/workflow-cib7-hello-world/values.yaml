@@ -44,13 +44,17 @@ resources:
 
 probes:
   startup:
-    failureThreshold: 30
+    initialDelaySeconds: 30
+    failureThreshold: 15
     periodSeconds: 10
+    timeoutSeconds: 5
   readiness:
+    initialDelaySeconds: 10
     periodSeconds: 10
     timeoutSeconds: 5
-    failureThreshold: 6
+    failureThreshold: 3
   liveness:
-    periodSeconds: 10
-    timeoutSeconds: 5
-    failureThreshold: 6
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 5

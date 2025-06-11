@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "workflow-cib7-hello-world-ldap.name" -}}
+{{- define "application-template.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "workflow-cib7-hello-world-ldap.fullname" -}}
+{{- define "application-template.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "workflow-cib7-hello-world-ldap.chart" -}}
+{{- define "application-template.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "workflow-cib7-hello-world-ldap.labels" -}}
-helm.sh/chart: {{ include "workflow-cib7-hello-world-ldap.chart" . }}
-{{ include "workflow-cib7-hello-world-ldap.selectorLabels" . }}
+{{- define "application-template.labels" -}}
+helm.sh/chart: {{ include "application-template.chart" . }}
+{{ include "application-template.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,15 +45,33 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "workflow-cib7-hello-world-ldap.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "workflow-cib7-hello-world-ldap.name" . }}
+{{- define "application-template.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "application-template.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the FQDN for the service
 */}}
-{{- define "workflow-cib7-hello-world-ldap.serviceFQDN" -}}
-{{- $fullname := include "workflow-cib7-hello-world-ldap.fullname" . -}}
+{{- define "application-template.serviceFQDN" -}}
+{{- $fullname := include "application-template.fullname" . -}}
 {{- printf "%s.%s.svc.cluster.local" $fullname .Release.Namespace }}
 {{- end }}
+
+
+{{/*
+Use the apifirst-server-jpa service FQDN
+*/}}
+{{- define "apifirst-server-jpa.serviceFQDN" -}}
+{{- $fullname := include "application-template.fullname" . -}}
+{{- printf "%s-%s.%s.svc.cluster.local" $fullname "apifirst-server-jpa" .Release.Namespace }}
+{{- end -}}
+
+
+{{/*
+Use the workflow-cib7-hello-world-ldap service FQDN
+*/}}
+{{- define "workflow-cib7-hello-world-ldap.serviceFQDN" -}}
+{{- $fullname := include "workflow-cib7-hello-world-ldap.fullname" . -}}
+{{- printf "%s-%s.%s.svc.cluster.local" $fullname "workflow-cib7-hello-world-ldap" .Release.Namespace }}
+{{- end -}}
