@@ -39,7 +39,7 @@ class GroupRepositoryTest {
 
         assertThat(camundaAdmins).isPresent();
         assertThat(camundaAdmins.get().getMembers())
-            .containsExactly("uid=camunda-admin,ou=users,dc=example,dc=ch");
+            .containsExactly("cn=camunda-admin,ou=users,dc=example,dc=ch");
     }
 
 }
