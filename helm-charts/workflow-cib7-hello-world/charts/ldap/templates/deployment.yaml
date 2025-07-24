@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
         - name: ldap
-          image: bitnami/openldap:2.6.9
-          imagePullPolicy: IfNotPresent
+          image: {{ .Values.bitnamiOpenldapImage.repository }}:{{ .Values.bitnamiOpenldapImage.tag }}
+          imagePullPolicy: {{ .Values.bitnamiOpenldapImage.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           env:

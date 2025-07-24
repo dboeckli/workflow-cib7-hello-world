@@ -11,3 +11,13 @@ ldap:
   baseDN: "dc=example,dc=ch"
   adminUsername: "cn=admin,dc=example,dc=ch"
   adminPassword: "password"
+
+bitnamiOpenldapImage:
+  repository: bitnami/openldap
+  tag: "2.6.9"
+  pullPolicy: IfNotPresent
+
+alpineImage:
+  repository: alpine
+  tag: "3.14"
+  pullPolicy: IfNotPresent

@@ -10,7 +10,8 @@ metadata:
 spec:
   containers:
     - name: test-ldap-connection
-      image: alpine:3.14
+      image: {{ .Values.alpineImage.repository }}:{{ .Values.alpineImage.tag }}
+      imagePullPolicy: {{ .Values.alpineImage.pullPolicy }}
       command: [ '/bin/sh', '-c' ]
       args:
         - |
