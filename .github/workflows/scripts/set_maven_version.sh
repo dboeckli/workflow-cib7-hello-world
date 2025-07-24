@@ -20,7 +20,7 @@ echo 'Will change the version in pom.xml files...'
 
 if [ "$EVENT_NAME" == "pull_request" ]; then
     BRANCH_NAME="PR_$HEAD_REF"
-fi
+fi    
 echo "### Branch is $BRANCH_NAME"
 
 # Replace `/` and `-` with `_` and remove any other unwanted characters
@@ -49,7 +49,13 @@ echo "### Prefix is: $prefix"
 
 # Build new version
 if [[ "$branch" != "master" ]] && [[ "$branch" != "main" ]]; then
-  NEW_MAVEN_VERSION=${prefix}_${branch}-${suffix}
+  # Calculate available length for branch name
+  available_length=$((63 - ${#prefix} - ${#suffix} - 2))  # 2 for the separators
+
+  # Truncate branch name if necessary
+  truncated_branch=$(echo "$branch" | cut -c1-$available_length)
+
+  NEW_MAVEN_VERSION="${prefix}_${truncated_branch}-${suffix}"
 else
   NEW_MAVEN_VERSION=$MVN_VERSION
 fi

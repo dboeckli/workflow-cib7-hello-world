@@ -17,15 +17,17 @@ spec:
     spec:
       initContainers:
         - name: wait-for-ldap
-          image: busybox:1.37.0
+          image: {{.Values.busyboxImage.repository }}:{{.Values.busyboxImage.tag }}
+          imagePullPolicy: {{.Values.busyboxImage.pullPolicy }}
           command: [ 'sh', '-c', 'until nc -z {{ include "workflow-cib7-hello-world-ldap.serviceFQDN" . }} {{ .Values.ldap.port }}; do echo "[busybox: wait-for-ldap] waiting for ldap"; sleep 2; done; echo "[busybox: wait-for-ldap] ldap is available"' ]
         - name: wait-for-apifirst-server-jpa
-          image: busybox:1.37.0
+          image: {{.Values.busyboxImage.repository }}:{{.Values.busyboxImage.tag }}
+          imagePullPolicy: {{.Values.busyboxImage.pullPolicy }}
           command: [ 'sh', '-c', 'until nc -z {{ include "apifirst-server-jpa.serviceFQDN" . }} {{ .Values.apifirstServerJpa.port }}; do echo "[busybox: wait-for-apifirst-server-jpa] waiting for apifirst-server-jpa"; sleep 2; done; echo "[busybox: wait-for-apifirst-server-jpa] apifirst-server-jpa is available"' ]
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: IfNotPresent
+          image: "{{ .Values.image.registry }}/@project.artifactId@:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: JAVA_TIMEZONE
               value: "{{ .Values.global.timezone }}"

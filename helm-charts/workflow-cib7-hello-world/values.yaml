@@ -25,8 +25,9 @@ ingress:
 replicaCount: 1
 
 image:
-  repository: @docker.repo@/@project.artifactId@
-  tag: @project.version@
+  # Those values are set by Maven filtering
+  # and will be replaced with a valid version number during the build process.
+  registry: @docker.repo@
 
 service:
   type: NodePort
