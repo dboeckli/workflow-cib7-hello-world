@@ -721,26 +721,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>generate-helm-version</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <propertyfile file="${project.build.directory}/helm.properties">
-                                    <entry key="helm.chart.version" value="v${project.version}" />
-                                </propertyfile>
-                                <!--suppress UnresolvedMavenProperty -->
-                                <replaceregexp file="${project.build.directory}/helm.properties"
-                                               match="helm\.chart\.version=(v[0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
-                                               replace="helm.chart.version=\1-${git.commit.id.abbrev}"
-                                               byline="true" />
-                                <property file="${project.build.directory}/helm.properties" />
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <phase>test</phase>
                         <!-- the dependencies-values.yaml has been merge into the values.yaml file. we delete it before the helm plugin is running -->
                         <id>delete-after-merge</id>
