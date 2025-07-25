@@ -14,7 +14,7 @@ ldap:
 
 bitnamiOpenldapImage:
   repository: bitnami/openldap
-  tag: "2.6.9"
+  tag: "2.6.10"
   pullPolicy: IfNotPresent
 
 alpineImage:
