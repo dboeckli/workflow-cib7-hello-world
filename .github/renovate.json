@@ -20,30 +20,28 @@
         "versioning": "maven"
     },
     "docker-compose": {
-        "enabled": true,
-        "fileMatch": ["^compose\\.ya?ml$/", "^docker-compose\\.ya?ml$/"],
-        "ignorePaths": ["**/docker-manual/**"]
+        "enabled": true
     },
     "kubernetes": {
         "managerFilePatterns": [
             "/k8s/.+\\.ya?ml$/",
-            "/helm-charts/.+\\.ya?ml$/"
+            "/helm-charts/workflow-cib7-hello-world//.+\\.ya?ml$/"
         ]
     },
     "helm-values": {
         "managerFilePatterns": [
-            "/helm-charts/values\\.ya?ml$/",
-            "/helm-charts/dependencies-values\\.ya?ml$/",
-            "/helm-charts/.+/values\\.ya?ml$/",
-            "/helm-charts/charts/.+/values\\.ya?ml$/"
+            "/helm-charts/workflow-cib7-hello-world/values\\.ya?ml$/",
+            "/helm-charts/workflow-cib7-hello-world/dependencies-values\\.ya?ml$/",
+            "/helm-charts/workflow-cib7-hello-world/.+/values\\.ya?ml$/",
+            "/helm-charts/workflow-cib7-hello-world/charts/.+/values\\.ya?ml$/"
         ]
     },
     "helmv3": {
         "managerFilePatterns": [
             "/(^|/)Chart\\.ya?ml$/",
-            "/helm-charts/dependencies-Chart\\.ya?ml$/",
-            "/helm-charts/Chart\\.ya?ml$/",
-            "/helm-charts/charts/.+/Chart\\.ya?ml$/"
+            "/helm-charts/workflow-cib7-hello-world/dependencies-Chart\\.ya?ml$/",
+            "/helm-charts/workflow-cib7-hello-world/Chart\\.ya?ml$/",
+            "/helm-charts/workflow-cib7-hello-world/charts/.+/Chart\\.ya?ml$/"
         ]
     },
     "packageRules": [
