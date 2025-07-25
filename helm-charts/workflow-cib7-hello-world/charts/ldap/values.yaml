@@ -19,5 +19,5 @@ bitnamiOpenldapImage:
 
 alpineImage:
   repository: alpine
-  tag: "3.14"
+  tag: "3.22"
   pullPolicy: IfNotPresent
