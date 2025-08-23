@@ -51,7 +51,7 @@
         <swagger-parser.version>2.1.32</swagger-parser.version>
 
         <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
-        <nashorn-core.version>15.6</nashorn-core.version>
+        <nashorn-core.version>15.7</nashorn-core.version>
 
         <logbook.version>3.12.2</logbook.version>
         <logstash-logback.version>8.1</logstash-logback.version>
