@@ -2,6 +2,7 @@ package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
+import ch.bpm.workflow.example.util.config.DockerComposeInitializer;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
@@ -25,10 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.*;
 import org.springframework.test.util.TestSocketUtils;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -69,6 +68,15 @@ import static org.mockserver.model.HttpResponse.response;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@TestPropertySource(properties = {
+    "camunda.bpm.job-execution.enabled=false",
+    "camunda.bpm.generate-unique-process-engine-name=true",
+    "camunda.bpm.generate-unique-process-application-name=true",
+    "spring.datasource.generate-unique-name=true",
+    "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerWithJunitFactoryBPM;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+})
+@ContextConfiguration(initializers = DockerComposeInitializer.class) // this ensures that Docker Compose pods are stopped before running the test
 @SuppressWarnings("java:S3577")
 // Das ist eine Variante zum Parameterized Test in WorkflowTestWithMockServerBPM. Wir nutzen hier TestFactory als Ersatz
 public class WorkflowTestWithMockServerWithJunitFactoryBPM {
