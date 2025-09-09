@@ -74,10 +74,10 @@ import static org.mockserver.model.HttpResponse.response;
     "camunda.bpm.generate-unique-process-engine-name=true",
     "camunda.bpm.generate-unique-process-application-name=true",
     "spring.datasource.generate-unique-name=true",
-    "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerWithJunitFactoryBPM;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerWithJunitFactoryBPM;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+    "spring.docker.compose.file=compose-it.yaml"
 })
 @ContextConfiguration(initializers = DockerComposeInitializer.class) // this ensures that Docker Compose pods are stopped before running the test
-@SuppressWarnings("java:S3577")
 // Das ist eine Variante zum Parameterized Test in WorkflowTestWithMockServerBPM. Wir nutzen hier TestFactory als Ersatz
 public class WorkflowTestWithMockServerWithJunitFactoryBPM {
 

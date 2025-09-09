@@ -14,8 +14,7 @@ public class DockerComposeInitializer implements ApplicationContextInitializer<C
     public void initialize(ConfigurableApplicationContext applicationContext) {
         log.info("Shutting down existing Docker environment...");
         try {
-            String composeFilePath = System.getProperty("docker.compose.file",
-                System.getProperty("user.dir") + "/compose.yaml");
+            String composeFilePath = System.getProperty("docker.compose.file", "./compose.yaml");
 
             log.info("Using Docker Compose file: {}", composeFilePath);
 
@@ -24,13 +23,13 @@ public class DockerComposeInitializer implements ApplicationContextInitializer<C
                 throw new RuntimeException("Docker Compose file not found: " + composeFilePath);
             }
 
-            ProcessBuilder pb = new ProcessBuilder(
+            ProcessBuilder dockerDownProcessBuilder = new ProcessBuilder(
                 "docker", "compose",
                 "-f", composeFilePath,
                 "down"
             );
-            pb.inheritIO();
-            Process process = pb.start();
+            dockerDownProcessBuilder.inheritIO();
+            Process process = dockerDownProcessBuilder.start();
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new RuntimeException("docker compose down failed");

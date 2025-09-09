@@ -2,6 +2,7 @@ package ch.bpm.workflow.example.bpm;
 
 import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.config.RestApiConfiguration;
+import ch.bpm.workflow.example.util.config.DockerComposeInitializer;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
@@ -26,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.*;
 import org.springframework.test.util.TestSocketUtils;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -70,7 +68,7 @@ import static org.mockserver.model.HttpResponse.response;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
-@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or 'Tests'"
+@ContextConfiguration(initializers = DockerComposeInitializer.class)
 class WorkflowTestWithMockServerBPM {
 
     @LocalServerPort
