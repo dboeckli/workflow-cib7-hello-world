@@ -1,6 +1,7 @@
 services:
   ldap:
-    image: bitnami/openldap:2.6.10
+    # see https://github.com/bitnami/containers/issues/83267
+    image: bitnamilegacy/openldap:2.6.10
     container_name: ldap
     environment:
       BITNAMI_DEBUG: true

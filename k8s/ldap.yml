@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: ldap
-          image: bitnami/openldap:2.6.10
+          image: bitnamilegacy/openldap:2.6.10
           ports:
             - containerPort: 389
           env:
