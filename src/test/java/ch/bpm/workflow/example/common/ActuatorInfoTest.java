@@ -11,7 +11,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,12 +52,11 @@ class ActuatorInfoTest {
 
     @Test
     void actuatorHealthTest() throws Exception {
-        MvcResult result = mockMvc.perform(get("/actuator/health/readiness"))
+        mockMvc.perform(get("/actuator/health/readiness"))
             .andExpect(status().isOk())
+            .andDo(result -> log.info("Response (pretty):\n{}", pretty(result.getResponse().getContentAsString())))
             .andExpect(jsonPath("$.status").value("UP"))
             .andReturn();
-
-        log.info("Response: {}", result.getResponse().getContentAsString());
     }
 
     private String pretty(String body) {
