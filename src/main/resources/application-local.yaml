@@ -141,6 +141,18 @@ management:
       probes:
         enabled: true
       show-details: always
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
 
 springdoc:
   show-actuator: true

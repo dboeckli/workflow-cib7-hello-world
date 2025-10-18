@@ -13,7 +13,7 @@ ldap:
   adminPassword: "password"
 
 bitnamiOpenldapImage:
-  repository: bitnami/openldap
+  repository: bitnamilegacy/openldap
   tag: "2.6.10"
   pullPolicy: IfNotPresent
 
