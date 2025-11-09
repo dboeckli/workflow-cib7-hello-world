@@ -28,13 +28,8 @@ public class RestApiConfiguration {
     private String context;
 
     @Bean
-    public RestTemplate customerApiRestTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public CustomerApi customerApi(RestTemplate customerApiRestTemplate) {
-        ApiClient apiClient = new ApiClient(customerApiRestTemplate);
+    public CustomerApi customerApi(RestTemplate customRestTemplate) {
+        ApiClient apiClient = new ApiClient(customRestTemplate);
 
         apiClient.addDefaultHeader("Accept", "application/json");
         apiClient.setBasePath(protocol + "://" + host + ":" + port + "/" + context);
