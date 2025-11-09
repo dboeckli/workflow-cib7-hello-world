@@ -41,7 +41,7 @@
         https://docs.cibseven.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         -->
         <spring.boot.version>3.4.10</spring.boot.version>
-        <cib7.spring.boot.starter.version>2.0.0</cib7.spring.boot.starter.version>
+        <cib7.spring.boot.starter.version>2.1.0</cib7.spring.boot.starter.version>
         <!--
         latest is: 2.8.8. use 2.8.4 to avoid conflicts with cibseven webclient dependency which is using 2.8.4
         see: https://github.com/cibseven/cibseven-webclient/blob/main/cibseven-webclient-web/pom.xml
@@ -54,7 +54,7 @@
         <nashorn-core.version>15.7</nashorn-core.version>
 
         <logbook.version>3.12.3</logbook.version>
-        <logstash-logback.version>8.1</logstash-logback.version>
+        <logstash-logback.version>9.0</logstash-logback.version>
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <helm.plugin.version>6.17.0</helm.plugin.version>
