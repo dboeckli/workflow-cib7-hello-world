@@ -40,7 +40,7 @@
         https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         https://docs.cibseven.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         -->
-        <spring.boot.version>3.5.7</spring.boot.version>
+        <spring.boot.version>3.5.9</spring.boot.version>
         <cib7.spring.boot.starter.version>2.1.0</cib7.spring.boot.starter.version>
         <!--
         latest is: 2.8.8. use 2.8.4 to avoid conflicts with cibseven webclient dependency which is using 2.8.4
@@ -49,13 +49,13 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.8.14</springdoc-openapi-starter-webmvc-ui.version>
         <springdoc-openapi-maven-plugin.version>1.5</springdoc-openapi-maven-plugin.version>
         <swagger-parser.version>2.1.36</swagger-parser.version>
+        <openapi-generator-maven-plugin.version>7.18.0</openapi-generator-maven-plugin.version>
 
         <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
         <nashorn-core.version>15.7</nashorn-core.version>
 
-        <logbook.version>3.12.3</logbook.version>
         <logstash-logback.version>9.0</logstash-logback.version>
-        <editorconfig-maven-plugin.version>0.1.17</editorconfig-maven-plugin.version>
+        <editorconfig-maven-plugin.version>0.2.0</editorconfig-maven-plugin.version>
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <helm.plugin.version>6.17.0</helm.plugin.version>
         <merge-yaml-plugin.version>1.4</merge-yaml-plugin.version>
@@ -64,7 +64,7 @@
         <mock-server.version>5.15.0</mock-server.version>
 
         <!-- Sonar -->
-        <sonar-maven-plugin.version>5.3.0.6276</sonar-maven-plugin.version>
+        <sonar-maven-plugin.version>5.4.0.6343</sonar-maven-plugin.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
@@ -178,18 +178,6 @@
     </dependencyManagement>
 
     <dependencies>
-
-        <dependency>
-            <groupId>ch.guru.springframework.apifirst</groupId>
-            <artifactId>apifirst-api</artifactId>
-            <version>${apifirst.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.guru.springframework.apifirst</groupId>
-            <artifactId>apifirst-client</artifactId>
-            <version>${apifirst.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.cibseven.bpm.springboot</groupId>
             <artifactId>cibseven-bpm-spring-boot-starter</artifactId>
@@ -303,16 +291,6 @@
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>logbook-spring-boot-starter</artifactId>
-            <version>${logbook.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.zalando</groupId>
-            <artifactId>logbook-logstash</artifactId>
-            <version>${logbook.version}</version>
-        </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -626,6 +604,27 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>get-apifirst-client-yaml</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>ch.guru.springframework.apifirst</groupId>
+                                    <artifactId>apifirst-client</artifactId>
+                                    <version>${apifirst.version}</version>
+                                    <classifier>yaml</classifier>
+                                    <type>yaml</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/apifirst-client/</outputDirectory>
+                                    <destFileName>openapi.yaml</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>get-camunda-openapi-definition</id>
                         <phase>generate-resources</phase>
                         <goals>
@@ -663,6 +662,47 @@
                                     <includes>**/*</includes>
                                 </artifactItem>
                             </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/apifirst-client/openapi.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>resttemplate</library>
+
+                            <generateApis>true</generateApis>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+
+                            <generateModels>true</generateModels>
+                            <generateModelTests>false</generateModelTests>
+                            <generateAliasAsModel>false</generateAliasAsModel>
+
+                            <generateSupportingFiles>true</generateSupportingFiles>
+
+                            <apiPackage>ch.guru.springframework.apifirst.client</apiPackage>
+                            <modelPackage>ch.guru.springframework.apifirst.model</modelPackage>
+                            <modelNameSuffix>Dto</modelNameSuffix>
+
+                            <configOptions>
+                                <sourceFolder>src/gen/java/main</sourceFolder>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useBeanValidation>true</useBeanValidation>
+                                <openApiNullable>false</openApiNullable>
+                                <additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
