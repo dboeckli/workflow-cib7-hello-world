@@ -165,40 +165,7 @@ springdoc:
 
 logging:
   level:
-    org.zalando.logbook: INFO
     org.springframework.ldap: DEBUG
-
-logbook:
-  filter:
-    enabled: true
-  format:
-    style: http
-  obfuscate:
-    headers:
-      - Authorization
-      - X-Secret
-    parameters:
-      - access_token
-      - password
-  predicate:
-    exclude:
-      # Exclude HTML-related calls and specific endpoints that Logbook doesn't handle correctly
-      - path: /actuator/health/**
-
-      - path: /h2-console/**
-
-      - path: /swagger/**
-      - path: /swagger-ui/**
-
-      - path: /favicon.ico
-
-      - path: /webapp
-      - path: /webapp/**
-
-      - path: /webjars/**
-
-      - path: /restapi/camunda
-      # Add more exclusions as needed
 
 application:
   apifirst-server-jpa:
