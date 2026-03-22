@@ -17,6 +17,7 @@
         }
     },
     "enabledManagers": [
+        "maven",
         "maven-wrapper",
         "docker-compose",
         "kubernetes",
@@ -52,6 +53,13 @@
         ]
     },
     "packageRules": [
+        {
+            "description": "Track both Spring Boot 3.x and 4.x separately",
+            "matchPackageNames": [
+                "org.springframework.boot:spring-boot-starter-parent"
+            ],
+            "separateMultipleMajor": true
+        },
         {
             "matchCategories": [
                 "docker"
