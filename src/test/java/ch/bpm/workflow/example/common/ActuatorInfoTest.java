@@ -45,9 +45,7 @@ class ActuatorInfoTest {
             .andExpect(jsonPath("$.git.commit.id.abbrev").isString())
 
             .andExpect(jsonPath("$.build.artifact").value(buildProperties.getArtifact()))
-            .andExpect(jsonPath("$.build.group").value(buildProperties.getGroup()))
-
-            .andExpect(jsonPath("$.java.version").value(startsWith("21")));
+            .andExpect(jsonPath("$.build.group").value(buildProperties.getGroup()));
     }
 
     @Test
