@@ -40,16 +40,16 @@
         https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         https://docs.cibseven.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         -->
-        <spring.boot.version>3.5.12</spring.boot.version>
+        <spring.boot.version>3.5.13</spring.boot.version>
         <cib7.spring.boot.starter.version>2.1.0</cib7.spring.boot.starter.version>
         <!--
         latest is: 2.8.8. use 2.8.4 to avoid conflicts with cibseven webclient dependency which is using 2.8.4
         see: https://github.com/cibseven/cibseven-webclient/blob/main/cibseven-webclient-web/pom.xml
         -->
-        <springdoc-openapi-starter-webmvc-ui.version>2.8.14</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.8.16</springdoc-openapi-starter-webmvc-ui.version>
         <springdoc-openapi-maven-plugin.version>1.5</springdoc-openapi-maven-plugin.version>
-        <swagger-parser.version>2.1.38</swagger-parser.version>
-        <openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
+        <swagger-parser.version>2.1.39</swagger-parser.version>
+        <openapi-generator-maven-plugin.version>7.21.0</openapi-generator-maven-plugin.version>
 
         <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
         <nashorn-core.version>15.7</nashorn-core.version>
