@@ -9,7 +9,7 @@
 
 ### URLS
 
-Use 8080 when started locally or 30080 in Kubernetes
+Use 8080 when started locally or 30080 in Kubernetes.
 
 - Camunda Cockpit: 
   - http://localhost:8080/camunda/app/welcome/default/#!/welcome
