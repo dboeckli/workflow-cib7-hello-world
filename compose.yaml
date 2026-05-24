@@ -41,8 +41,10 @@ services:
   apifirst-server-jpa:
     container_name: apifirst-server-jpa
     image: domboeckli/apifirst-server-jpa:0.0.1-SNAPSHOT
+    pull_policy: always
     environment:
       SERVER_PORT: 8082
+      LOGGING_CONFIG: classpath:logback-kube.xml
     ports:
       - "8082:8082"
     expose:
