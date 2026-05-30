@@ -1,5 +1,7 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "ignorePaths": [],
+    "includePaths": ["**/*"],
     "extends": [
         "mergeConfidence:all-badges",
         "config:recommended"
@@ -9,15 +11,14 @@
     ],
     "customDatasources": {
         "custom_java": {
-            "defaultRegistryUrlTemplate": "https://api.adoptium.net/v3/info/available_releases",
+            "defaultRegistryUrlTemplate": "https://api.bell-sw.com/v1/liberica/versions",
             "format": "json",
             "transformTemplates": [
-                "{ \"releases\": $map(available_lts_releases, function($v) { { \"version\": $string($v) } }) }"
+                "{ \"releases\": $map($[LTS=true and GA=true], function($v) { { \"version\": $string($v.featureVersion) } }) }"
             ]
         }
     },
     "enabledManagers": [
-        "maven",
         "maven-wrapper",
         "docker-compose",
         "kubernetes",
@@ -25,6 +26,7 @@
         "helmv3",
         "custom.regex"
     ],
+
     "maven-wrapper": {
         "managerFilePatterns": [
             "/(^|/)mvnw$/",
@@ -53,13 +55,6 @@
         ]
     },
     "packageRules": [
-        {
-            "description": "Track both Spring Boot 3.x and 4.x separately",
-            "matchPackageNames": [
-                "org.springframework.boot:spring-boot-starter-parent"
-            ],
-            "separateMultipleMajor": true
-        },
         {
             "matchCategories": [
                 "docker"
@@ -92,6 +87,14 @@
             "automerge": false,
             "automergeType": "pr",
             "ignoreTests": true
+        },
+        {
+            "matchDatasources": ["maven", "docker"],
+            "matchPackageNames": [
+                "org.mock-server:mockserver-junit-jupiter-no-dependencies",
+                "mockserver/mockserver"
+            ],
+            "groupName": "mockserver"
         }
     ],
     "customManagers": [
@@ -114,12 +117,38 @@
             "datasourceTemplate": "custom.custom_java",
             "depNameTemplate": "java",
             "managerFilePatterns": [
-                "/^\\.github\\/workflows\\/(release|maven-build)\\.ya?ml$/"
+                "/^\\.github\\/workflows\\/(release|maven-build|deploy-and-test-cluster)\\.ya?ml$/"
             ],
             "matchStrings": [
                 "  JAVA_VERSION:[\\t ]*(?<currentValue>\\d+)"
             ],
             "autoReplaceStringTemplate": "  JAVA_VERSION: {{{newValue}}}"
+        },
+        {
+            "description": "Parse and update MockServer version in pom.xml",
+            "customType": "regex",
+            "datasourceTemplate": "maven",
+            "depNameTemplate": "org.mock-server:mockserver-junit-jupiter-no-dependencies",
+            "managerFilePatterns": [
+                "/(^|\\/)pom\\.xml$/"
+            ],
+            "matchStrings": [
+                "<mock-server\\.version>(?<currentValue>[^<]+)</mock-server\\.version>"
+            ],
+            "autoReplaceStringTemplate": "<mock-server.version>{{{newValue}}}</mock-server.version>"
+        },
+        {
+            "description": "Parse and update MockServer Docker image version in Java test files",
+            "customType": "regex",
+            "datasourceTemplate": "docker",
+            "depNameTemplate": "mockserver/mockserver",
+            "managerFilePatterns": [
+                "/\\.java$/"
+            ],
+            "matchStrings": [
+                "\"mockserver/mockserver:(?<currentValue>[^\"]+)\""
+            ],
+            "autoReplaceStringTemplate": "\"mockserver/mockserver:{{{newValue}}}\""
         }
     ],
     "platformAutomerge": false,
