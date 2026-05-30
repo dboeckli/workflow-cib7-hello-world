@@ -15,10 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @Slf4j
 class GroupRepositoryTest {
 
@@ -38,8 +36,7 @@ class GroupRepositoryTest {
             .findFirst();
 
         assertThat(camundaAdmins).isPresent();
-        assertThat(camundaAdmins.get().getMembers())
-            .containsExactly("cn=camunda-admin,ou=users,dc=example,dc=ch");
+        assertThat(camundaAdmins.get().getMembers()).containsExactly("cn=camunda-admin,ou=users,dc=example,dc=ch");
     }
 
 }

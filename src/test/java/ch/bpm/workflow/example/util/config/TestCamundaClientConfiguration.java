@@ -25,16 +25,21 @@ public class TestCamundaClientConfiguration {
     private ProcessEngine processEngine;
 
     @PostConstruct
-    // this is a workaround to initialize the Camunda client with the correct base URL. The test
-    // is using a random port and random engine name. Therefore, we need to change the client
-    // base url which include the engine name. We obtain the engine name from the ProcessEngine.
+    // this is a workaround to initialize the Camunda client with the correct base URL.
+    // The test
+    // is using a random port and random engine name. Therefore, we need to change the
+    // client
+    // base url which include the engine name. We obtain the engine name from the
+    // ProcessEngine.
     public void init() throws URISyntaxException {
         URI uri = new URI(clientConfiguration.getBaseUrl());
-        String baseUrl = new URI(uri.getScheme(), null, uri.getHost(), localServerPort, uri.getPath(), null, null).toString();
+        String baseUrl = new URI(uri.getScheme(), null, uri.getHost(), localServerPort, uri.getPath(), null, null)
+            .toString();
 
-        baseUrl = baseUrl + "/engine/" +  processEngine.getName();
+        baseUrl = baseUrl + "/engine/" + processEngine.getName();
         log.info("Initializing Camunda client with rest baseUrl: {}", baseUrl);
 
         clientConfiguration.setBaseUrl(baseUrl);
     }
+
 }

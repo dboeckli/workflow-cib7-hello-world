@@ -16,8 +16,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public List<Person> getAllPersons() {
-        return StreamSupport.stream(personRepository.findAll().spliterator(), false)
-            .collect(Collectors.toList());
+        return StreamSupport.stream(personRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 
 }

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TokenVariableDeserializerTest {
 
     private TokenVariableDeserializer deserializer;
+
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -42,7 +43,8 @@ class TokenVariableDeserializerTest {
     @Test
     void testDeserializeWithTextualNode() throws IOException {
         // Given
-        String json = "\"" + "{\\\"status\\\":\\\"RUNNING\\\",\\\"input\\\":{\\\"inputVariable\\\":\\\"testInput\\\"}}" + "\"";
+        String json = "\"" + "{\\\"status\\\":\\\"RUNNING\\\",\\\"input\\\":{\\\"inputVariable\\\":\\\"testInput\\\"}}"
+                + "\"";
         JsonParser jsonParser = objectMapper.getFactory().createParser(json);
         DeserializationContext ctxt = objectMapper.getDeserializationContext();
 
@@ -70,4 +72,5 @@ class TokenVariableDeserializerTest {
         String expectedErrorMessage = "Invalid status: INVALID. Status should be one of STARTED, RUNNING, COMPLETED, BUSINESS_EXCEPTION, FINISHED";
         assertEquals(expectedErrorMessage, exception.getMessage());
     }
+
 }

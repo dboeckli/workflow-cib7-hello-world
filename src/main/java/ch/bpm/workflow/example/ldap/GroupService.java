@@ -16,7 +16,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     public List<Group> getAllGroups() {
-        return StreamSupport.stream(groupRepository.findAll().spliterator(), false)
-            .collect(Collectors.toList());
+        return StreamSupport.stream(groupRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
+
 }

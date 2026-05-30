@@ -19,12 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true",
-    "spring.docker.compose.file=compose-it.yaml",
-    "spring.docker.compose.stop.command=stop"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true",
+                "spring.docker.compose.file=compose-it.yaml", "spring.docker.compose.stop.command=stop" })
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "local")
 class PingRestControllerIT {
@@ -37,31 +34,30 @@ class PingRestControllerIT {
 
     @Test
     void testGetInfo() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping")
-            .with(SecurityMockMvcRequestPostProcessors.httpBasic("camunda-admin", "camunda-admin-password")))
-            //.with(httpBasic("camunda-admin", "camunda-admin-password")))
-            .andExpect(status().isOk()).andExpect(content().json(new Gson().toJson(createResponse())));
+        this.mockMvc
+            .perform(get("/restapi/ping")
+                .with(SecurityMockMvcRequestPostProcessors.httpBasic("camunda-admin", "camunda-admin-password")))
+            // .with(httpBasic("camunda-admin", "camunda-admin-password")))
+            .andExpect(status().isOk())
+            .andExpect(content().json(new Gson().toJson(createResponse())));
     }
 
     @Test
     void testGetInfoWithoutCredentials() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping")
-            .with(SecurityMockMvcRequestPostProcessors.anonymous()))
+        this.mockMvc.perform(get("/restapi/ping").with(SecurityMockMvcRequestPostProcessors.anonymous()))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
     void testGetInfoWithWrongPassword() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping")
-                .with(httpBasic("camunda-admin", "wrong-password-here")))
+        this.mockMvc.perform(get("/restapi/ping").with(httpBasic("camunda-admin", "wrong-password-here")))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
     @Disabled("currently disabled. role base authentication is not implemented yet")
     void testGetInfoNotAllowed() throws Exception {
-        this.mockMvc.perform(get("/restapi/ping")
-                .with(httpBasic("user01", "user01-password")))
+        this.mockMvc.perform(get("/restapi/ping").with(httpBasic("user01", "user01-password")))
             .andExpect(status().isForbidden());
     }
 
@@ -75,7 +71,7 @@ class PingRestControllerIT {
             .mavenUser(buildProperties.get("mavenUser"))
             .javaVersion(buildProperties.get("javaVersion"))
             .gitCommitId(buildProperties.get("commit-id"))
-                                              .build();
+            .build();
     }
 
 }

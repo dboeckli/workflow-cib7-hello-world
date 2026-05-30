@@ -1,6 +1,5 @@
 package ch.bpm.workflow.example.config;
 
-
 import ch.guru.springframework.apifirst.ApiClient;
 import ch.guru.springframework.apifirst.client.CustomerApi;
 import lombok.Getter;

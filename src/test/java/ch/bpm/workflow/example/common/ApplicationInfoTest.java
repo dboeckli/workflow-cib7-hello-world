@@ -10,10 +10,8 @@ import org.springframework.test.context.TestPropertySource;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @ActiveProfiles(profiles = "test")
 class ApplicationInfoTest {
 
@@ -22,37 +20,32 @@ class ApplicationInfoTest {
 
     @Test
     void testApplicationMavenVersion() {
-        assertAll(
-            () -> assertNotNull(buildProperties.getVersion()),
-            () -> assertFalse(buildProperties.getVersion().isEmpty())
-        );
+        assertAll(() -> assertNotNull(buildProperties.getVersion()),
+                () -> assertFalse(buildProperties.getVersion().isEmpty()));
     }
 
     @Test
     void testApplicationMavenGroupId() {
-        assertAll(
-            () -> assertNotNull(buildProperties.getGroup()),
-            () -> assertFalse(buildProperties.getGroup().isEmpty()));
+        assertAll(() -> assertNotNull(buildProperties.getGroup()),
+                () -> assertFalse(buildProperties.getGroup().isEmpty()));
     }
 
     @Test
     void testApplicationMavenArtifactId() {
-        assertAll(
-            () -> assertNotNull(buildProperties.getArtifact()),
-            () -> assertFalse(buildProperties.getArtifact().isEmpty()));
+        assertAll(() -> assertNotNull(buildProperties.getArtifact()),
+                () -> assertFalse(buildProperties.getArtifact().isEmpty()));
     }
 
     @Test
     void testApplicationMavenName() {
-        assertAll(
-            () -> assertNotNull(buildProperties.getName()),
-            () -> assertFalse(buildProperties.getName().isEmpty()));
+        assertAll(() -> assertNotNull(buildProperties.getName()),
+                () -> assertFalse(buildProperties.getName().isEmpty()));
     }
 
     @Test
     void testApplicationMavenTimeStamp() {
-        assertAll(
-            () -> assertNotNull(buildProperties.getTime()),
-            () -> assertFalse(buildProperties.getTime().toString().isEmpty()));
+        assertAll(() -> assertNotNull(buildProperties.getTime()),
+                () -> assertFalse(buildProperties.getTime().toString().isEmpty()));
     }
+
 }

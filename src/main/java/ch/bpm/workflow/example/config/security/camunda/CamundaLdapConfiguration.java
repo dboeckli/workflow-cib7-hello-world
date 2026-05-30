@@ -21,8 +21,9 @@ import static org.cibseven.bpm.engine.rest.security.auth.ProcessEngineAuthentica
 
 @Configuration
 @Slf4j
-@Profile({"local"})
+@Profile({ "local" })
 public class CamundaLdapConfiguration {
+
     @Value("${camunda.bpm.run.auth.authentication}")
     private String authenticationProvider;
 
@@ -129,14 +130,19 @@ public class CamundaLdapConfiguration {
         registration.setName("camunda-auth");
         registration.setFilter(getProcessEngineAuthenticationFilter());
 
-        // This is a workaround to set the authentication provider dynamically based on the provided configuration
+        // This is a workaround to set the authentication provider dynamically based on
+        // the provided configuration
         if (authenticationProvider.equals("basic")) {
-            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, HttpBasicAuthenticationProvider.class.getName());
+            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM,
+                    HttpBasicAuthenticationProvider.class.getName());
             log.info("### Using basic authentication");
-        } else if (authenticationProvider.equals("composite")) {
-            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM, CompositeAuthenticationProvider.class.getName());
+        }
+        else if (authenticationProvider.equals("composite")) {
+            registration.addInitParameter(AUTHENTICATION_PROVIDER_PARAM,
+                    CompositeAuthenticationProvider.class.getName());
             log.info("### Using composite authentication");
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Invalid authentication provider: " + authenticationProvider);
         }
 
@@ -153,8 +159,8 @@ public class CamundaLdapConfiguration {
     }
 
     public static String printLdapIdentityProviderPlugin(LdapIdentityProviderPlugin ldapIdentityProviderPlugin) {
-        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
-                ldapIdentityProviderPlugin, ToStringStyle.MULTI_LINE_STYLE) {
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(ldapIdentityProviderPlugin,
+                ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
                 return !field.getName().equals("managerPassword");
@@ -162,4 +168,5 @@ public class CamundaLdapConfiguration {
         };
         return builder.toString();
     }
+
 }

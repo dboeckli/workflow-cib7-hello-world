@@ -14,11 +14,12 @@ import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFIN
 import static org.cibseven.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
 
 @Configuration
-@Profile({"local"})
+@Profile({ "local" })
 @RequiredArgsConstructor
 @Slf4j
 // TODO: ADD CONFIGURABLE PERMISSIONS HERE FOR USERS (user01, user02,...) AND GROUPS
-// SEE: https://docs.camunda.org/manual/latest/user-guide/process-engine/authorization-service/
+// SEE:
+// https://docs.camunda.org/manual/latest/user-guide/process-engine/authorization-service/
 public class AuthorizationConfig {
 
     private final AuthorizationService authorizationService;
@@ -46,8 +47,10 @@ public class AuthorizationConfig {
         authorizationService.saveAuthorization(authProcessDefinition);
         authorizationService.saveAuthorization(authProcessInstance);
 
-        log.info("Permissions set successfully! User 'user01' has the necessary permissions to start and manage processes." +
-            " authProcessDefinition: {} and authProcessInstance: {}", authProcessDefinition, authProcessInstance);
+        log.info(
+                "Permissions set successfully! User 'user01' has the necessary permissions to start and manage processes."
+                        + " authProcessDefinition: {} and authProcessInstance: {}",
+                authProcessDefinition, authProcessInstance);
     }
 
 }

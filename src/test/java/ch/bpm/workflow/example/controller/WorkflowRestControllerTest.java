@@ -23,10 +23,8 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(value = "test")
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @Slf4j
 class WorkflowRestControllerTest {
 
@@ -46,22 +44,22 @@ class WorkflowRestControllerTest {
         givenExecution.setProcessDefinitionId("processDefinitionId");
 
         final String givenInput = "hallo";
-        Mockito.when(runtimeServiceMock.startProcessInstanceByKey(eq(PROCESS_DEFINITION_KEY), eq(PROCESS_DEFINITION_KEY), eq(Map.of(INPUT_VARIABLE_NAME, givenInput)))).thenReturn(givenExecution);
+        Mockito.when(runtimeServiceMock.startProcessInstanceByKey(eq(PROCESS_DEFINITION_KEY),
+                eq(PROCESS_DEFINITION_KEY), eq(Map.of(INPUT_VARIABLE_NAME, givenInput))))
+            .thenReturn(givenExecution);
 
-        ResponseEntity<?> response = workflowRestController.startProcess(WorkflowRestController.InfoRequest.builder().input(givenInput).build());
-        assertAll(
-            () -> assertNotNull(response),
-            () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-            () -> assertInstanceOf(WorkflowRestController.HelloWorldWorklfowResponse.class, response.getBody())
-        );
+        ResponseEntity<?> response = workflowRestController
+            .startProcess(WorkflowRestController.InfoRequest.builder().input(givenInput).build());
+        assertAll(() -> assertNotNull(response), () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
+                () -> assertInstanceOf(WorkflowRestController.HelloWorldWorklfowResponse.class, response.getBody()));
 
-        WorkflowRestController.HelloWorldWorklfowResponse responseBody = (WorkflowRestController.HelloWorldWorklfowResponse) response.getBody();
-        assertAll(
-            () -> assertEquals(givenExecution.getId(), responseBody.id()),
-            () -> assertEquals(givenExecution.getCaseInstanceId(), responseBody.caseInstanceId()),
-            () -> assertEquals(givenExecution.getProcessInstanceId(), responseBody.processInstanceId()),
-            () -> assertEquals(givenExecution.getRootProcessInstanceId(), responseBody.rootProcessInstanceId()),
-            () -> assertEquals(givenExecution.getProcessDefinitionId(), responseBody.processDefinitionId())
-        );
+        WorkflowRestController.HelloWorldWorklfowResponse responseBody = (WorkflowRestController.HelloWorldWorklfowResponse) response
+            .getBody();
+        assertAll(() -> assertEquals(givenExecution.getId(), responseBody.id()),
+                () -> assertEquals(givenExecution.getCaseInstanceId(), responseBody.caseInstanceId()),
+                () -> assertEquals(givenExecution.getProcessInstanceId(), responseBody.processInstanceId()),
+                () -> assertEquals(givenExecution.getRootProcessInstanceId(), responseBody.rootProcessInstanceId()),
+                () -> assertEquals(givenExecution.getProcessDefinitionId(), responseBody.processDefinitionId()));
     }
+
 }

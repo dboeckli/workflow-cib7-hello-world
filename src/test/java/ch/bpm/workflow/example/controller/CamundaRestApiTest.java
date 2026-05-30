@@ -21,10 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @ActiveProfiles(value = "test")
 @Slf4j
 class CamundaRestApiTest {
@@ -43,8 +41,7 @@ class CamundaRestApiTest {
 
     @Test
     void getEngineInfo() throws JSONException {
-        ResponseEntity<String> response = restTemplate
-            .getForEntity("/engine-rest/engine", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/engine-rest/engine", String.class);
 
         log.info("######### Engine info: {}", response.getBody());
 
@@ -64,4 +61,5 @@ class CamundaRestApiTest {
         }
         assertThat("Expected engine name not found: " + expectedEngineName, expectedEngineFound, is(true));
     }
+
 }

@@ -17,10 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @Slf4j
 class PersonRepositoryTest {
 
@@ -53,4 +51,5 @@ class PersonRepositoryTest {
         Iterable<Person> peoples = personRepository.findAll();
         assertThat(peoples).hasSize(4).extracting("uid").contains("camunda-admin", "user01", "user02", "user03");
     }
+
 }

@@ -30,10 +30,7 @@ import java.util.Base64;
 import static ch.bpm.workflow.example.controller.CamundaOpenApiRestController.CAMUNDA_OPENAPI_CONTEXT;
 
 @OpenAPIDefinition(
-    info = @Info(
-        license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0")
-    )
-)
+        info = @Info(license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0")))
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -61,7 +58,8 @@ public class OpenApiConfiguration {
                 openApi.getTags().forEach(tag -> {
                     log.info("Setting description for tag '{}'", tag.getName());
                     if ("Actuator".equals(tag.getName())) {
-                        tag.setDescription("Spring Boot Actuator endpoints for monitoring and managing the application");
+                        tag.setDescription(
+                                "Spring Boot Actuator endpoints for monitoring and managing the application");
                     }
                     // Add other group descriptions here if needed
                 });
@@ -71,15 +69,14 @@ public class OpenApiConfiguration {
 
     @Bean
     // TODO: ADD SECURITY
-    public GroupedOpenApi restapiApi(@Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
+    public GroupedOpenApi restapiApi(
+            @Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
         return GroupedOpenApi.builder()
             .group("restapi")
             .addOpenApiCustomizer(customGlobalHeaderOpenApiCustomizer)
             .addOpenApiCustomizer(openApi -> {
-                openApi.components(new Components()
-                    .addSecuritySchemes("basicAuth", new SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("basic")));
+                openApi.components(new Components().addSecuritySchemes("basicAuth",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")));
                 openApi.addSecurityItem(new SecurityRequirement().addList("basicAuth"));
             })
             .displayName("REST API")
@@ -88,7 +85,8 @@ public class OpenApiConfiguration {
     }
 
     @Bean
-    public GroupedOpenApi actuatorApi(@Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
+    public GroupedOpenApi actuatorApi(
+            @Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
         return GroupedOpenApi.builder()
             .group("actuator")
             .addOpenApiCustomizer(customGlobalHeaderOpenApiCustomizer)
@@ -98,7 +96,8 @@ public class OpenApiConfiguration {
     }
 
     @Bean
-    public GroupedOpenApi camnundaEngineRestApi(@Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
+    public GroupedOpenApi camnundaEngineRestApi(
+            @Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
         return GroupedOpenApi.builder()
             .group("camunda-engine-rest-api")
             .addOpenApiCustomizer(customGlobalHeaderOpenApiCustomizer)
@@ -136,7 +135,8 @@ public class OpenApiConfiguration {
                     String engineRestUrl = scheme + "://" + hostname + ":" + port + "/engine-rest";
                     externalOpenApi.addServersItem(new Server().url(engineRestUrl));
 
-                    // Merge paths and components from external OpenAPI into the current one
+                    // Merge paths and components from external OpenAPI into the current
+                    // one
                     openApi.getPaths().putAll(externalOpenApi.getPaths());
                     if (externalOpenApi.getComponents() != null) {
                         if (openApi.getComponents() == null) {
@@ -147,10 +147,12 @@ public class OpenApiConfiguration {
 
                     openApi.setServers(externalOpenApi.getServers());
 
-                } catch (Exception ex) {
-                    throw new RuntimeException("Failed to load camunda OpenAPI definition." ,ex);
+                }
+                catch (Exception ex) {
+                    throw new RuntimeException("Failed to load camunda OpenAPI definition.", ex);
                 }
             })
             .build();
     }
+
 }

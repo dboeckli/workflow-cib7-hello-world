@@ -27,23 +27,27 @@ public class SayHelloDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws WorkflowException {
-        TokenVariable tokenVariable = (TokenVariable)delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
+        TokenVariable tokenVariable = (TokenVariable) delegateExecution.getVariable(TOKEN_VARIABLE_NAME);
         String errorCode = Optional.ofNullable(delegateExecution.getVariable("errorCode"))
             .map(Object::toString)
             .orElse(null);
-        log.info("### executing sayHelloDelegate: {}. Variable status: {}. Error code: {}", delegateExecution, tokenVariable.getStatus(), errorCode);
+        log.info("### executing sayHelloDelegate: {}. Variable status: {}. Error code: {}", delegateExecution,
+                tokenVariable.getStatus(), errorCode);
         try {
             if (tokenVariable.getInput().getInputVariable().equals("fail") && errorCode == null) {
                 throw new WorkflowException("fail required");
-            } else {
+            }
+            else {
                 List<CustomerDto> customers = customerApi.listCustomers();
                 log.info("Got response from apifirst. Customers: \n {}", customers);
                 tokenVariable.setStatus(FINISHED);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             log.error("Failed to call apifirst. Creating Business Error", ex);
             tokenVariable.setStatus(BUSINESS_EXCEPTION);
             throw new BpmnError(BUSINESS_EXCEPTION.name(), "Failed to call apifirst.");
         }
     }
+
 }

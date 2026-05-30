@@ -8,7 +8,7 @@ import org.springframework.ldap.odm.annotations.Id;
 import javax.naming.Name;
 import java.util.List;
 
-@Entry(objectClasses = {"groupOfNames"}, base = "ou=groups")
+@Entry(objectClasses = { "groupOfNames" }, base = "ou=groups")
 @Data
 public class Group {
 

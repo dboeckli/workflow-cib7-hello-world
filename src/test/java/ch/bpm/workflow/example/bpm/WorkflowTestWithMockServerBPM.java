@@ -58,19 +58,18 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.generate-unique-process-engine-name=true",
-    "camunda.bpm.generate-unique-process-application-name=true",
-    "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerBPM",
-    "spring.datasource.generate-unique-name=true"
-})
+@TestPropertySource(properties = { "camunda.bpm.job-execution.enabled=false",
+        "camunda.bpm.generate-unique-process-engine-name=true",
+        "camunda.bpm.generate-unique-process-application-name=true",
+        "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowTestWithMockServerBPM",
+        "spring.datasource.generate-unique-name=true" })
 @Testcontainers
 @Deployment(resources = "process.bpmn")
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
-@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or 'Tests'"
+@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or
+                                // 'Tests'"
 class WorkflowTestWithMockServerBPM {
 
     @LocalServerPort
@@ -79,7 +78,8 @@ class WorkflowTestWithMockServerBPM {
     @Autowired
     public RuntimeService runtimeService;
 
-    // See https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develop-and-test/#using-assertions-with-context-caching
+    // See
+    // https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/develop-and-test/#using-assertions-with-context-caching
     @Autowired
     ProcessEngine processEngine;
 
@@ -88,7 +88,8 @@ class WorkflowTestWithMockServerBPM {
 
     // this version should correspond to the client version defined int the pom.xml
     @Container
-    public MockServerContainer mockServer = new MockServerContainer(DockerImageName.parse("mockserver/mockserver:5.15.0"));
+    public MockServerContainer mockServer = new MockServerContainer(
+            DockerImageName.parse("mockserver/mockserver:5.15.0"));
 
     @Autowired
     CustomerApi customerApi;
@@ -101,7 +102,6 @@ class WorkflowTestWithMockServerBPM {
 
     private MockServerClient mockServerClient;
 
-
     @BeforeEach
     void setup() {
         init(processEngine);
@@ -109,10 +109,8 @@ class WorkflowTestWithMockServerBPM {
 
         mockServerClient = new MockServerClient(mockServer.getHost(), mockServer.getServerPort());
         customerApi.getApiClient()
-                  .setBasePath(restApiConfiguration.getProtocol() + "://" +
-                          mockServer.getHost() + ":" +
-                          mockServer.getServerPort() + "/" +
-                          restApiConfiguration.getContext());
+            .setBasePath(restApiConfiguration.getProtocol() + "://" + mockServer.getHost() + ":"
+                    + mockServer.getServerPort() + "/" + restApiConfiguration.getContext());
     }
 
     @AfterEach
@@ -130,76 +128,70 @@ class WorkflowTestWithMockServerBPM {
 
     @ParameterizedTest
     @MethodSource("happyPathTestParameters")
-    void shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName) throws JsonProcessingException {
+    void shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName)
+            throws JsonProcessingException {
         createExpectedMockserverResponse();
 
         // when
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY, Map.of(INPUT_VARIABLE_NAME, inputVariable));
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY,
+                Map.of(INPUT_VARIABLE_NAME, inputVariable));
 
         // then
         assertAll("Process instance initial state assertions",
-            () -> assertThat(processInstance).isStarted()
-                .hasBusinessKey(BUSINESS_KEY)
-                .hasVariables(INPUT_VARIABLE_NAME)
-                .variables()
-                .contains(entry(INPUT_VARIABLE_NAME, inputVariable)),
-            () -> assertEquals(inputVariable, this.getTokenVariable(processInstance).getInput().getInputVariable()),
-            () -> assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus())
-        );
-        // token is waiting at the end of the validate input activity because of the Asynchronous continuations After flag
+                () -> assertThat(processInstance).isStarted()
+                    .hasBusinessKey(BUSINESS_KEY)
+                    .hasVariables(INPUT_VARIABLE_NAME)
+                    .variables()
+                    .contains(entry(INPUT_VARIABLE_NAME, inputVariable)),
+                () -> assertEquals(inputVariable, this.getTokenVariable(processInstance).getInput().getInputVariable()),
+                () -> assertEquals(STARTED, this.getTokenVariable(processInstance).getStatus()));
+        // token is waiting at the end of the validate input activity because of the
+        // Asynchronous continuations After flag
         assertAll("Validate input activity assertions",
-            () -> assertThat(processInstance).hasPassed("Activity_validate_input"),
-            () -> assertThat(processInstance).isWaitingAt("Activity_validate_input")
-        );
+                () -> assertThat(processInstance).hasPassed("Activity_validate_input"),
+                () -> assertThat(processInstance).isWaitingAt("Activity_validate_input"));
         execute(job()); // push forward
 
         assertThat(processInstance).isWaitingAt("Service_for_Script");
         execute(job());
         assertThat(processInstance).hasPassed("Service_for_Script");
-        String user1 = (String)runtimeService.getVariable(processInstance.getId(), "User01");
-        String user2 = (String)runtimeService.getVariable(processInstance.getId(), "User02");
+        String user1 = (String) runtimeService.getVariable(processInstance.getId(), "User01");
+        String user2 = (String) runtimeService.getVariable(processInstance.getId(), "User02");
         JsonNode user1Json = objectMapper.readTree(user1);
         JsonNode user2Json = objectMapper.readTree(user2);
-        assertAll("User 1/2 JSON assertions",
-            () -> assertEquals(1, user1Json.get("id").asInt()),
-            () -> assertEquals("John Doe", user1Json.get("name").asText()),
-            () -> assertEquals(2, user2Json.get("id").asInt()),
-            () -> assertEquals("Jane Smith", user2Json.get("name").asText())
-        );
+        assertAll("User 1/2 JSON assertions", () -> assertEquals(1, user1Json.get("id").asInt()),
+                () -> assertEquals("John Doe", user1Json.get("name").asText()),
+                () -> assertEquals(2, user2Json.get("id").asInt()),
+                () -> assertEquals("Jane Smith", user2Json.get("name").asText()));
         execute(job());
 
         assertThat(processInstance).isWaitingAt(expectedActivity);
         execute(job());
         assertThat(processInstance).hasPassed(expectedActivity);
-        String user3 = (String)runtimeService.getVariable(processInstance.getId(), "User03");
+        String user3 = (String) runtimeService.getVariable(processInstance.getId(), "User03");
         JsonNode user3Json = objectMapper.readTree(user3);
-        assertAll("User 3 JSON assertions",
-            () -> assertEquals(3, user3Json.get("id").asInt()),
-            () -> assertEquals(expectedName, user3Json.get("name").asText())
-        );
+        assertAll("User 3 JSON assertions", () -> assertEquals(3, user3Json.get("id").asInt()),
+                () -> assertEquals(expectedName, user3Json.get("name").asText()));
         execute(job());
 
         assertThat(processInstance).isWaitingAt("External_Task");
         execute(job());
         assertThat(processInstance).isWaitingAt("External_Task").externalTask().hasTopicName(TOPIC_NAME);
-        await().atMost(15, SECONDS)
-            .pollInterval(500, MILLISECONDS)
-            .until(() -> {
-                TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
-                log.info("Current status: {}", currentTokenVariable.getStatus());
-                return currentTokenVariable.getStatus() == RUNNING;
-            });
+        await().atMost(15, SECONDS).pollInterval(500, MILLISECONDS).until(() -> {
+            TokenVariable currentTokenVariable = this.getTokenVariable(processInstance);
+            log.info("Current status: {}", currentTokenVariable.getStatus());
+            return currentTokenVariable.getStatus() == RUNNING;
+        });
         assertThat(processInstance).hasPassed("External_Task");
         execute(job());
 
-        assertAll("Say hello task assertions",
-            () -> assertThat(processInstance).isWaitingAt("say-hello"),
-            () -> assertEquals(RUNNING, this.getTokenVariable(processInstance).getStatus(), "Token status should be RUNNING"),
-            () -> assertThat(processInstance).task()
-                .hasDefinitionKey("say-hello")
-                .hasCandidateUser("admin")
-                .isNotAssigned()
-        );
+        assertAll("Say hello task assertions", () -> assertThat(processInstance).isWaitingAt("say-hello"),
+                () -> assertEquals(RUNNING, this.getTokenVariable(processInstance).getStatus(),
+                        "Token status should be RUNNING"),
+                () -> assertThat(processInstance).task()
+                    .hasDefinitionKey("say-hello")
+                    .hasCandidateUser("admin")
+                    .isNotAssigned());
         claim(task(), "admin");
         assertEquals("admin", task().getAssignee());
         complete(task());
@@ -207,15 +199,15 @@ class WorkflowTestWithMockServerBPM {
 
         // is waiting before this activity
         assertAll("Activity_say_hello-via_delegate assertions",
-            () -> assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate"),
-            () -> assertEquals(COMPLETED, this.getTokenVariable(processInstance).getStatus(), "Token status should be COMPLETED")
-        );
+                () -> assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate"),
+                () -> assertEquals(COMPLETED, this.getTokenVariable(processInstance).getStatus(),
+                        "Token status should be COMPLETED"));
         execute(job());
         assertAll("Final Activity_say_hello-via_delegate assertions",
-            () -> assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate"),
-            () -> assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate"),
-            () -> assertEquals(FINISHED, this.getTokenVariable(processInstance).getStatus(), "Token status should be FINISHED")
-        );
+                () -> assertThat(processInstance).hasPassed("Activity_say_hello-via_delegate"),
+                () -> assertThat(processInstance).isWaitingAt("Activity_say_hello-via_delegate"),
+                () -> assertEquals(FINISHED, this.getTokenVariable(processInstance).getStatus(),
+                        "Token status should be FINISHED"));
         execute(job());
 
         assertThat(processInstance).isEnded();
@@ -223,35 +215,44 @@ class WorkflowTestWithMockServerBPM {
 
     static Stream<Arguments> happyPathTestParameters() {
         String generatedName = RandomStringUtils.secure().nextAlphabetic(10);
-        return Stream.of(
-            Arguments.of(generatedName, "Set_User03_To_Default", "Default"),
-            Arguments.of("eder", "Set_User03_To_Eder", "Eder"),
-            Arguments.of("pumukel", "Set_User03_To_Pumukel", "Pumukel")
-        );
+        return Stream.of(Arguments.of(generatedName, "Set_User03_To_Default", "Default"),
+                Arguments.of("eder", "Set_User03_To_Eder", "Eder"),
+                Arguments.of("pumukel", "Set_User03_To_Pumukel", "Pumukel"));
     }
 
     private void createExpectedMockserverResponse() {
         List<CustomerDto> customers = new ArrayList<>();
         CustomerDto customer1 = CustomerDto.builder()
-                .id(UUID.randomUUID())
-                .name(NameDto.builder().firstName("John").lastName("Doe").build())
-                .shipToAddress(AddressDto.builder().addressLine1("123 Main St").city("New York").city("NY").state("NY").zip("10001").build())
-                .billToAddress(AddressDto.builder().addressLine1("456 Elm St").city("Los Angeles").city("CA").state("CA").zip("90001").build())
-                .build();
+            .id(UUID.randomUUID())
+            .name(NameDto.builder().firstName("John").lastName("Doe").build())
+            .shipToAddress(AddressDto.builder()
+                .addressLine1("123 Main St")
+                .city("New York")
+                .city("NY")
+                .state("NY")
+                .zip("10001")
+                .build())
+            .billToAddress(AddressDto.builder()
+                .addressLine1("456 Elm St")
+                .city("Los Angeles")
+                .city("CA")
+                .state("CA")
+                .zip("90001")
+                .build())
+            .build();
         customers.add(customer1);
 
         String customersJson;
         try {
             customersJson = objectMapper.writeValueAsString(customers);
-        } catch (JsonProcessingException e) {
+        }
+        catch (JsonProcessingException e) {
             throw new RuntimeException("Failed to convert customers to JSON", e);
         }
-        mockServerClient
-                .when(request().withMethod("GET").withPath("/v1/customers"))
-                .respond(response()
-                        .withStatusCode(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody(customersJson));
+        mockServerClient.when(request().withMethod("GET").withPath("/v1/customers"))
+            .respond(response().withStatusCode(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody(customersJson));
     }
 
     private TokenVariable getTokenVariable(ProcessInstance processInstance) {
