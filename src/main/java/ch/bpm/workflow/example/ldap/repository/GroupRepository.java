@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import javax.naming.Name;
 
 public interface GroupRepository extends CrudRepository<Group, Name> {
+
 }

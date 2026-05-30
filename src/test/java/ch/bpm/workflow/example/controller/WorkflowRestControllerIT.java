@@ -23,12 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true",
-    "spring.docker.compose.file=compose-it.yaml",
-    "spring.docker.compose.stop.command=stop"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true",
+                "spring.docker.compose.file=compose-it.yaml", "spring.docker.compose.stop.command=stop" })
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "local")
 @Slf4j
@@ -46,12 +43,13 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         this.mockMvc
-            .perform(post("/restapi/workflow")
-                .with(httpBasic("camunda-admin", "camunda-admin-password"))
+            .perform(post("/restapi/workflow").with(httpBasic("camunda-admin", "camunda-admin-password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest))
-            .andDo(result -> log.info("### Response: {}", result.getResponse().getContentAsString())).andDo(print())
-            //.andExpect(MockMvcResultMatchers.status().isBadRequest()) // This test will fail as it expects a 400 status code
+            .andDo(result -> log.info("### Response: {}", result.getResponse().getContentAsString()))
+            .andDo(print())
+            // .andExpect(MockMvcResultMatchers.status().isBadRequest()) // This test will
+            // fail as it expects a 400 status code
             .andExpect(result -> {
                 Exception resolvedException = result.getResolvedException();
                 assertNotNull(resolvedException);
@@ -69,12 +67,11 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         MvcResult result = this.mockMvc
-            .perform(post("/restapi/workflow")
-                .with(httpBasic("camunda-admin", "camunda-admin-password1"))
+            .perform(post("/restapi/workflow").with(httpBasic("camunda-admin", "camunda-admin-password1"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest)
-            )
-            .andExpect(MockMvcResultMatchers.status().isUnauthorized()).andReturn();
+                .content(jsonRequest))
+            .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+            .andReturn();
         log.info("Response: {}", result.getResponse().getContentAsString());
     }
 
@@ -84,12 +81,11 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         this.mockMvc
-            .perform(post("/restapi/workflow")
-                .with(httpBasic("user02", "user02-password"))
+            .perform(post("/restapi/workflow").with(httpBasic("user02", "user02-password"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRequest)
-            )
-            .andDo(result -> log.info("### Response: {}", result.getResponse().getContentAsString())).andDo(print())
+                .content(jsonRequest))
+            .andDo(result -> log.info("### Response: {}", result.getResponse().getContentAsString()))
+            .andDo(print())
             .andExpect(result -> {
                 Exception resolvedException = result.getResolvedException();
                 assertNotNull(resolvedException);
@@ -97,7 +93,9 @@ class WorkflowRestControllerIT {
 
                 ResponseStatusException responseStatusException = (ResponseStatusException) resolvedException;
                 assertEquals(HttpStatus.FORBIDDEN, responseStatusException.getStatusCode());
-                assertEquals("The user with id 'user02' does not have 'CREATE' permission on resource 'ProcessInstance'.", responseStatusException.getReason());
+                assertEquals(
+                        "The user with id 'user02' does not have 'CREATE' permission on resource 'ProcessInstance'.",
+                        responseStatusException.getReason());
             });
     }
 
@@ -107,13 +105,13 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         MvcResult result = this.mockMvc
-            .perform(post("/restapi/workflow")
-                .with(httpBasic("camunda-admin", "camunda-admin-password"))
+            .perform(post("/restapi/workflow").with(httpBasic("camunda-admin", "camunda-admin-password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.caseInstanceId").value(nullValue()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.processDefinitionId").value(matchesPattern("hello-world-process:1:[a-f0-9-]+")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.processDefinitionId")
+                .value(matchesPattern("hello-world-process:1:[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.rootProcessInstanceId").value(matchesPattern("[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(matchesPattern("[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.processInstanceId").value(matchesPattern("[a-f0-9-]+")))
@@ -127,17 +125,18 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         MvcResult result = this.mockMvc
-            .perform(post("/restapi/workflow")
-                .with(httpBasic("camunda-admin", "camunda-admin-password"))
+            .perform(post("/restapi/workflow").with(httpBasic("camunda-admin", "camunda-admin-password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.caseInstanceId").value(nullValue()))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.processDefinitionId").value(matchesPattern("hello-world-process:1:[a-f0-9-]+")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.processDefinitionId")
+                .value(matchesPattern("hello-world-process:1:[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.rootProcessInstanceId").value(matchesPattern("[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(matchesPattern("[a-f0-9-]+")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.processInstanceId").value(matchesPattern("[a-f0-9-]+")))
             .andReturn();
         log.info("Response: {}", result.getResponse().getContentAsString());
     }
+
 }

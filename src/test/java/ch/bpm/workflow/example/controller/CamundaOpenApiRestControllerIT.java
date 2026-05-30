@@ -22,12 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(value = "local")
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true",
-    "spring.docker.compose.file=compose-it.yaml",
-    "spring.docker.compose.stop.command=stop"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true",
+                "spring.docker.compose.file=compose-it.yaml", "spring.docker.compose.stop.command=stop" })
 @Slf4j
 class CamundaOpenApiRestControllerIT {
 
@@ -36,15 +33,14 @@ class CamundaOpenApiRestControllerIT {
 
     @Test
     void getOpenApiFile() throws Exception {
-        this.mockMvc.perform(get("/restapi/camunda")
-            .with(httpBasic("camunda-admin", "camunda-admin-password")))
-            .andExpect(status().isOk()).andExpect(content().json(createResponse()));
+        this.mockMvc.perform(get("/restapi/camunda").with(httpBasic("camunda-admin", "camunda-admin-password")))
+            .andExpect(status().isOk())
+            .andExpect(content().json(createResponse()));
     }
 
     @Test
     void getOpenApiUnauthorized() throws Exception {
-        this.mockMvc.perform(get("/restapi/camunda"))
-            .andExpect(status().isUnauthorized());
+        this.mockMvc.perform(get("/restapi/camunda")).andExpect(status().isUnauthorized());
     }
 
     private String createResponse() throws IOException {

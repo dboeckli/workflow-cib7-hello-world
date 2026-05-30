@@ -130,7 +130,7 @@ management:
       exposure:
         include: "*"
     #access:
-      #default: unrestricted
+    #default: unrestricted
   endpoint:
     configprops:
       # WARNING: SECURITY RISK - DO NOT USE IN PRODUCTION ENVIRONMENT

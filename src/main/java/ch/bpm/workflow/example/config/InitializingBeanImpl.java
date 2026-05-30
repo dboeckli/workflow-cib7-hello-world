@@ -21,7 +21,7 @@ import static ch.bpm.workflow.example.config.security.camunda.CamundaLdapConfigu
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@Profile({"local"})
+@Profile({ "local" })
 public class InitializingBeanImpl implements InitializingBean {
 
     private final LdapIdentityProviderPlugin ldapIdentityProviderPlugin;
@@ -34,27 +34,37 @@ public class InitializingBeanImpl implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(), printLdapIdentityProviderPlugin(ldapIdentityProviderPlugin));
-        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(), "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(),
+                printLdapIdentityProviderPlugin(ldapIdentityProviderPlugin));
+        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(),
+                "---------------------------------------------------------------------------");
 
-        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(), printSpringProcessEngineConfiguration(processEngineConfiguration));
-        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(), "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(),
+                printSpringProcessEngineConfiguration(processEngineConfiguration));
+        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(),
+                "---------------------------------------------------------------------------");
 
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), printCamundaBpmProperties(camundaBpmProperties));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
+                printCamundaBpmProperties(camundaBpmProperties));
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
+                "---------------------------------------------------------------------------");
 
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), printCamundaBpmProperties(camundaBpmProperties));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
+                printCamundaBpmProperties(camundaBpmProperties));
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
+                "---------------------------------------------------------------------------");
 
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(),
+                printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(),
+                "---------------------------------------------------------------------------");
     }
 
     private static String printSpringProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
         SpringProcessEngineConfiguration springProcessEngineConfiguration = (SpringProcessEngineConfiguration) processEngineConfiguration;
 
-        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
-            springProcessEngineConfiguration, ToStringStyle.MULTI_LINE_STYLE) {
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(springProcessEngineConfiguration,
+                ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
                 return !field.getName().equals("managerPassword");
@@ -64,8 +74,8 @@ public class InitializingBeanImpl implements InitializingBean {
     }
 
     private static String printCamundaBpmProperties(CamundaBpmProperties camundaBpmProperties) {
-        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
-            camundaBpmProperties, ToStringStyle.MULTI_LINE_STYLE) {
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(camundaBpmProperties,
+                ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
                 return !field.getName().equals("managerPassword");
@@ -75,8 +85,8 @@ public class InitializingBeanImpl implements InitializingBean {
     }
 
     private static String printCamundaJerseyResourceConfig(CamundaJerseyResourceConfig camundaJerseyResourceConfig) {
-        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(
-            camundaJerseyResourceConfig, ToStringStyle.MULTI_LINE_STYLE) {
+        ReflectionToStringBuilder builder = new ReflectionToStringBuilder(camundaJerseyResourceConfig,
+                ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
                 return !field.getName().equals("managerPassword");
@@ -84,4 +94,5 @@ public class InitializingBeanImpl implements InitializingBean {
         };
         return builder.toString();
     }
+
 }

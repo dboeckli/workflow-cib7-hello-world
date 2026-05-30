@@ -23,7 +23,8 @@ public class CamundaOpenApiRestController {
         InputStream inputStream = getClass().getResourceAsStream("/openapi.json");
         try {
             return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             Response response = Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             throw new WebApplicationException(response);
         }

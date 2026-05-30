@@ -18,21 +18,22 @@ public class PingRestController {
         this.buildProperties = buildProperties;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<PingResponse> getInfo() {
         return ResponseEntity.ok().body(createResponse());
     }
 
     private PingResponse createResponse() {
         return PingResponse.builder()
-                           .mavenGroupdId(buildProperties.getGroup())
-                           .mavenArtifactId(buildProperties.getArtifact())
-                           .version(buildProperties.getVersion())
-                           .vendor(buildProperties.get("javaVendor"))
-                           .mavenTimeStamp(buildProperties.getTime().toString())
-                           .mavenUser(buildProperties.get("mavenUser"))
-                           .javaVersion(buildProperties.get("javaVersion"))
-                           .gitCommitId(buildProperties.get("commit-id"))
-                           .build();
+            .mavenGroupdId(buildProperties.getGroup())
+            .mavenArtifactId(buildProperties.getArtifact())
+            .version(buildProperties.getVersion())
+            .vendor(buildProperties.get("javaVendor"))
+            .mavenTimeStamp(buildProperties.getTime().toString())
+            .mavenUser(buildProperties.get("mavenUser"))
+            .javaVersion(buildProperties.get("javaVersion"))
+            .gitCommitId(buildProperties.get("commit-id"))
+            .build();
     }
+
 }

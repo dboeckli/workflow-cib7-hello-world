@@ -36,4 +36,5 @@ public class JacksonDataFormatConfiguration {
         List<Module> modules = ObjectMapper.findModules();
         modules.forEach(module -> log.debug(JACKSON_CONFIG_MODULES.getMessage(), module, module.version()));
     }
+
 }

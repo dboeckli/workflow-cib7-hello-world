@@ -28,6 +28,7 @@ import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TO
 public class ValidateInputDelegate implements JavaDelegate {
 
     private final PersonService personService;
+
     private final GroupService groupService;
 
     LdapContextSource ldapContextSource;
@@ -43,19 +44,22 @@ public class ValidateInputDelegate implements JavaDelegate {
         List<Group> groups = groupService.getAllGroups();
         log.info("### Groups from ldap: {}", groups);
 
-        if (!delegateExecution.getVariables().containsKey(INPUT_VARIABLE_NAME) || delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString().isEmpty()) {
+        if (!delegateExecution.getVariables().containsKey(INPUT_VARIABLE_NAME)
+                || delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString().isEmpty()) {
             throw new WorkflowException("Variable " + INPUT_VARIABLE_NAME + " not found or empty");
-        } else {
-            TokenVariable tokenVariable = new TokenVariable(new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()));
+        }
+        else {
+            TokenVariable tokenVariable = new TokenVariable(
+                    new Input(delegateExecution.getVariables().get(INPUT_VARIABLE_NAME).toString()));
             tokenVariable.setStatus(STARTED);
 
-            ObjectValue tokenVariableValue = Variables
-                .objectValue(tokenVariable)
+            ObjectValue tokenVariableValue = Variables.objectValue(tokenVariable)
                 .serializationDataFormat(Variables.SerializationDataFormats.JAVA)
-                //.serializationDataFormat(Variables.SerializationDataFormats.JSON)
+                // .serializationDataFormat(Variables.SerializationDataFormats.JSON)
                 .create();
 
             delegateExecution.setVariable(TOKEN_VARIABLE_NAME, tokenVariableValue);
         }
     }
+
 }

@@ -14,10 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles(profiles = "test")
-@TestPropertySource(properties = {
-    "camunda.bpm.job-execution.enabled=false",
-    "camunda.bpm.client.disable-auto-fetching=true"
-})
+@TestPropertySource(
+        properties = { "camunda.bpm.job-execution.enabled=false", "camunda.bpm.client.disable-auto-fetching=true" })
 @Slf4j
 class PersonServiceTest {
 
@@ -30,4 +28,5 @@ class PersonServiceTest {
         log.info("Persons: {}", persons);
         assertThat(persons).isNotNull().hasSize(4);
     }
+
 }

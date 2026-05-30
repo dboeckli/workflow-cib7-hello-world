@@ -15,11 +15,8 @@ import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.RUNN
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable.TOKEN_VARIABLE_NAME;
 
 @Component
-@ExternalTaskSubscription(
-    topicName = HelloTaskHandler.TOPIC_NAME,
-    processDefinitionKey = PROCESS_DEFINITION_KEY,
-    includeExtensionProperties = true
-)
+@ExternalTaskSubscription(topicName = HelloTaskHandler.TOPIC_NAME, processDefinitionKey = PROCESS_DEFINITION_KEY,
+        includeExtensionProperties = true)
 @Slf4j
 public class HelloTaskHandler implements ExternalTaskHandler {
 
@@ -27,11 +24,13 @@ public class HelloTaskHandler implements ExternalTaskHandler {
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        log.info("### Received external task: {} with variables {}", externalTask.getId(), externalTask.getAllVariables());
+        log.info("### Received external task: {} with variables {}", externalTask.getId(),
+                externalTask.getAllVariables());
 
         TokenVariable tokenVariable = externalTask.getVariable(TOKEN_VARIABLE_NAME);
         tokenVariable.setStatus(RUNNING);
 
         externalTaskService.complete(externalTask, Collections.singletonMap(TOKEN_VARIABLE_NAME, tokenVariable));
-     }
+    }
+
 }
