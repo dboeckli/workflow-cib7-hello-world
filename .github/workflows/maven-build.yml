@@ -371,6 +371,7 @@ jobs:
                   -s $GITHUB_WORKSPACE/settings.xml \
                   -Dsonar.token=${SONAR_TOKEN} \
                   -Dsonar.host.url=https://sonarcloud.io \
+                  -Dsonar.scanner.skipJreProvisioning=true \
                   -Dsonar.sourceEncoding=UTF-8 \
                   -Dsonar.organization=${ORGANIZATION} \
                   -Dsonar.projectKey="${ORGANIZATION}_${ARTIFACT_ID}" \
@@ -381,6 +382,7 @@ jobs:
                   -s $GITHUB_WORKSPACE/settings.xml \
                   -Dsonar.token=${SONAR_TOKEN} \
                   -Dsonar.host.url=https://sonarcloud.io \
+                  -Dsonar.scanner.skipJreProvisioning=true \
                   -Dsonar.sourceEncoding=UTF-8 \
                   -Dsonar.organization=${ORGANIZATION} \
                   -Dsonar.projectKey="${ORGANIZATION}_${ARTIFACT_ID}" \
