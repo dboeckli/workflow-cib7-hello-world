@@ -68,10 +68,13 @@ camunda:
         historyTimeToLive: 5
         enableExceptionsAfterUnhandledBpmnError: true
 
+# CIB seven webclient configuration
+# Defaults & overrides
 # https://github.com/cibseven/cibseven-webclient
 # https://docs.cibseven.org/manual/latest/user-guide/cibseven-run/#choose-between-default-and-production-configuration
 # https://docs.cibseven.org/get-started/spring-boot/configuration/
-# see webapp\cibseven-webclient-web-spring-boot-4\2.2.0\cibseven-webclient-web-spring-boot-4-2.2.0-classes.jar!\application.yaml for defaults
+# Default is in JAR: cibseven-webclient-web-spring-boot-4-2.2.0.jar!/application.yaml
+# Config-Binding: org.cibseven.webapp.SevenWebclientContext
 cibseven:
   webclient:
     enabled: true
