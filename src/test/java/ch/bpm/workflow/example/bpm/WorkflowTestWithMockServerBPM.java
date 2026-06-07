@@ -68,8 +68,6 @@ import static org.mockserver.model.HttpResponse.response;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
-@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or
-                                // 'Tests'"
 class WorkflowTestWithMockServerBPM {
 
     @LocalServerPort

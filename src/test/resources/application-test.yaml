@@ -15,11 +15,10 @@ spring:
       ldif: "classpath:test-embedded.ldif"
       base-dn: "dc=example,dc=ch"
       port: 0
-
-server:
-  error:
-    include-message: always
-    include-binding-errors: always
+  web:
+    error:
+      include-message: always
+      include-binding-errors: always
 
 camunda:
   bpm:
