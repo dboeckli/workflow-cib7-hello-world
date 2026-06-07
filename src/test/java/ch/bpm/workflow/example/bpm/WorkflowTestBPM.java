@@ -55,8 +55,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
-@SuppressWarnings("java:S3577") // Suppress "Test class names should end with 'Test' or
-                                // 'Tests'"
 class WorkflowTestBPM {
 
     @LocalServerPort
