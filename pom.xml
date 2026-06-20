@@ -50,6 +50,7 @@
         -->
     <spring.boot.version>4.1.0</spring.boot.version>
     <cib7.spring.boot.starter.version>2.2.0</cib7.spring.boot.starter.version>
+    <graalvm.polyglot.js.version>25.0.3</graalvm.polyglot.js.version>
     <!--
         latest is: 2.8.8. use 2.8.4 to avoid conflicts with cibseven webclient dependency which is using 2.8.4
         see: https://github.com/cibseven/cibseven-webclient/blob/main/cibseven-webclient-web/pom.xml
@@ -132,10 +133,20 @@
     </dependency>
 
     <!-- for javascript support -->
+    <!-- Die JavaScript-Engine selbst -->
+    
     <dependency>
-      <groupId>org.openjdk.nashorn</groupId>
-      <artifactId>nashorn-core</artifactId>
-      <version>${nashorn-core.version}</version>
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>js</artifactId>
+      <version>${graalvm.polyglot.js.version}</version>
+      <type>pom</type>
+    </dependency>
+
+    <!-- Der JSR-223 ScriptEngine-Adapter – DAS ist der Schlüssel -->
+    <dependency>
+      <groupId>org.graalvm.js</groupId>
+      <artifactId>js-scriptengine</artifactId>
+      <version>${graalvm.polyglot.js.version}</version>
     </dependency>
 
     <!-- allows us to use connector service tasks -->
