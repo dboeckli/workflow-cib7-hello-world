@@ -134,7 +134,7 @@
 
     <!-- for javascript support -->
     <!-- Die JavaScript-Engine selbst -->
-    
+
     <dependency>
       <groupId>org.graalvm.polyglot</groupId>
       <artifactId>js</artifactId>
