@@ -9,10 +9,28 @@ Authorization: Basic {{username}} {{password}}
 Accept: application/json
 
 ### Start a new process instance check gateway in flow: is setting user03 to Default. Any input except eder and pumukel is taking the default path in gateway.
+< {%
+    function randomHex(length) {
+        let result = '';
+        const chars = '0123456789abcdef';
+        for (let i = 0; i < length; i++) {
+            result += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return result;
+    }
+
+    const traceId = randomHex(32);
+    const spanId  = randomHex(16);
+
+    request.variables.set("traceId", traceId);
+    request.variables.set("spanId", spanId);
+%}
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=halloecho
 
 {
     "input": "hallo"

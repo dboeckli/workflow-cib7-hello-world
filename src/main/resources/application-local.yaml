@@ -194,6 +194,8 @@ management:
         enabled: false
     sampling:
       probability: 1.0
+    propagation:
+      type: W3C
 
   logging:
     export:
