@@ -133,16 +133,12 @@
     </dependency>
 
     <!-- for javascript support -->
-    <!-- Die JavaScript-Engine selbst -->
-
     <dependency>
-      <groupId>org.graalvm.polyglot</groupId>
+      <groupId>org.graalvm.js</groupId>
       <artifactId>js</artifactId>
       <version>${graalvm.polyglot.js.version}</version>
       <type>pom</type>
     </dependency>
-
-    <!-- Der JSR-223 ScriptEngine-Adapter – DAS ist der Schlüssel -->
     <dependency>
       <groupId>org.graalvm.js</groupId>
       <artifactId>js-scriptengine</artifactId>
@@ -202,6 +198,10 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>context-propagation</artifactId>
     </dependency>
 
     <dependency>
