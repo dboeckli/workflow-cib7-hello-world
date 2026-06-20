@@ -5,6 +5,14 @@ spring:
   application:
     name: workflow-hello-world
 
+  threads:
+    virtual:
+      enabled: true
+
+  task:
+    execution:
+      propagate-context: true
+
   h2:
     console:
       enabled: true
@@ -161,6 +169,42 @@ management:
       enabled: true
       mode: full
 
+  httpexchanges:
+    recording:
+      enabled: true
+      include: request_headers, response_headers, session_id, time_taken
+  observations:
+    annotations:
+      enabled: true
+    http:
+      server:
+        requests:
+          name: http.server.requests
+      client:
+        requests:
+          name: http-client-requests
+
+  otlp:
+    metrics:
+      export:
+        enabled: false
+  tracing:
+    export:
+      otlp:
+        enabled: false
+    sampling:
+      probability: 1.0
+
+  logging:
+    export:
+      enabled: false
+      otlp:
+        enabled: false
+  simple:
+    metrics:
+      export:
+        enabled: false
+
 springdoc:
   show-actuator: true
   api-docs:
@@ -172,7 +216,8 @@ springdoc:
 
 logging:
   level:
-    org.springframework.ldap: DEBUG
+    org.springframework.ldap: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
 
 application:
   apifirst-server-jpa:

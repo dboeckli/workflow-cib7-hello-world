@@ -7,12 +7,16 @@ var user2 = {
     name: 'Jane Smith'
 }
 
-print('[Service_for_Script] Hello - I am a script');
-print('[Service_for_Script] Token Variable: ' + execution.getVariable("tokenVariable"));
-print('[Service_for_Script] Status: ' + execution.getVariable("tokenVariable").getStatus());
-print('[Service_for_Script] Business key:' + execution.processBusinessKey);
+var LoggerFactory = Java.type('org.slf4j.LoggerFactory');
+var log = LoggerFactory.getLogger('com.yourcompany.camunda.scripts.ServiceForScript');
 
-print("user :: " + JSON.stringify(user1));
+log.info('[Service_for_Script] Hello - I am a script');
+
+log.info('[Service_for_Script] Token Variable: ' + execution.getVariable("tokenVariable"));
+log.info('[Service_for_Script] Status: ' + execution.getVariable("tokenVariable").getStatus());
+log.info('[Service_for_Script] Business key:' + execution.processBusinessKey);
+
+log.info("user :: " + JSON.stringify(user1));
 
 execution.setVariable("User02", JSON.stringify(user2));
 
