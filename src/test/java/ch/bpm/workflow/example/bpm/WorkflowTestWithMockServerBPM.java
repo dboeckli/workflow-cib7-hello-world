@@ -87,7 +87,7 @@ class WorkflowTestWithMockServerBPM {
     // this version should correspond to the client version defined int the pom.xml
     @Container
     public MockServerContainer mockServer = new MockServerContainer(
-            DockerImageName.parse("mockserver/mockserver:7.5.0"));
+            DockerImageName.parse("mockserver/mockserver:7.6.0"));
 
     @Autowired
     CustomerApi customerApi;
