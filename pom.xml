@@ -48,7 +48,7 @@
         https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         https://docs.cibseven.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         -->
-    <spring.boot.version>4.1.0</spring.boot.version>
+    <spring.boot.version>4.1.1</spring.boot.version>
     <cib7.spring.boot.starter.version>2.2.0</cib7.spring.boot.starter.version>
     <graalvm.polyglot.js.version>25.3.4.1</graalvm.polyglot.js.version>
     <!--
