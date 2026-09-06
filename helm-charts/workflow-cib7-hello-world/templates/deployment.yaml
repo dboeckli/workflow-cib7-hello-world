@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{.Values.busyboxImage.pullPolicy }}
           command: [ 'sh', '-c', 'until nc -z {{ include "apifirst-server-jpa.serviceFQDN" . }} {{ .Values.apifirstServerJpa.port }}; do echo "[busybox: wait-for-apifirst-server-jpa] waiting for apifirst-server-jpa"; sleep 2; done; echo "[busybox: wait-for-apifirst-server-jpa] apifirst-server-jpa is available"' ]
       containers:
-        - name: {{ .Chart.Name }}
+        - name: @project.artifactId@
           image: "{{ .Values.image.registry }}/@project.artifactId@:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:

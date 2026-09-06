@@ -1,3 +1,6 @@
+nameOverride: "workflow-cib7-hello-world"
+fullnameOverride: "workflow-cib7-hello-world"
+
 global:
   timezone: Europe/Zurich
   timezonePath: /etc/localtime

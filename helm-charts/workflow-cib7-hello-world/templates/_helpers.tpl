@@ -63,8 +63,7 @@ Create the FQDN for the service
 Use the apifirst-server-jpa service FQDN
 */}}
 {{- define "apifirst-server-jpa.serviceFQDN" -}}
-{{- $fullname := include "application-template.fullname" . -}}
-{{- printf "%s-%s.%s.svc.cluster.local" $fullname "apifirst-server-jpa" .Release.Namespace }}
+{{- printf "apifirst-server-jpa.%s.svc.cluster.local" .Release.Namespace }}
 {{- end -}}
 
 

@@ -7,6 +7,6 @@ version: 0.0.1
 appVersion: 0.0.1
 
 dependencies:
-  - name: apifirst-server-jpa
-    version: "v0.0.1-SNAPSHOT"
+  - name: apifirst-server-jpa-chart
+    version: "0.0.1-snapshot"
     repository: "oci://registry-1.docker.io/domboeckli"
