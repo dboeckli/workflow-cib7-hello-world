@@ -5,7 +5,7 @@ name: @project.artifactId@
 description: A Helm chart for Spring 6 Project
 type: application
 version: @helm.chart.version@
-appVersion: @project.version@
+appVersion: @helm.chart.version@
 
 dependencies:
   - name: workflow-cib7-hello-world-ldap

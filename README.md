@@ -121,7 +121,7 @@ cd target/helm/repo
 
 unpack
 ```powershell
-$file = Get-ChildItem -Filter workflow-cib7-hello-world-v*.tgz | Select-Object -First 1
+$file = Get-ChildItem -Filter workflow-cib7-hello-world-*.tgz | Select-Object -First 1
 tar -xvf $file.Name
 ```
 
