@@ -1242,7 +1242,7 @@
               <arguments>
                 <argument>push</argument>
                 <!--suppress UnresolvedMavenProperty: helm.chart.version is set by maven antrun plugin -->
-                <argument>${project.build.directory}/helm/repo/${project.artifactId}-${helm.chart.version}.tgz</argument>
+                <argument>${project.build.directory}/helm/repo/${project.artifactId}-chart-${helm.chart.version}.tgz</argument>
                 <argument>--username</argument>
                 <!--suppress UnresolvedMavenProperty: DOCKER_USER is set by GitHub Actions -->
                 <argument>${env.DOCKER_USER}</argument>
