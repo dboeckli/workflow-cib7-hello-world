@@ -81,6 +81,18 @@
             "enabled": false
         },
         {
+            "description": "Resolve ch.guru.springframework.apifirst Maven packages on GitHub Packages",
+            "matchDatasources": [
+                "maven"
+            ],
+            "matchPackageNames": [
+                "ch.guru.springframework.apifirst:apifirst-client"
+            ],
+            "registryUrls": [
+                "https://maven.pkg.github.com/dboeckli/workflow-cib7-hello-world"
+            ]
+        },
+        {
             "matchCategories": [
                 "docker"
             ],
