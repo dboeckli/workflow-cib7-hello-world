@@ -4,6 +4,7 @@
 - [Prerequisites](#prerequisites)
 - [Build](#build)
 - [Kubernetes](#kubernetes)
+- [Sandbox](#sandbox)
 
 ## Description
 
@@ -167,3 +168,25 @@ kubectl run busybox-test --rm -it --image=busybox:1.36 --namespace=workflow-cib7
 ```
 
 You can use the actuator rest call to verify via port 30080
+## Sandbox
+
+Entwicklung in einer isolierten Docker-Sandbox via [opencode-sandbox-kit](https://github.com/dboeckli/opencode-sandbox-kit).
+Voraussetzungen: `sbx` CLI, Secrets (`sbx secret set github` + `sbx secret set github-maven`), IntelliJ-MCP-Registrierung
+(`sbx mcp add idea --url http://localhost:64342/stream --skip-ssrf-check`).
+
+Sandbox starten (PowerShell) — **mehrzeilig**, mit `--static-mcp idea`, gepinnter Template-Version und
+**read-only Host-Maven-Cache** (kein Neu-Download gecachter Dependencies):
+
+```powershell
+sbx run opencode --name workflow-cib7-hello-world `
+    --static-mcp idea `
+    --kit "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
+    -t docker/sandbox-templates:opencode-docker-0.5.0 `
+    "C:\development\projects\workflow-cib7-hello-world" `
+    "$env:USERPROFILE\.kube:ro" `       # optional: Kubernetes (kubectl/helm im Docker-Desktop-Cluster)
+    "C:\development\maven-repo:ro"      # read-only Host-Maven-Cache (Issue opencode-sandbox-kit #87)
+```
+
+Claude-Variante (Home): `sbx run claude --name workflow-cib7-hello-world --static-mcp idea --kit "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" -t docker/sandbox-templates:claude-code-docker-0.5.0 "C:\development\projects\workflow-cib7-hello-world" "C:\development\maven-repo:ro"`
+
+> **Sandbox-Quirk:** Vor jedem `./mvnw` in der Sandbox `export npm_config_bin_links=false` (Spotless/prettier bricht sonst mit EPERM im gemounteten Workspace).
