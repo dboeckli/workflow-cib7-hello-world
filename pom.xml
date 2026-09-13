@@ -62,7 +62,7 @@
     <swagger-parser.version>2.1.48</swagger-parser.version>
     <openapi-generator-maven-plugin.version>7.25.0</openapi-generator-maven-plugin.version>
 
-    <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
+    <apifirst.version>0.0.1_PR_feature_upgrade_readocly_to_2_5_0-SNAPSHOT</apifirst.version>
     <nashorn-core.version>15.7</nashorn-core.version>
 
     <logstash-logback.version>9.0</logstash-logback.version>
