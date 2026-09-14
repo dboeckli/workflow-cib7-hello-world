@@ -106,6 +106,7 @@ Use 8080 when started locally or 30080 in Kubernetes
   - http://localhost:8080/restapi/camunda or http://localhost:30080/restapi/camunda
   - http://localhost:8080/restapi/ping or http://localhost:30080/restapi/ping
   - http://localhost:8080/restapi/workflow or http://localhost:30080/restapi/workflow
+- LDAP Browser (dev): http://localhost:5000
 
 ### Accessing Services
 
@@ -114,6 +115,15 @@ Use 8080 when started locally or 30080 in Kubernetes
 - URL: `ldap://localhost:389` (local) or `ldap://localhost:30389` (Kubernetes NodePort)
 - User: cn=admin,dc=example,dc=ch
 - Password: password
+
+#### LDAP Browser (dev)
+
+[`dnknth/ldap-ui`](https://github.com/dnknth/ldap-ui) runs as part of the dev `compose.yaml`:
+
+- URL: http://localhost:5000
+- Login uses the full bind DN (`BIND_PATTERN=%s`):
+  - Admin — userid: `cn=admin,dc=example,dc=ch`, password: `password`
+  - User — userid: `cn=user01,ou=users,dc=example,dc=ch`, password: `user01-password`
 
 All rest services can be executed via the `httprequest` folder using the `k8s` environment setting
 
