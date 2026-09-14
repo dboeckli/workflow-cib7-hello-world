@@ -20,49 +20,39 @@ spec:
     spec:
       containers:
         - name: ldap
-          image: {{ .Values.bitnamiOpenldapImage.repository }}:{{ .Values.bitnamiOpenldapImage.tag }}
-          imagePullPolicy: {{ .Values.bitnamiOpenldapImage.pullPolicy }}
+          image: {{ .Values.openldapImage.repository }}:{{ .Values.openldapImage.tag }}
+          imagePullPolicy: {{ .Values.openldapImage.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           env:
-            - name: BITNAMI_DEBUG
-              value: "true"
-            - name: LDAP_LOGLEVEL
-              value: "stats"
-            - name: LDAP_CONFIG_ADMIN_ENABLED
-              value: "true"
-            - name: LDAP_CONFIG_ADMIN_USERNAME
-              value: "config-admin"
-            - name: LDAP_CONFIG_ADMIN_PASSWORD
-              value: "config-password"
-            - name: LDAP_ROOT
-              value: "dc=example,dc=ch"
-            - name: LDAP_ADMIN_USERNAME
-              value: "admin"
-            - name: LDAP_ADMIN_PASSWORD
-              value: "password"
-            - name: LDAP_PORT_NUMBER
-              value: "{{ .Values.service.targetPort }}"
-            - name: LDAP_CUSTOM_LDIF_DIR
-              value: "/ldifs"
+            - name: LDAP_INIT_ORG_DN
+              value: "{{ .Values.ldap.baseDN }}"
+            - name: LDAP_INIT_ORG_NAME
+              value: "{{ .Values.ldap.orgName }}"
+            - name: LDAP_INIT_ROOT_USER_DN
+              value: "{{ .Values.ldap.adminUsername }}"
+            - name: LDAP_INIT_ROOT_USER_PW
+              value: "{{ .Values.ldap.adminPassword }}"
           volumeMounts:
             - name: ldifs
-              mountPath: /ldifs
+              mountPath: /opt/ldifs/init_org_tree.ldif
+              subPath: init_org_tree.ldif
+            - name: ldifs
+              mountPath: /opt/ldifs/init_org_entries.ldif
+              subPath: init_org_entries.ldif
           readinessProbe:
             exec:
               command:
                 - ldapsearch
                 - -x
                 - -H
-                - ldap://localhost
-                - p
-                - "{{ .Values.service.targetPort }}"
+                - ldap://localhost:{{ .Values.service.targetPort }}
                 - -D
-                - cn=admin,dc=example,dc=ch
+                - "{{ .Values.ldap.adminUsername }}"
                 - -w
-                - password
+                - "{{ .Values.ldap.adminPassword }}"
                 - -b
-                - dc=example,dc=ch
+                - "{{ .Values.ldap.baseDN }}"
             initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 10
@@ -73,15 +63,13 @@ spec:
                 - ldapsearch
                 - -x
                 - -H
-                - ldap://localhost
-                - p
-                - "{{ .Values.service.targetPort }}"
+                - ldap://localhost:{{ .Values.service.targetPort }}
                 - -D
-                - cn=admin,dc=example,dc=ch
+                - "{{ .Values.ldap.adminUsername }}"
                 - -w
-                - password
+                - "{{ .Values.ldap.adminPassword }}"
                 - -b
-                - dc=example,dc=ch
+                - "{{ .Values.ldap.baseDN }}"
             initialDelaySeconds: 30
             periodSeconds: 30
             timeoutSeconds: 10
@@ -90,3 +78,8 @@ spec:
         - name: ldifs
           configMap:
             name: {{ include "workflow-cib7-hello-world-ldap.fullname" . }}-config-map
+            items:
+              - key: init_org_tree.ldif
+                path: init_org_tree.ldif
+              - key: init_org_entries.ldif
+                path: init_org_entries.ldif

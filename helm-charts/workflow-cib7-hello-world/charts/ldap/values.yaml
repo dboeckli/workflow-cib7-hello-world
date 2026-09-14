@@ -9,11 +9,12 @@ service:
 
 ldap:
   baseDN: "dc=example,dc=ch"
+  orgName: "Example, Inc"
   adminUsername: "cn=admin,dc=example,dc=ch"
   adminPassword: "password"
 
-bitnamiOpenldapImage:
-  repository: bitnamilegacy/openldap
+openldapImage:
+  repository: vegardit/openldap
   tag: "2.6.10"
   pullPolicy: IfNotPresent
 

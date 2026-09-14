@@ -42,6 +42,7 @@ graph LR
     subgraph External ["External Services"]
         LDAP[("OpenLDAP\n:389")]
         ApiFirst["apifirst-server-jpa\n:8082"]
+        LDAPUI["LDAP Browser (dev)\ndnknth/ldap-ui :5000"]
     end
 
     H2[("H2 In-Memory\njdbc:h2:mem:workflow-hello-world")]
@@ -50,6 +51,7 @@ graph LR
     Client -->|"browser"| Webclient
     Client -->|"browser"| Cockpit
     Client -->|"browser"| Docs
+    Client -->|"browser"| LDAPUI
     REST --> Engine
     Webclient --> Engine
     Cockpit --> Engine
@@ -59,6 +61,7 @@ graph LR
     Webclient -->|"LDAP auth"| LDAP
     Cockpit -->|"LDAP auth"| LDAP
     Engine -->|"identity"| LDAP
+    LDAPUI -->|"browse"| LDAP
 ```
 
 ## Process
@@ -106,6 +109,7 @@ Use 8080 when started locally or 30080 in Kubernetes
   - http://localhost:8080/restapi/camunda or http://localhost:30080/restapi/camunda
   - http://localhost:8080/restapi/ping or http://localhost:30080/restapi/ping
   - http://localhost:8080/restapi/workflow or http://localhost:30080/restapi/workflow
+- LDAP Browser (dev): http://localhost:5000
 
 ### Accessing Services
 
@@ -115,7 +119,29 @@ Use 8080 when started locally or 30080 in Kubernetes
 - User: cn=admin,dc=example,dc=ch
 - Password: password
 
-All rest services can be executed via the `httprequest` folder using the `k8s` environment setting
+#### LDAP Browser (dev)
+
+[`dnknth/ldap-ui`](https://github.com/dnknth/ldap-ui) runs as part of the dev `compose.yaml`:
+
+- URL: http://localhost:5000
+- Login (user id = LDAP `uid`):
+  - Admin — userid: `camunda-admin`, password: `camunda-admin-password`
+  - User — userid: `user01`, password: `user01-password`
+
+#### IntelliJ HTTP Client
+
+The `httprequest/` folder contains IntelliJ HTTP request files for manual testing:
+
+|      File       |                Coverage                |
+|-----------------|----------------------------------------|
+| `rest.http`     | REST API (`ping`/`camunda`/`workflow`) |
+| `camunda.http`  | Camunda engine REST API                |
+| `actuator.http` | Actuator/health endpoints              |
+| `apifirst.http` | apifirst-server-jpa endpoints          |
+
+Requests include W3C trace context via `httprequest/scripts/traceparent.js` (`traceparent` and
+`baggage: testBaggage=workflow-cib7-hello-world` headers). Environments (`host`, `context`,
+credentials) are configured in `httprequest/http-client.env.json`; select `local` or `k8s`.
 
 ### Servers
 
