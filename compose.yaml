@@ -32,6 +32,14 @@ services:
       BASE_DN: dc=example,dc=ch
     ports:
       - "5000:5000"
+    # override the image healthcheck: /api/health reads the base DN anonymously,
+    # which depends on the LDAP ACL state; check the HTTP endpoint instead
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:5000/" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     depends_on:
       ldap:
         condition: service_healthy
