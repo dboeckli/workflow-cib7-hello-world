@@ -42,6 +42,7 @@ graph LR
     subgraph External ["External Services"]
         LDAP[("OpenLDAP\n:389")]
         ApiFirst["apifirst-server-jpa\n:8082"]
+        LDAPUI["LDAP Browser (dev)\ndnknth/ldap-ui :5000"]
     end
 
     H2[("H2 In-Memory\njdbc:h2:mem:workflow-hello-world")]
@@ -50,6 +51,7 @@ graph LR
     Client -->|"browser"| Webclient
     Client -->|"browser"| Cockpit
     Client -->|"browser"| Docs
+    Client -->|"browser"| LDAPUI
     REST --> Engine
     Webclient --> Engine
     Cockpit --> Engine
@@ -59,6 +61,7 @@ graph LR
     Webclient -->|"LDAP auth"| LDAP
     Cockpit -->|"LDAP auth"| LDAP
     Engine -->|"identity"| LDAP
+    LDAPUI -->|"browse"| LDAP
 ```
 
 ## Process
