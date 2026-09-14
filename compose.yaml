@@ -1,32 +1,15 @@
 services:
   ldap:
-    # see https://github.com/bitnami/containers/issues/83267
-    image: bitnamilegacy/openldap:2.6.10
+    # vegardit/openldap is the maintained successor to the frozen bitnamilegacy/openldap
+    # (see https://github.com/bitnami/containers/issues/83267)
+    image: vegardit/openldap:2.6.10
     container_name: ldap
     environment:
-      BITNAMI_DEBUG: true
-      LDAP_LOGLEVEL: stats
-
-      LDAP_CONFIG_ADMIN_ENABLED: true
-      # cn=config-admin,cn=config
-      LDAP_CONFIG_ADMIN_USERNAME: config-admin
-      LDAP_CONFIG_ADMIN_PASSWORD: config-password
-
-
-      LDAP_ROOT: dc=example,dc=ch
+      LDAP_INIT_ORG_DN: dc=example,dc=ch
+      LDAP_INIT_ORG_NAME: Example, Inc
       # cn=admin,dc=example,dc=ch
-      LDAP_ADMIN_USERNAME: admin
-      LDAP_ADMIN_PASSWORD: password
-
-      LDAP_PORT_NUMBER: 389
-      # disable secure port
-      #LDAP_LDAPS_PORT_NUMBER: 636
-
-      LDAP_CUSTOM_LDIF_DIR: /ldifs
-      # LDAP_CUSTOM_LDIF_DIR is a replacement for the items below
-      # cn=camunda-admin,ou=users,dc=example,dc=ch
-      # LDAP_USERS: user01,user02,user03,camunda-admin
-      # LDAP_PASSWORDS: password1,password2,password3,camunda-admin-password
+      LDAP_INIT_ROOT_USER_DN: cn=admin,dc=example,dc=ch
+      LDAP_INIT_ROOT_USER_PW: password
     ports:
       - 389:389
       #- 636:636
@@ -36,7 +19,24 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - './ldifs:/ldifs'
+      - './ldifs/init_org_tree.ldif:/opt/ldifs/init_org_tree.ldif:ro'
+      - './ldifs/init_org_entries.ldif:/opt/ldifs/init_org_entries.ldif:ro'
+
+  # web UI to browse the LDAP directory (dev only), see https://github.com/dnknth/ldap-ui
+  ldap-ui:
+    image: dnknth/ldap-ui:0.15.3
+    container_name: ldap-ui
+    environment:
+      LDAP_URL: ldap://ldap:389/
+      BASE_DN: dc=example,dc=ch
+      # vegardit denies anonymous reads, so login must use the full bind DN
+      # (e.g. cn=admin,dc=example,dc=ch)
+      BIND_PATTERN: "%s"
+    ports:
+      - "5000:5000"
+    depends_on:
+      ldap:
+        condition: service_healthy
 
   apifirst-server-jpa:
     container_name: apifirst-server-jpa
