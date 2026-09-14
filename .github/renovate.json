@@ -90,7 +90,8 @@
             ],
             "registryUrls": [
                 "https://maven.pkg.github.com/dboeckli/workflow-cib7-hello-world"
-            ]
+            ],
+            "allowedVersions": "/^[0-9]+\\.[0-9]+\\.[0-9]+(-SNAPSHOT)?$/"
         },
         {
             "matchCategories": [
