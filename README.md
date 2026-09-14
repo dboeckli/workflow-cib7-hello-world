@@ -69,7 +69,7 @@ The BPMN process `hello-world-process` (`src/main/resources/process.bpmn`) is st
 `say-hello` and finally invokes the say-hello delegate — which calls the `apifirst-server-jpa` REST API and can
 raise a `BpmnError` caught by a boundary event.
 
-![Hello World Process](src/main/resources/process.diagram.svg)
+![Hello World Process](docs/process.diagram.svg)
 
 ## Description
 
