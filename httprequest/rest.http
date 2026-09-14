@@ -1,81 +1,87 @@
 ###
+< scripts/traceparent.js
 GET {{host}}/{{context}}/restapi/ping
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 ###
+< scripts/traceparent.js
 GET {{host}}/{{context}}/restapi/camunda
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 ### Start a new process instance check gateway in flow: is setting user03 to Default. Any input except eder and pumukel is taking the default path in gateway.
-< {%
-    function randomHex(length) {
-        let result = '';
-        const chars = '0123456789abcdef';
-        for (let i = 0; i < length; i++) {
-            result += chars[Math.floor(Math.random() * chars.length)];
-        }
-        return result;
-    }
-
-    const traceId = randomHex(32);
-    const spanId  = randomHex(16);
-
-    request.variables.set("traceId", traceId);
-    request.variables.set("spanId", spanId);
-%}
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
 traceparent: 00-{{traceId}}-{{spanId}}-03
-baggage: testBaggage=halloecho
+baggage: testBaggage=workflow-cib7-hello-world
 
 {
     "input": "hallo"
 }
 
 ### Start a new process instance. check gateway in flow: is setting user03 to Eder
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 {
     "input": "eder"
 }
 
 ### Start a new process instance. check gateway in flow: is setting user03 to Pumukel
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 {
     "input": "pumukel"
 }
 
 ### Start a new process instance which is failing in the delegate and takes the error intermediate event path.
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 {
     "input": "fail"
 }
 
 ### Start a new process instance. Shoud fail. no input field
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 ### Start a new process instance. Shoud fail. empty input field
+< scripts/traceparent.js
 POST {{host}}/{{context}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
 
 {
     "input": ""

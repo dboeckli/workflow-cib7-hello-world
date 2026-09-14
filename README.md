@@ -128,7 +128,20 @@ Use 8080 when started locally or 30080 in Kubernetes
   - Admin — userid: `camunda-admin`, password: `camunda-admin-password`
   - User — userid: `user01`, password: `user01-password`
 
-All rest services can be executed via the `httprequest` folder using the `k8s` environment setting
+#### IntelliJ HTTP Client
+
+The `httprequest/` folder contains IntelliJ HTTP request files for manual testing:
+
+|      File       |                Coverage                |
+|-----------------|----------------------------------------|
+| `rest.http`     | REST API (`ping`/`camunda`/`workflow`) |
+| `camunda.http`  | Camunda engine REST API                |
+| `actuator.http` | Actuator/health endpoints              |
+| `apifirst.http` | apifirst-server-jpa endpoints          |
+
+Requests include W3C trace context via `httprequest/scripts/traceparent.js` (`traceparent` and
+`baggage: testBaggage=workflow-cib7-hello-world` headers). Environments (`host`, `context`,
+credentials) are configured in `httprequest/http-client.env.json`; select `local` or `k8s`.
 
 ### Servers
 
