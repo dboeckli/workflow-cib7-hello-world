@@ -21,6 +21,7 @@ services:
     volumes:
       - './ldifs/init_org_tree.ldif:/opt/ldifs/init_org_tree.ldif:ro'
       - './ldifs/init_org_entries.ldif:/opt/ldifs/init_org_entries.ldif:ro'
+      - './ldifs/init_mdb_acls.ldif:/opt/ldifs/init_mdb_acls.ldif:ro'
 
   # web UI to browse the LDAP directory (dev only), see https://github.com/dnknth/ldap-ui
   ldap-ui:
@@ -29,9 +30,6 @@ services:
     environment:
       LDAP_URL: ldap://ldap:389/
       BASE_DN: dc=example,dc=ch
-      # vegardit denies anonymous reads, so login must use the full bind DN
-      # (e.g. cn=admin,dc=example,dc=ch)
-      BIND_PATTERN: "%s"
     ports:
       - "5000:5000"
     depends_on:

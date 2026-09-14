@@ -124,9 +124,9 @@ Use 8080 when started locally or 30080 in Kubernetes
 [`dnknth/ldap-ui`](https://github.com/dnknth/ldap-ui) runs as part of the dev `compose.yaml`:
 
 - URL: http://localhost:5000
-- Login uses the full bind DN (`BIND_PATTERN=%s`):
-  - Admin — userid: `cn=admin,dc=example,dc=ch`, password: `password`
-  - User — userid: `cn=user01,ou=users,dc=example,dc=ch`, password: `user01-password`
+- Login (user id = LDAP `uid`):
+  - Admin — userid: `camunda-admin`, password: `camunda-admin-password`
+  - User — userid: `user01`, password: `user01-password`
 
 All rest services can be executed via the `httprequest` folder using the `k8s` environment setting
 
