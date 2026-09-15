@@ -73,7 +73,7 @@
     <merge-yaml-plugin.version>1.4</merge-yaml-plugin.version>
 
     <!-- When upgrading, set version in WorkflowTestWithMockServerBPM as well -->
-    <mock-server.version>7.6.0</mock-server.version>
+    <mock-server.version>8.0.0</mock-server.version>
 
     <!-- Sonar -->
     <sonar-maven-plugin.version>5.8.0.7211</sonar-maven-plugin.version>
