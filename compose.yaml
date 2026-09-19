@@ -25,7 +25,7 @@ services:
 
   # web UI to browse the LDAP directory (dev only), see https://github.com/dnknth/ldap-ui
   ldap-ui:
-    image: dnknth/ldap-ui:0.15.3
+    image: dnknth/ldap-ui:0.15.4
     container_name: ldap-ui
     environment:
       LDAP_URL: ldap://ldap:389/
