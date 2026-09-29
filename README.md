@@ -243,7 +243,7 @@ You can use the actuator rest call to verify via port 30080
 
 ## Sandbox
 
-Entwicklung in einer isolierten Docker-Sandbox via [opencode-sandbox-kit](https://github.com/dboeckli/opencode-sandbox-kit).
+Entwicklung in einer isolierten Docker-Sandbox via [opencode-sandbox-kit](https://codeberg.org/dboeckli/opencode-sandbox-kit).
 Voraussetzungen: `sbx` CLI, Secrets (`sbx secret set github` + `sbx secret set github-maven`), IntelliJ-MCP-Registrierung
 (`sbx mcp add idea --url http://localhost:64342/stream --skip-ssrf-check`).
 
@@ -252,8 +252,8 @@ Sandbox starten (PowerShell) — **mehrzeilig**, mit `--static-mcp idea`, gepinn
 
 ```powershell
 sbx run opencode `
-    --kit "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
-    --template docker.io/domboeckli/sbx-opencode-tooling:latest `
+    --kit "git+https://codeberg.org/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
+    --template docker.cloudsmith.io/dboeckli/sbx/sbx-opencode-tooling:latest `
     --skills=off `
     --static-mcp idea `
     . `
@@ -265,8 +265,8 @@ Claude-Variante (Home):
 
 ```powershell
 sbx run claude `
-    --kit "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
-    --template docker.io/domboeckli/sbx-claude-tooling:latest `
+    --kit "git+https://codeberg.org/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
+    --template docker.cloudsmith.io/dboeckli/sbx/sbx-claude-tooling:latest `
     --skills=off `
     --static-mcp idea `
     . `
