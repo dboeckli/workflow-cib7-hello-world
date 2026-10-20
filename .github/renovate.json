@@ -127,12 +127,15 @@
             "ignoreTests": true
         },
         {
+            "description": "Keep MockServer Maven client and Docker image in one PR",
             "matchDatasources": ["maven", "docker"],
             "matchPackageNames": [
-                "org.mock-server:mockserver-junit-jupiter-no-dependencies",
+                "org.mock-server:*",
                 "mockserver/mockserver"
             ],
-            "groupName": "mockserver"
+            "groupName": "mockserver",
+            "separateMajorMinor": false,
+            "separateMinorPatch": false
         }
     ],
     "customManagers": [
