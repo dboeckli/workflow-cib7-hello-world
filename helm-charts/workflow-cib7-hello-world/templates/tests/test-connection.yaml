@@ -17,26 +17,36 @@ spec:
         - |
           ERROR_OCCURED=0
 
-          echo "### Test 1: Checking health endpoint using service short name: {{ include "application-template.fullname" . }}"
-          wget -O- -q {{ include "application-template.fullname" . }}:{{ .Values.service.port }}/actuator/health
-          echo "Exit code: $?"
-          if [ $? -ne 0 ]; then
-            ERROR_OCCURED=1
-          fi
+          check_health() {
+            description="$1"
+            url="$2"
+            echo "### $description"
+            attempt=1
+            exit_code=1
+            while [ $attempt -le 5 ]; do
+              wget -O- -q -T 10 "$url"
+              exit_code=$?
+              if [ $exit_code -eq 0 ]; then
+                break
+              fi
+              echo "Attempt $attempt failed with exit code $exit_code, retrying..."
+              attempt=$((attempt + 1))
+              sleep 2
+            done
+            echo "Exit code: $exit_code"
+            if [ $exit_code -ne 0 ]; then
+              ERROR_OCCURED=1
+            fi
+          }
 
-          echo "### Test 2: Checking health endpoint using fully qualified domain name (FQDN): {{ include "application-template.serviceFQDN" . }}"
-          wget -O- -q {{ include "application-template.serviceFQDN" . }}:{{ .Values.service.port }}/actuator/health
-          echo "Exit code: $?"
-          if [ $? -ne 0 ]; then
-            ERROR_OCCURED=1
-          fi
+          check_health "Test 1: Checking health endpoint using service short name: {{ include "application-template.fullname" . }}" \
+            "http://{{ include "application-template.fullname" . }}:{{ .Values.service.port }}/actuator/health"
 
-          echo "### Test 3: Checking health apifirst using fully qualified domain name (FQDN): {{ include "apifirst-server-jpa.serviceFQDN" . }}"
-          wget -O- -q {{ include "apifirst-server-jpa.serviceFQDN" . }}:{{ .Values.apifirstServerJpa.port }}/actuator/health
-          echo "Exit code: $?"
-          if [ $? -ne 0 ]; then
-            ERROR_OCCURED=1
-          fi
+          check_health "Test 2: Checking health endpoint using fully qualified domain name (FQDN): {{ include "application-template.serviceFQDN" . }}" \
+            "http://{{ include "application-template.serviceFQDN" . }}:{{ .Values.service.port }}/actuator/health"
+
+          check_health "Test 3: Checking health apifirst using fully qualified domain name (FQDN): {{ include "apifirst-server-jpa.serviceFQDN" . }}" \
+            "http://{{ include "apifirst-server-jpa.serviceFQDN" . }}:{{ .Values.apifirstServerJpa.port }}/actuator/health"
 
           if [ $ERROR_OCCURED -ne 0 ]; then
             # Print DNS configuration
@@ -52,5 +62,7 @@ spec:
             echo "nslookup APIFIRST_FQDN: $APIFIRST_FQDN"
             nslookup $APIFIRST_FQDN
           fi
+
+          exit $ERROR_OCCURED
 
   restartPolicy: Never
