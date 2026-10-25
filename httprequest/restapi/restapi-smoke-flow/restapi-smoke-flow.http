@@ -1,0 +1,39 @@
+# Flow: ping -> camunda — see restapi-smoke-flow.md
+
+### 1) ping (application build info)
+< ../../scripts/traceparent.js
+GET {{host}}/{{context}}/restapi/ping
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    client.test("ping returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("ping returns build information", function () {
+        client.assert(!!response.body.mavenGroupdId, "mavenGroupdId missing");
+        client.assert(!!response.body.mavenArtifactId, "mavenArtifactId missing");
+        client.assert(!!response.body.version, "version missing");
+        client.assert(!!response.body.mavenTimeStamp, "mavenTimeStamp missing");
+    });
+%}
+
+### 2) camunda openapi (controller response)
+< ../../scripts/traceparent.js
+GET {{host}}/{{context}}/restapi/camunda
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    client.test("camunda openapi returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("camunda openapi returns an OpenAPI document", function () {
+        client.assert(!!response.body.openapi, "openapi version missing");
+        client.assert(!!response.body.paths, "paths missing");
+    });
+%}

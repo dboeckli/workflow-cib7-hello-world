@@ -1,0 +1,129 @@
+# Flow: start hello-world-process in all controller branches — see workflow-flow.md
+
+### 1) start process with default input (gateway default branch, User03 = Default)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{
+    "input": "hallo"
+}
+
+> {%
+    client.test("default input returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("default input starts hello-world-process", function () {
+        client.assert(response.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId");
+        client.assert(!!response.body.processInstanceId, "processInstanceId missing");
+        client.assert(!!response.body.id, "id missing");
+    });
+%}
+
+### 2) start process with input eder (gateway branch, User03 = Eder)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{
+    "input": "eder"
+}
+
+> {%
+    client.test("eder input returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("eder input starts hello-world-process", function () {
+        client.assert(response.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId");
+        client.assert(!!response.body.processInstanceId, "processInstanceId missing");
+    });
+%}
+
+### 3) start process with input pumukel (gateway branch, User03 = Pumukel)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{
+    "input": "pumukel"
+}
+
+> {%
+    client.test("pumukel input returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("pumukel input starts hello-world-process", function () {
+        client.assert(response.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId");
+        client.assert(!!response.body.processInstanceId, "processInstanceId missing");
+    });
+%}
+
+### 4) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{
+    "input": "fail"
+}
+
+> {%
+    client.test("fail input still starts the process with 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("fail input returns a process instance", function () {
+        client.assert(!!response.body.processInstanceId, "processInstanceId missing");
+    });
+%}
+
+### 5) start process without input field (validation error)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{}
+
+> {%
+    client.test("missing input returns 400", function () {
+        client.assert(response.status === 400, "expected 400 but got " + response.status);
+    });
+%}
+
+### 6) start process with empty input (ValidateInputDelegate rejects empty input)
+< ../../scripts/traceparent.js
+POST {{host}}/{{context}}/restapi/workflow
+Accept: application/json
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+{
+    "input": ""
+}
+
+> {%
+    client.test("empty input returns 400", function () {
+        client.assert(response.status === 400, "expected 400 but got " + response.status);
+    });
+%}
