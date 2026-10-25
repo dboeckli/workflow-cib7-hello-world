@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: mfinelli/setup-shfmt@v4
+      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
         with:
           shfmt-version: 3.14.1
 
@@ -88,7 +88,6 @@ jobs:
         id: show_variables
         shell: bash
         env:
-          ALLMYSECRETS: ${{ toJSON(secrets) }}
           ALLMYVARS: ${{ toJSON(vars) }}
           ALLMYOUTPUT: ${{ toJSON(steps.set_version.outputs) }}
           BRANCH_MVN_VERSION: ${{ steps.set_version.outputs.BRANCH_MVN_VERSION }}
@@ -99,7 +98,6 @@ jobs:
           ORGANIZATION: ${{ steps.set_version.outputs.ORGANIZATION }}
 
         run: |
-          echo "### ALLMYSECRETS: $ALLMYSECRETS"
           echo "### ALLMYVARS: $ALLMYVARS"
           echo "### ALLMYOUTPUT: $ALLMYOUTPUT"
           
@@ -142,7 +140,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: mfinelli/setup-shfmt@v4
+      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
         with:
           shfmt-version: 3.14.1
 
@@ -206,11 +204,9 @@ jobs:
         id: show_build_variables
         shell: bash
         env:
-          ALLMYSECRETS: ${{ toJSON(secrets) }}
           ALLMYVARS: ${{ toJSON(vars) }}
           ALLMYOUTPUT: ${{ toJSON(needs.setup.outputs) }}
         run: |
-          echo "### ALLMYSECRETS: $ALLMYSECRETS"
           echo "### ALLMYVARS: $ALLMYVARS"
           echo "### ALLMYOUTPUT: $ALLMYOUTPUT"
 
@@ -300,7 +296,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: mfinelli/setup-shfmt@v4
+      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
         with:
           shfmt-version: 3.14.1
 
