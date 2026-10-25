@@ -1,7 +1,7 @@
 info:
-  name: 5) start process without input field (validation error)
+  name: 10) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
   type: http
-  seq: 5
+  seq: 10
 
 http:
   method: POST
@@ -15,7 +15,10 @@ http:
       value: testBaggage=workflow-cib7-hello-world
   body:
     type: json
-    data: "{}"
+    data: |-
+      {
+          "input": "fail"
+      }
   auth:
     type: basic
     username: "{{username}}"
@@ -25,9 +28,13 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("missing input returns 400", function () {
-            expect(res.status === 400, "expected 400 but got " + res.status).to.be.true;
+        test("fail input still starts the process with 200", function () {
+            expect(res.status === 200, "expected 200 but got " + res.status).to.be.true;
         });
+        test("fail input returns a process instance", function () {
+            expect(!!res.body.processInstanceId, "processInstanceId missing").to.be.true;
+        });
+        bru.setVar("processInstanceId", res.body.processInstanceId);
 
 settings:
   encodeUrl: true

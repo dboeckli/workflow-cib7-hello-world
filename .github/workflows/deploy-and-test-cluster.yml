@@ -173,7 +173,7 @@ jobs:
           done
 
           mkdir -p "$GITHUB_WORKSPACE/bru-reports"
-          bru run restapi -r --env local \
+          bru run restapi -r --env local --delay 6000 \
             --reporter-skip-all-headers \
             --reporter-junit "$GITHUB_WORKSPACE/bru-reports/TEST-bruno-restapi.xml" \
             --reporter-html "$GITHUB_WORKSPACE/bru-reports/bru-report-restapi.html"

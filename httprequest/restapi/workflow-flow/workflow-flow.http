@@ -1,4 +1,4 @@
-# Flow: start hello-world-process in all controller branches — see workflow-flow.md
+# Flow: start hello-world-process and verify the token position — see workflow-flow.md
 
 ### 1) start process with default input (gateway default branch, User03 = Default)
 < ../../scripts/traceparent.js
@@ -22,9 +22,48 @@ baggage: testBaggage=workflow-cib7-hello-world
         client.assert(!!response.body.processInstanceId, "processInstanceId missing");
         client.assert(!!response.body.id, "id missing");
     });
+    client.global.set("processInstanceId", response.body.processInstanceId);
 %}
 
-### 2) start process with input eder (gateway branch, User03 = Eder)
+### 2) default branch: read the token variable (status/input)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/variables/tokenVariable
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const token = response.body.value;
+    client.log("default token status: " + (token ? token.status : "missing") + ", input: " + (token ? token.input.inputVariable : "missing"));
+    client.test("default token variable is readable", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!token, "token value missing");
+        client.assert(["STARTED", "RUNNING", "COMPLETED", "FINISHED", "BUSINESS_EXCEPTION"].indexOf(token.status) >= 0, "unexpected token status " + token.status);
+        client.assert(token.input.inputVariable === "hallo", "unexpected token input");
+    });
+%}
+
+### 3) default branch: read the token position (activity)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/activity-instances
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const root = response.body;
+    const current = (root.childActivityInstances && root.childActivityInstances[0]) || (root.childTransitionInstances && root.childTransitionInstances[0]);
+    client.log("default token position: " + (current ? current.activityId : "unknown"));
+    client.test("default token is in the process", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!current, "no current activity or transition");
+        client.assert(current.processInstanceId === client.global.get("processInstanceId"), "processInstanceId mismatch");
+    });
+%}
+
+### 4) start process with input eder (gateway branch, User03 = Eder)
 < ../../scripts/traceparent.js
 POST {{host}}/restapi/workflow
 Accept: application/json
@@ -45,9 +84,48 @@ baggage: testBaggage=workflow-cib7-hello-world
         client.assert(response.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId");
         client.assert(!!response.body.processInstanceId, "processInstanceId missing");
     });
+    client.global.set("processInstanceId", response.body.processInstanceId);
 %}
 
-### 3) start process with input pumukel (gateway branch, User03 = Pumukel)
+### 5) eder branch: read the token variable (status/input)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/variables/tokenVariable
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const token = response.body.value;
+    client.log("eder token status: " + (token ? token.status : "missing") + ", input: " + (token ? token.input.inputVariable : "missing"));
+    client.test("eder token variable is readable", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!token, "token value missing");
+        client.assert(["STARTED", "RUNNING", "COMPLETED", "FINISHED", "BUSINESS_EXCEPTION"].indexOf(token.status) >= 0, "unexpected token status " + token.status);
+        client.assert(token.input.inputVariable === "eder", "unexpected token input");
+    });
+%}
+
+### 6) eder branch: read the token position (activity)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/activity-instances
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const root = response.body;
+    const current = (root.childActivityInstances && root.childActivityInstances[0]) || (root.childTransitionInstances && root.childTransitionInstances[0]);
+    client.log("eder token position: " + (current ? current.activityId : "unknown"));
+    client.test("eder token is in the process", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!current, "no current activity or transition");
+        client.assert(current.processInstanceId === client.global.get("processInstanceId"), "processInstanceId mismatch");
+    });
+%}
+
+### 7) start process with input pumukel (gateway branch, User03 = Pumukel)
 < ../../scripts/traceparent.js
 POST {{host}}/restapi/workflow
 Accept: application/json
@@ -68,9 +146,48 @@ baggage: testBaggage=workflow-cib7-hello-world
         client.assert(response.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId");
         client.assert(!!response.body.processInstanceId, "processInstanceId missing");
     });
+    client.global.set("processInstanceId", response.body.processInstanceId);
 %}
 
-### 4) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
+### 8) pumukel branch: read the token variable (status/input)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/variables/tokenVariable
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const token = response.body.value;
+    client.log("pumukel token status: " + (token ? token.status : "missing") + ", input: " + (token ? token.input.inputVariable : "missing"));
+    client.test("pumukel token variable is readable", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!token, "token value missing");
+        client.assert(["STARTED", "RUNNING", "COMPLETED", "FINISHED", "BUSINESS_EXCEPTION"].indexOf(token.status) >= 0, "unexpected token status " + token.status);
+        client.assert(token.input.inputVariable === "pumukel", "unexpected token input");
+    });
+%}
+
+### 9) pumukel branch: read the token position (activity)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/activity-instances
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const root = response.body;
+    const current = (root.childActivityInstances && root.childActivityInstances[0]) || (root.childTransitionInstances && root.childTransitionInstances[0]);
+    client.log("pumukel token position: " + (current ? current.activityId : "unknown"));
+    client.test("pumukel token is in the process", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!current, "no current activity or transition");
+        client.assert(current.processInstanceId === client.global.get("processInstanceId"), "processInstanceId mismatch");
+    });
+%}
+
+### 10) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
 < ../../scripts/traceparent.js
 POST {{host}}/restapi/workflow
 Accept: application/json
@@ -90,9 +207,48 @@ baggage: testBaggage=workflow-cib7-hello-world
     client.test("fail input returns a process instance", function () {
         client.assert(!!response.body.processInstanceId, "processInstanceId missing");
     });
+    client.global.set("processInstanceId", response.body.processInstanceId);
 %}
 
-### 5) start process without input field (validation error)
+### 11) fail branch: read the token variable (status/input)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/variables/tokenVariable
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const token = response.body.value;
+    client.log("fail token status: " + (token ? token.status : "missing") + ", input: " + (token ? token.input.inputVariable : "missing"));
+    client.test("fail token variable is readable", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!token, "token value missing");
+        client.assert(["STARTED", "RUNNING", "COMPLETED", "FINISHED", "BUSINESS_EXCEPTION"].indexOf(token.status) >= 0, "unexpected token status " + token.status);
+        client.assert(token.input.inputVariable === "fail", "unexpected token input");
+    });
+%}
+
+### 12) fail branch: read the token position (activity)
+< ../../scripts/traceparent.js
+GET {{host}}/engine-rest/process-instance/{{processInstanceId}}/activity-instances
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    const root = response.body;
+    const current = (root.childActivityInstances && root.childActivityInstances[0]) || (root.childTransitionInstances && root.childTransitionInstances[0]);
+    client.log("fail token position: " + (current ? current.activityId : "unknown"));
+    client.test("fail token is in the process", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+        client.assert(!!current, "no current activity or transition");
+        client.assert(current.processInstanceId === client.global.get("processInstanceId"), "processInstanceId mismatch");
+    });
+%}
+
+### 13) start process without input field (validation error)
 < ../../scripts/traceparent.js
 POST {{host}}/restapi/workflow
 Accept: application/json
@@ -109,7 +265,7 @@ baggage: testBaggage=workflow-cib7-hello-world
     });
 %}
 
-### 6) start process with empty input (ValidateInputDelegate rejects empty input)
+### 14) start process with empty input (ValidateInputDelegate rejects empty input)
 < ../../scripts/traceparent.js
 POST {{host}}/restapi/workflow
 Accept: application/json

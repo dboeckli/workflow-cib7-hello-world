@@ -1,7 +1,7 @@
 info:
-  name: 4) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
+  name: 14) start process with empty input (ValidateInputDelegate rejects empty input)
   type: http
-  seq: 4
+  seq: 14
 
 http:
   method: POST
@@ -17,7 +17,7 @@ http:
     type: json
     data: |-
       {
-          "input": "fail"
+          "input": ""
       }
   auth:
     type: basic
@@ -28,11 +28,8 @@ runtime:
   scripts:
     - type: tests
       code: |-
-        test("fail input still starts the process with 200", function () {
-            expect(res.status === 200, "expected 200 but got " + res.status).to.be.true;
-        });
-        test("fail input returns a process instance", function () {
-            expect(!!res.body.processInstanceId, "processInstanceId missing").to.be.true;
+        test("empty input returns 400", function () {
+            expect(res.status === 400, "expected 400 but got " + res.status).to.be.true;
         });
 
 settings:

@@ -1,7 +1,7 @@
 info:
-  name: 3) start process with input pumukel (gateway branch, User03 = Pumukel)
+  name: 7) start process with input pumukel (gateway branch, User03 = Pumukel)
   type: http
-  seq: 3
+  seq: 7
 
 http:
   method: POST
@@ -35,6 +35,7 @@ runtime:
             expect(res.body.processDefinitionId.startsWith("hello-world-process"), "unexpected processDefinitionId").to.be.true;
             expect(!!res.body.processInstanceId, "processInstanceId missing").to.be.true;
         });
+        bru.setVar("processInstanceId", res.body.processInstanceId);
 
 settings:
   encodeUrl: true
