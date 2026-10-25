@@ -205,6 +205,19 @@
             ]
         },
         {
+            "description": "Update Helm version pinned in GitHub workflows (azure/setup-helm)",
+            "customType": "regex",
+            "datasourceTemplate": "github-releases",
+            "depNameTemplate": "helm/helm",
+            "extractVersionTemplate": "^v?(?<version>.*)$",
+            "managerFilePatterns": [
+                "/^\\.github\\/workflows\\/.*\\.ya?ml$/"
+            ],
+            "matchStrings": [
+                "uses: azure/setup-helm@[^\\n]+\\n\\s+with:\\n\\s+version: v(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+            ]
+        },
+        {
             "description": "Update shfmt version pinned in pom.xml (spotless shfmt formatter) and GitHub workflows (mfinelli/setup-shfmt)",
             "customType": "regex",
             "datasourceTemplate": "github-tags",
