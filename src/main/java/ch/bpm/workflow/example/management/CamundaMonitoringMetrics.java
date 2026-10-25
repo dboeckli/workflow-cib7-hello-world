@@ -27,9 +27,11 @@ public class CamundaMonitoringMetrics {
     private static final String NUMBER_OF_ACQUISITION_CYCLES = "Number of acquisition cycles";
 
     public CamundaMonitoringMetrics(ProcessEngine engine) {
-        super();
-        Objects.requireNonNull(engine);
-        this.managementService = engine.getManagementService();
+        this(Objects.requireNonNull(engine, "engine must not be null").getManagementService());
+    }
+
+    private CamundaMonitoringMetrics(ManagementService managementService) {
+        this.managementService = managementService;
     }
 
     @Bean

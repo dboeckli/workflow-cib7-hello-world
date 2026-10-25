@@ -15,14 +15,14 @@ public class TestClassOrderer implements ClassOrderer {
 
     private static int getOrder(ClassDescriptor classDescriptor) {
         String className = classDescriptor.getTestClass().getSimpleName();
-        if (className.endsWith("Test") || className.endsWith("Tests")) {
+        if (className.endsWith("BPMTest") || className.endsWith("BPM")) {
+            return 3;
+        }
+        else if (className.endsWith("Test") || className.endsWith("Tests")) {
             return 1;
         }
         else if (className.endsWith("IT")) {
             return 2;
-        }
-        else if (className.endsWith("BPM")) {
-            return 3;
         }
         else {
             return 999;

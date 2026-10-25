@@ -7,7 +7,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 /*
- * TODO: FIX FOR THIS ISSUE WHEN UPGRADE TO CIB7 2.0.0. See
+ * Workaround until the CIB7 2.0.0 upgrade. See
  * https://github.com/cibseven/cibseven/issues/85 Parameter 0 of method
  * setPropertyConfigurer in org.cibseven.bpm.client.spring.impl.client.ClientFactory
  * required a single bean, but 2 were found: - propertySourcesPlaceholderConfigurer:
