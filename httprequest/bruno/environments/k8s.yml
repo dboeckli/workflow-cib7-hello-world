@@ -1,0 +1,5 @@
+name: k8s
+variables:
+  - name: host
+    value: http://localhost:30080
+    enabled: true

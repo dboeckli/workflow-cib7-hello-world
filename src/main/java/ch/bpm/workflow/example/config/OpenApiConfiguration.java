@@ -19,6 +19,7 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 import static ch.bpm.workflow.example.controller.CamundaOpenApiRestController.CAMUNDA_OPENAPI_CONTEXT;
 
@@ -46,6 +48,9 @@ public class OpenApiConfiguration {
     @Value("${camunda.bpm.client.basic-auth.password}")
     private String password;
 
+    @Value("${openapi.server-url:}")
+    private String openApiServerUrl;
+
     @Bean
     @Qualifier("customGlobalHeaderOpenApiCustomizer")
     public OpenApiCustomizer customGlobalHeaderOpenApiCustomizer() {
@@ -63,6 +68,9 @@ public class OpenApiConfiguration {
                     }
                     // Add other group descriptions here if needed
                 });
+            }
+            if (StringUtils.hasText(openApiServerUrl)) {
+                openApi.setServers(List.of(new Server().url(openApiServerUrl)));
             }
         };
     }
@@ -132,8 +140,12 @@ public class OpenApiConfiguration {
 
                     // Set the correct server URL
                     externalOpenApi.getServers().clear();
-                    String engineRestUrl = scheme + "://" + hostname + ":" + port + "/engine-rest";
-                    externalOpenApi.addServersItem(new Server().url(engineRestUrl));
+                    String baseUrl = StringUtils.hasText(openApiServerUrl) ? openApiServerUrl
+                            : scheme + "://" + hostname + ":" + port;
+                    if (baseUrl.endsWith("/")) {
+                        baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+                    }
+                    externalOpenApi.addServersItem(new Server().url(baseUrl + "/engine-rest"));
 
                     // Merge paths and components from external OpenAPI into the current
                     // one

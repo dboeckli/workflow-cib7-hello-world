@@ -1,0 +1,33 @@
+opencollection: 1.0.0
+
+info:
+  name: workflow-cib7-hello-world httprequest
+  version: "1"
+
+request:
+  scripts:
+    - type: before-request
+      code: |-
+        function randomHex(length) {
+          let result = "";
+          const chars = "0123456789abcdef";
+          for (let i = 0; i < length; i += 1) {
+            result += chars[Math.floor(Math.random() * chars.length)];
+          }
+          return result;
+        }
+
+        bru.setVar("traceId", randomHex(32));
+        bru.setVar("spanId", randomHex(16));
+
+        const username = bru.getProcessEnv("BRUNO_USERNAME") || bru.getEnvVar("username") || "camunda-admin";
+        const password = bru.getProcessEnv("BRUNO_PASSWORD") || bru.getEnvVar("password") || "camunda-admin-password";
+        bru.setVar("username", username);
+        bru.setVar("password", password);
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+      - tools
