@@ -105,7 +105,7 @@ class WorkflowRestControllerIT {
         String jsonRequest = objectMapper.writeValueAsString(infoRequest);
 
         MvcResult result = this.mockMvc
-            .perform(post("/restapi/workflow").with(httpBasic("camunda-admin", "camunda-admin-password"))
+            .perform(post("/restapi/workflow").with(httpBasic("user01", "user01-password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRequest))
             .andExpect(MockMvcResultMatchers.status().isOk())

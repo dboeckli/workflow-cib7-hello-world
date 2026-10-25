@@ -24,6 +24,10 @@ import static ch.bpm.workflow.example.config.security.camunda.CamundaLdapConfigu
 @Profile({ "local" })
 public class InitializingBeanImpl implements InitializingBean {
 
+    private static final String SEPARATOR = "---------------------------------------------------------------------------";
+
+    private static final String MANAGER_PASSWORD_FIELD = "managerPassword";
+
     private final LdapIdentityProviderPlugin ldapIdentityProviderPlugin;
 
     private final ProcessEngineConfiguration processEngineConfiguration;
@@ -36,28 +40,23 @@ public class InitializingBeanImpl implements InitializingBean {
     public void afterPropertiesSet() {
         log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(),
                 printLdapIdentityProviderPlugin(ldapIdentityProviderPlugin));
-        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(),
-                "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), ldapIdentityProviderPlugin.getClass().getName(), SEPARATOR);
 
         log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(),
                 printSpringProcessEngineConfiguration(processEngineConfiguration));
-        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(),
-                "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), processEngineConfiguration.getClass().getName(), SEPARATOR);
 
         log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
                 printCamundaBpmProperties(camundaBpmProperties));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
-                "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), SEPARATOR);
 
         log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
                 printCamundaBpmProperties(camundaBpmProperties));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(),
-                "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaBpmProperties.getClass().getName(), SEPARATOR);
 
         log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(),
                 printCamundaJerseyResourceConfig(camundaJerseyResourceConfig));
-        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(),
-                "---------------------------------------------------------------------------");
+        log.debug(READING_CONFIG_CLASS.getMessage(), camundaJerseyResourceConfig.getClass().getName(), SEPARATOR);
     }
 
     private static String printSpringProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
@@ -67,7 +66,7 @@ public class InitializingBeanImpl implements InitializingBean {
                 ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
-                return !field.getName().equals("managerPassword");
+                return !field.getName().equals(MANAGER_PASSWORD_FIELD);
             }
         };
         return builder.toString();
@@ -78,7 +77,7 @@ public class InitializingBeanImpl implements InitializingBean {
                 ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
-                return !field.getName().equals("managerPassword");
+                return !field.getName().equals(MANAGER_PASSWORD_FIELD);
             }
         };
         return builder.toString();
@@ -89,7 +88,7 @@ public class InitializingBeanImpl implements InitializingBean {
                 ToStringStyle.MULTI_LINE_STYLE) {
             @Override
             protected boolean accept(Field field) {
-                return !field.getName().equals("managerPassword");
+                return !field.getName().equals(MANAGER_PASSWORD_FIELD);
             }
         };
         return builder.toString();

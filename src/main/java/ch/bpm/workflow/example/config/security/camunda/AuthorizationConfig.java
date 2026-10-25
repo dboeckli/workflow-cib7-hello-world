@@ -17,7 +17,7 @@ import static org.cibseven.bpm.engine.authorization.Authorization.AUTH_TYPE_GRAN
 @Profile({ "local" })
 @RequiredArgsConstructor
 @Slf4j
-// TODO: ADD CONFIGURABLE PERMISSIONS HERE FOR USERS (user01, user02,...) AND GROUPS
+// NOTE: permissions are currently hard-coded; make them configurable for users/groups.
 // SEE:
 // https://docs.camunda.org/manual/latest/user-guide/process-engine/authorization-service/
 public class AuthorizationConfig {

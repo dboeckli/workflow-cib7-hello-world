@@ -39,7 +39,7 @@
     <skip.docker.publish>true</skip.docker.publish>
     <skip.start.stop.springboot>false</skip.start.stop.springboot>
 
-    <!-- TODO: remove this pin once https://github.com/paketo-buildpacks/builder-noble-java-tiny/issues/344 is fixed -->
+    <!-- Pin until https://github.com/paketo-buildpacks/builder-noble-java-tiny/issues/344 is fixed. -->
     <!-- :latest is arm64-only since 0.0.200; with Spring Boot 4.2.x switch to the new default paketobuildpacks/ubuntu-resolute-builder -->
     <spring-boot.build-image.builder>paketobuildpacks/builder-noble-java-tiny:0.0.200</spring-boot.build-image.builder>
 
@@ -77,7 +77,7 @@
     <exec-maven-plugin.version>3.6.4</exec-maven-plugin.version>
     <merge-yaml-plugin.version>1.4</merge-yaml-plugin.version>
 
-    <!-- When upgrading, set version in WorkflowTestWithMockServerBPM as well -->
+    <!-- When upgrading, set version in WorkflowWithMockServerBPMTest as well -->
     <mock-server.version>9.1.0</mock-server.version>
 
     <!-- Sonar -->
@@ -468,6 +468,7 @@
                 <excludes>
                   <exclude>**/*IT.java</exclude>
                   <exclude>**/*BPM.java</exclude>
+                  <exclude>**/*BPMTest.java</exclude>
                 </excludes>
               </configuration>
             </execution>
@@ -489,6 +490,7 @@
                   <exclude>**/*Test.java</exclude>
                   <exclude>**/*Spec.java</exclude>
                   <exclude>**/*BPM.java</exclude>
+                  <exclude>**/*BPMTest.java</exclude>
                 </excludes>
               </configuration>
             </execution>
@@ -501,14 +503,8 @@
                 <!--suppress UnresolvedMavenProperty -->
                 <argLine>${argLine} -XX:+EnableDynamicAgentLoading -Xshare:off</argLine>
                 <includes>
-                  <include>**/*BPM.java</include>
+                  <include>**/*BPMTest.java</include>
                 </includes>
-                <excludes>
-                  <exclude>**/*Tests.java</exclude>
-                  <exclude>**/*Test.java</exclude>
-                  <exclude>**/*Spec.java</exclude>
-                  <exclude>**/*IT.java</exclude>
-                </excludes>
               </configuration>
             </execution>
           </executions>

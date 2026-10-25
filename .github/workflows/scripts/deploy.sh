@@ -8,88 +8,90 @@ set -o errtrace # Ensure the error trap handler is inherited
 readonly ACTION_RUNNER_DEPLOYMENT_WORKING_DIR="/opt/actions-runner/deployment-$(date +'%Y-%m-%d_%T')"
 readonly BACKUP_DIR="backup"
 
-if [ -z "${FORCE_DEPLOY}" ]; then
+if [[ -z "${FORCE_DEPLOY}" ]]; then
 	FORCE_DEPLOY="false"
 fi
 
 readonly RUNTIME_DIR RUNTIME_USER BRANCH_MVN_VERSION BRANCH_NAME CAMUNDA_DB_SECRET LDAP_SECRET ENVIRONMENT ARTIFACT_ID ARTIFACTORY_URL GROUP_ID
 
-function verifyParameter() {
+function verify_parameter() {
 	echo "Environment Variables are:"
 	echo "Variable FORCE_DEPLOY: ${FORCE_DEPLOY}"
 
 	if [[ ${ARTIFACTORY_URL} && ${ARTIFACTORY_URL-x} ]]; then
 		echo "[INFO] ARTIFACTORY_URL: ${ARTIFACTORY_URL}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. ARTIFACTORY_URL was empty"
+		echo "[ERROR] Missing mandatory environment variable. ARTIFACTORY_URL was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${ARTIFACT_ID} && ${ARTIFACT_ID-x} ]]; then
 		echo "[INFO] ARTIFACTORY_URL: ${ARTIFACT_ID}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. ARTIFACT_ID was empty"
+		echo "[ERROR] Missing mandatory environment variable. ARTIFACT_ID was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${GROUP_ID} && ${GROUP_ID-x} ]]; then
 		echo "[INFO] ARTIFACTORY_URL: ${GROUP_ID}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. GROUP_ID was empty"
+		echo "[ERROR] Missing mandatory environment variable. GROUP_ID was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${BRANCH_NAME} && ${BRANCH_NAME-x} ]]; then
 		echo "[INFO] BRANCH_NAME: ${BRANCH_NAME}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. BRANCH_NAME was empty"
+		echo "[ERROR] Missing mandatory environment variable. BRANCH_NAME was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${BRANCH_MVN_VERSION} && ${BRANCH_MVN_VERSION-x} ]]; then
 		echo "[INFO] BRANCH_MVN_VERSION: ${BRANCH_MVN_VERSION}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. BRANCH_MVN_VERSION was empty"
+		echo "[ERROR] Missing mandatory environment variable. BRANCH_MVN_VERSION was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${RUNTIME_DIR} && ${RUNTIME_DIR-x} ]]; then
 		echo "[INFO] RUNTIME_DIR: ${RUNTIME_DIR}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. RUNTIME_DIR was empty"
+		echo "[ERROR] Missing mandatory environment variable. RUNTIME_DIR was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${RUNTIME_USER} && ${RUNTIME_USER-x} ]]; then
 		echo "[INFO] RUNTIME_DIR: ${RUNTIME_USER}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. RUNTIME_USER was empty"
+		echo "[ERROR] Missing mandatory environment variable. RUNTIME_USER was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${CAMUNDA_DB_SECRET} && ${CAMUNDA_DB_SECRET-x} ]]; then
 		echo "[INFO] CAMUNDA_DB_SECRET has been set"
 	else
-		echo "[ERROR] Missing mandatory environment variable. CAMUNDA_DB_SECRET was empty"
+		echo "[ERROR] Missing mandatory environment variable. CAMUNDA_DB_SECRET was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${LDAP_SECRET} && ${LDAP_SECRET-x} ]]; then
 		echo "[INFO] LDAP_SECRET has been set"
 	else
-		echo "[ERROR] Missing mandatory environment variable. LDAP_SECRET was empty"
+		echo "[ERROR] Missing mandatory environment variable. LDAP_SECRET was empty" >&2
 		exit 1
 	fi
 
 	if [[ ${ENVIRONMENT} && ${ENVIRONMENT-x} ]]; then
 		echo "[INFO] TOMCAT_NAME: ${ENVIRONMENT}"
 	else
-		echo "[ERROR] Missing mandatory environment variable. ENVIRONMENT was empty"
+		echo "[ERROR] Missing mandatory environment variable. ENVIRONMENT was empty" >&2
 		exit 1
 	fi
+
+	return 0
 }
 
-function getArtefacts() {
+function get_artefacts() {
 	if [[ "${FORCE_DEPLOY}" == "true" ]] || [[ "${BRANCH_NAME}" == "main" ]]; then
 		set -x
 		mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.1:purge-local-repository \
@@ -114,15 +116,17 @@ function getArtefacts() {
 			-Ddest="${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar"
 		set +x
 
-		if [ -f "${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar" ]; then
+		if [[ -f "${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar" ]]; then
 			echo "[INFO] artifact successfully downloaded: ${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar"
 		else
-			echo "[ERROR] Missing deployment artifact: ${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar"
+			echo "[ERROR] Missing deployment artifact: ${ACTION_RUNNER_DEPLOYMENT_WORKING_DIR}/${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar" >&2
 			exit 1
 		fi
 	else
 		echo "[INFO] No need to retrieve artifacts when no deployment on the way."
 	fi
+
+	return 0
 }
 
 function deploy() {
@@ -163,14 +167,16 @@ function deploy() {
 	else
 		echo "::notice:: ### Deployment skipped for ${ARTIFACT_ID}-${BRANCH_MVN_VERSION}.jar"
 	fi
+
+	return 0
 }
 
 function main() {
-	verifyParameter
+	verify_parameter
 
 	echo "[INFO] All good. Starting deployment with user: $(whoami) and version ${BRANCH_MVN_VERSION}. Deployment enforced: ${FORCE_DEPLOY}"
 
-	getArtefacts
+	get_artefacts
 
 	deploy
 }

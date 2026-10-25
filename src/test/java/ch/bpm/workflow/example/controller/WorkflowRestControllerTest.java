@@ -19,7 +19,6 @@ import java.util.Map;
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.INPUT_VARIABLE_NAME;
 import static ch.bpm.workflow.example.common.bpm.WorkflowConstants.PROCESS_DEFINITION_KEY;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles(value = "test")
@@ -44,8 +43,8 @@ class WorkflowRestControllerTest {
         givenExecution.setProcessDefinitionId("processDefinitionId");
 
         final String givenInput = "hallo";
-        Mockito.when(runtimeServiceMock.startProcessInstanceByKey(eq(PROCESS_DEFINITION_KEY),
-                eq(PROCESS_DEFINITION_KEY), eq(Map.of(INPUT_VARIABLE_NAME, givenInput))))
+        Mockito.when(runtimeServiceMock.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, PROCESS_DEFINITION_KEY,
+                Map.of(INPUT_VARIABLE_NAME, givenInput)))
             .thenReturn(givenExecution);
 
         ResponseEntity<?> response = workflowRestController
