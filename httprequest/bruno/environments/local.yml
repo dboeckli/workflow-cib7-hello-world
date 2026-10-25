@@ -1,0 +1,11 @@
+name: local
+variables:
+  - name: host
+    value: http://localhost:8080
+    enabled: true
+  - name: apifirst-port
+    value: "8082"
+    enabled: true
+  - name: context
+    value: ""
+    enabled: true

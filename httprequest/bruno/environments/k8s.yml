@@ -1,0 +1,11 @@
+name: k8s
+variables:
+  - name: host
+    value: http://localhost:30080
+    enabled: true
+  - name: apifirst-port
+    value: "30082"
+    enabled: true
+  - name: context
+    value: ""
+    enabled: true
