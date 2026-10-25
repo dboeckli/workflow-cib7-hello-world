@@ -14,6 +14,7 @@ Siehe README.md für Build/Kubernetes/Helm-Anleitung.
 | Build (ohne Docker/Start) | `./mvnw package -Dskip.docker.build=true -Dskip.start.stop.springboot=true` |
 | Voll-Build inkl. Helm (lint/template/package) | `./mvnw clean install -Dskip.start.stop.springboot=true` |
 | Tests | `./mvnw test` |
+| OpenAPI-Specs erzeugen (startet App, haengt Artefakte an) | `./mvnw verify -DskipTests -Dskip.docker.build=true` |
 
 ## Sandbox
 

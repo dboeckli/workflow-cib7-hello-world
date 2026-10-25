@@ -350,6 +350,9 @@ function slugify(title, fallback) {
 }
 
 function normalizeUrl(url) {
+  if (url.startsWith('{{')) {
+    return url;
+  }
   return /^[a-z][a-z0-9+.-]*:\/\//i.test(url) ? url : `http://${url}`;
 }
 

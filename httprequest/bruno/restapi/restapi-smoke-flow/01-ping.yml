@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://{{host}}/{{context}}/restapi/ping
+  url: "{{host}}/restapi/ping"
   headers:
     - name: Accept
       value: application/json

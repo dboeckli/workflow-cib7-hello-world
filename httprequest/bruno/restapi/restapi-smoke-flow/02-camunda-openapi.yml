@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://{{host}}/{{context}}/restapi/camunda
+  url: "{{host}}/restapi/camunda"
   headers:
     - name: Accept
       value: application/json

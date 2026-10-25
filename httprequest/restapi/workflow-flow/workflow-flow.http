@@ -2,7 +2,7 @@
 
 ### 1) start process with default input (gateway default branch, User03 = Default)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
@@ -26,7 +26,7 @@ baggage: testBaggage=workflow-cib7-hello-world
 
 ### 2) start process with input eder (gateway branch, User03 = Eder)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
@@ -49,7 +49,7 @@ baggage: testBaggage=workflow-cib7-hello-world
 
 ### 3) start process with input pumukel (gateway branch, User03 = Pumukel)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
@@ -72,7 +72,7 @@ baggage: testBaggage=workflow-cib7-hello-world
 
 ### 4) start process with input fail (sayHelloDelegate raises BpmnError, boundary event path)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
@@ -94,7 +94,7 @@ baggage: testBaggage=workflow-cib7-hello-world
 
 ### 5) start process without input field (validation error)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
@@ -111,7 +111,7 @@ baggage: testBaggage=workflow-cib7-hello-world
 
 ### 6) start process with empty input (ValidateInputDelegate rejects empty input)
 < ../../scripts/traceparent.js
-POST {{host}}/{{context}}/restapi/workflow
+POST {{host}}/restapi/workflow
 Accept: application/json
 Authorization: Basic {{username}} {{password}}
 Content-Type: application/json

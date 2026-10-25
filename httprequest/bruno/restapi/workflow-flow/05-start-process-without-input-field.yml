@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://{{host}}/{{context}}/restapi/workflow
+  url: "{{host}}/restapi/workflow"
   headers:
     - name: Accept
       value: application/json

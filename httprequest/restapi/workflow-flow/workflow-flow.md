@@ -40,7 +40,7 @@ sequenceDiagram
 
 |        Variable        |             Quelle             |    Verwendung     |
 |------------------------|--------------------------------|-------------------|
-| `host`, `context`      | `http-client.env.json`         | Basis-URL         |
+| `host`                 | `http-client.env.json`         | Basis-URL         |
 | `username`, `password` | `http-client.private.env.json` | Basic Auth        |
 | `traceId`, `spanId`    | `../../scripts/traceparent.js` | Trace-Korrelation |
 
