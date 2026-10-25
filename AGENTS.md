@@ -14,6 +14,7 @@ Siehe README.md für Build/Kubernetes/Helm-Anleitung.
 | Build (ohne Docker/Start) | `./mvnw package -Dskip.docker.build=true -Dskip.start.stop.springboot=true` |
 | Voll-Build inkl. Helm (lint/template/package) | `./mvnw clean install -Dskip.start.stop.springboot=true` |
 | Tests | `./mvnw test` |
+| OpenAPI-Specs erzeugen (startet App, haengt Artefakte an) | `./mvnw verify -DskipTests -Dskip.docker.build=true` |
 
 ## Sandbox
 
@@ -23,6 +24,8 @@ Siehe README.md für Build/Kubernetes/Helm-Anleitung.
   (`github-maven`-Secret) läuft über den Kit-Proxy. Nur echte Maven-Builds sind repräsentativ
   (`mvn dependency:get` ignoriert settings-`<proxies>`).
 - Formatting: shfmt `3.14.1` (Spotless `<shfmt>` + CI `mfinelli/setup-shfmt@v4`).
+- Helm: CI pinnt `v4.3.1` via `azure/setup-helm`; die Sandbox liefert Helm 4 als `helm` (`helm4` ist ein
+  Symlink darauf). Der frühere Workaround `-Dhelm.executable=helm4` ist nicht nötig.
 
 ## Hinweise
 

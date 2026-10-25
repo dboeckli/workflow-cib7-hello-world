@@ -1,0 +1,38 @@
+# Flow: OpenAPI specs (restapi + camunda engine) — see openapi-spec-flow.md
+
+### 1) REST API OpenAPI spec
+< ../../scripts/traceparent.js
+GET {{host}}/swagger/v3/api-docs/restapi
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    client.test("restapi spec returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("restapi spec contains the REST API paths", function () {
+        client.assert(!!response.body.openapi, "openapi version missing");
+        client.assert(!!response.body.paths["/restapi/ping"], "/restapi/ping missing");
+        client.assert(!!response.body.paths["/restapi/camunda"], "/restapi/camunda missing");
+        client.assert(!!response.body.paths["/restapi/workflow"], "/restapi/workflow missing");
+    });
+%}
+
+### 2) Camunda Engine REST OpenAPI spec
+< ../../scripts/traceparent.js
+GET {{host}}/swagger/v3/api-docs/camunda-engine-rest-api
+Accept: application/json
+traceparent: 00-{{traceId}}-{{spanId}}-03
+baggage: testBaggage=workflow-cib7-hello-world
+
+> {%
+    client.test("camunda spec returns 200", function () {
+        client.assert(response.status === 200, "expected 200 but got " + response.status);
+    });
+    client.test("camunda spec contains the engine paths", function () {
+        client.assert(!!response.body.openapi, "openapi version missing");
+        client.assert(!!response.body.paths["/version"], "/version missing");
+        client.assert(Object.keys(response.body.paths).length > 100, "unexpectedly few engine paths");
+    });
+%}
