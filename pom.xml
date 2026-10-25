@@ -39,6 +39,10 @@
     <skip.docker.publish>true</skip.docker.publish>
     <skip.start.stop.springboot>false</skip.start.stop.springboot>
 
+    <!-- TODO: remove this pin once https://github.com/paketo-buildpacks/builder-noble-java-tiny/issues/344 is fixed -->
+    <!-- :latest is arm64-only since 0.0.200; with Spring Boot 4.2.x switch to the new default paketobuildpacks/ubuntu-resolute-builder -->
+    <spring-boot.build-image.builder>paketobuildpacks/builder-noble-java-tiny:0.0.200</spring-boot.build-image.builder>
+
     <docker.image.tag>development</docker.image.tag>
     <!-- for feature branches -->
     <docker.repo>local</docker.repo>
@@ -61,6 +65,7 @@
     <springdoc-openapi-maven-plugin.version>1.5</springdoc-openapi-maven-plugin.version>
     <swagger-parser.version>2.1.48</swagger-parser.version>
     <openapi-generator-maven-plugin.version>7.26.0</openapi-generator-maven-plugin.version>
+    <openapi.server.url>http://localhost:8080</openapi.server.url>
 
     <apifirst.version>0.0.1-SNAPSHOT</apifirst.version>
     <nashorn-core.version>15.7</nashorn-core.version>
@@ -991,6 +996,29 @@
               </resources>
             </configuration>
           </execution>
+
+          <execution>
+            <id>attach-openapi-artifacts</id>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <skipAttach>${skip.start.stop.springboot}</skipAttach>
+              <artifacts>
+                <artifact>
+                  <file>${project.build.directory}/openapi/openapi-restapi.json</file>
+                  <type>json</type>
+                  <classifier>openapi-restapi</classifier>
+                </artifact>
+                <artifact>
+                  <file>${project.build.directory}/openapi/openapi-camunda-engine-rest-api.json</file>
+                  <type>json</type>
+                  <classifier>openapi-camunda-engine-rest-api</classifier>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -1047,7 +1075,6 @@
             <id>start-springboot-app</id>
             <goals>
               <goal>start</goal>
-              <goal>stop</goal>
             </goals>
             <phase>post-integration-test</phase>
             <configuration>
@@ -1061,9 +1088,22 @@
                 <argument>-Xmx1024m</argument>
                 <argument>--server.port=${tomcat.http.port}</argument>
                 <argument>--spring.cloud.kubernetes.enabled=false</argument>
+                <argument>--openapi.server-url=${openapi.server.url}</argument>
                 <argument>--camunda.bpm.job-execution.enabled=false</argument>
                 <argument>--camunda.bpm.client.disable-auto-fetching=true</argument>
               </arguments>
+              <jmxPort>${jmx.server.port}</jmxPort>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>stop-springboot-app</id>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <phase>verify</phase>
+            <configuration>
+              <skip>${skip.start.stop.springboot}</skip>
               <jmxPort>${jmx.server.port}</jmxPort>
             </configuration>
           </execution>
@@ -1292,6 +1332,42 @@
                 <argument>${env.DOCKER_TOKEN}</argument>
                 <argument>oci://registry-1.docker.io/${env.DOCKER_USER}</argument>
               </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-maven-plugin</artifactId>
+        <version>${springdoc-openapi-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>generate-openapi-restapi</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <apiDocsUrl>http://localhost:${tomcat.http.port}/swagger/v3/api-docs/restapi</apiDocsUrl>
+              <outputFileName>openapi-restapi.json</outputFileName>
+              <outputDir>${project.build.directory}/openapi</outputDir>
+              <skip>${skip.start.stop.springboot}</skip>
+              <failOnError>true</failOnError>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-openapi-camunda-engine-rest-api</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <apiDocsUrl>http://localhost:${tomcat.http.port}/swagger/v3/api-docs/camunda-engine-rest-api</apiDocsUrl>
+              <outputFileName>openapi-camunda-engine-rest-api.json</outputFileName>
+              <outputDir>${project.build.directory}/openapi</outputDir>
+              <skip>${skip.start.stop.springboot}</skip>
+              <failOnError>true</failOnError>
             </configuration>
           </execution>
         </executions>

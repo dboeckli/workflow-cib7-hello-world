@@ -111,6 +111,27 @@ Use 8080 when started locally or 30080 in Kubernetes
   - http://localhost:8080/restapi/workflow or http://localhost:30080/restapi/workflow
 - LDAP Browser (dev): http://localhost:5000
 
+### OpenAPI generation (Maven)
+
+The Maven build starts the application and writes the OpenAPI specs to `target/openapi/`:
+
+- `openapi-restapi.json` (Springdoc group `restapi`)
+- `openapi-camunda-engine-rest-api.json` (Springdoc group `camunda-engine-rest-api`, 306 paths)
+
+The server URL written into both specs defaults to `http://localhost:8080` and can be overridden:
+
+```bash
+./mvnw verify -DskipTests -Dskip.docker.build=true -Dopenapi.server.url=http://localhost:30080
+```
+
+The specs are attached as Maven artifacts in the `verify` phase and are therefore published with
+`mvn deploy` (GitHub Packages):
+
+- `ch.bpm.workflow.cib7:workflow-cib7-hello-world:<version>:json:openapi-restapi`
+- `ch.bpm.workflow.cib7:workflow-cib7-hello-world:<version>:json:openapi-camunda-engine-rest-api`
+
+With `-Dskip.start.stop.springboot=true` app start, generation and attachment are skipped.
+
 ### Accessing Services
 
 #### LDAP Database
