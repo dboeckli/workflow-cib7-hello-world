@@ -52,7 +52,6 @@ public class OpenApiConfiguration {
     private String openApiServerUrl;
 
     @Bean
-    @Qualifier("customGlobalHeaderOpenApiCustomizer")
     public OpenApiCustomizer customGlobalHeaderOpenApiCustomizer() {
         return openApi -> {
             io.swagger.v3.oas.models.info.Info info = openApi.getInfo();
@@ -76,7 +75,6 @@ public class OpenApiConfiguration {
     }
 
     @Bean
-    // TODO: ADD SECURITY
     public GroupedOpenApi restapiApi(
             @Qualifier("customGlobalHeaderOpenApiCustomizer") OpenApiCustomizer customGlobalHeaderOpenApiCustomizer) {
         return GroupedOpenApi.builder()

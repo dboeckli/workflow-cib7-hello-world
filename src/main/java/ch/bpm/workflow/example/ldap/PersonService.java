@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -16,7 +15,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public List<Person> getAllPersons() {
-        return StreamSupport.stream(personRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        return StreamSupport.stream(personRepository.findAll().spliterator(), false).toList();
     }
 
 }
