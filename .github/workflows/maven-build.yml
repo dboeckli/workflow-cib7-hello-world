@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
+      - uses: mfinelli/setup-shfmt@a25fda4c1fe115aec0f85e04126610841bc3141d # v4
         with:
           shfmt-version: 3.14.1
 
@@ -140,7 +140,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
+      - uses: mfinelli/setup-shfmt@a25fda4c1fe115aec0f85e04126610841bc3141d # v4
         with:
           shfmt-version: 3.14.1
 
@@ -296,7 +296,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: mfinelli/setup-shfmt@11b449519985436c5f8e43169c1272f74b50fa04 # v4
+      - uses: mfinelli/setup-shfmt@a25fda4c1fe115aec0f85e04126610841bc3141d # v4
         with:
           shfmt-version: 3.14.1
 
