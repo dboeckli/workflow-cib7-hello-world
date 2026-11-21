@@ -50,7 +50,7 @@
         https://docs.camunda.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         https://docs.cibseven.org/manual/latest/user-guide/spring-boot-integration/version-compatibility/
         -->
-    <spring.boot.version>4.1.2</spring.boot.version>
+    <spring.boot.version>4.2.0</spring.boot.version>
     <cib7.spring.boot.starter.version>2.2.0</cib7.spring.boot.starter.version>
     <graalvm.polyglot.js.version>25.5.5.0.3</graalvm.polyglot.js.version>
     <!--
@@ -68,7 +68,7 @@
 
     <logstash-logback.version>9.0</logstash-logback.version>
     <spring-javaformat-maven-plugin.version>0.0.48</spring-javaformat-maven-plugin.version>
-    <spotless-maven-plugin.version>3.11.0</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>3.12.0</spotless-maven-plugin.version>
     <properties-maven-plugin.version>1.4.0</properties-maven-plugin.version>
     <exec-maven-plugin.version>3.7.0</exec-maven-plugin.version>
     <merge-yaml-plugin.version>1.4</merge-yaml-plugin.version>
