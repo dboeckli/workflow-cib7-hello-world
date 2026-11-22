@@ -269,9 +269,7 @@ Voraussetzungen: `sbx` CLI, Secrets (`sbx secret set github` + `sbx secret set g
 (`sbx mcp add idea --url http://localhost:64342/stream --skip-ssrf-check`).
 
 ```powershell
-sbx run opencode `
-    --kit "git+https://codeberg.org/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent" `
-    --template docker.io/domboeckli/sbx-opencode-tooling:latest `
+sbx run docker.io/domboeckli/sbx-opencode:latest `
     --skills=off `
     --static-mcp idea,k8s,docker `
     . `

@@ -3,8 +3,9 @@ package ch.bpm.workflow.example.bpm;
 import ch.bpm.workflow.example.common.bpm.WorkflowException;
 import ch.bpm.workflow.example.common.bpm.variable.token.TokenVariable;
 import ch.bpm.workflow.example.util.config.TestCamundaClientConfiguration;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
+import spinjar.tools.jackson.databind.JsonNode;
+import spinjar.tools.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cibseven.bpm.engine.ProcessEngine;
@@ -40,7 +41,6 @@ import static java.util.Map.entry;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
-import static org.cibseven.bpm.admin.impl.plugin.resources.MetricsRestService.objectMapper;
 import static org.cibseven.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,6 +56,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles(value = "local")
 @Import(TestCamundaClientConfiguration.class)
 class WorkflowBPMTest {
+
+    private static final ObjectMapper objectMapper = JsonMapper.builder().build();
 
     @LocalServerPort
     private int localServerPort;
@@ -92,8 +94,7 @@ class WorkflowBPMTest {
 
     @ParameterizedTest
     @MethodSource("happyPathTestParameters")
-    void test_shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName)
-            throws JsonProcessingException {
+    void test_shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName) {
         // when
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY,
                 Map.of(INPUT_VARIABLE_NAME, inputVariable));
@@ -138,7 +139,7 @@ class WorkflowBPMTest {
     }
 
     @Test
-    void test_shouldExecuteHappyPathWithFail() throws JsonProcessingException {
+    void test_shouldExecuteHappyPathWithFail() {
         // when
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(PROCESS_DEFINITION_KEY, BUSINESS_KEY,
                 Map.of(INPUT_VARIABLE_NAME, "fail"));
@@ -205,7 +206,7 @@ class WorkflowBPMTest {
                 () -> assertThat(processInstance).isWaitingAt("Activity_validate_input"));
     }
 
-    private void assertScriptVariables(ProcessInstance processInstance) throws JsonProcessingException {
+    private void assertScriptVariables(ProcessInstance processInstance) {
         String user1 = (String) runtimeService.getVariable(processInstance.getId(), "User01");
         String user2 = (String) runtimeService.getVariable(processInstance.getId(), "User02");
         JsonNode user1Json = objectMapper.readTree(user1);
@@ -216,7 +217,7 @@ class WorkflowBPMTest {
                 () -> assertEquals("Jane Smith", user2Json.get("name").asText()));
     }
 
-    private void assertUser3(ProcessInstance processInstance, String expectedName) throws JsonProcessingException {
+    private void assertUser3(ProcessInstance processInstance, String expectedName) {
         String user3 = (String) runtimeService.getVariable(processInstance.getId(), "User03");
         JsonNode user3Json = objectMapper.readTree(user3);
         assertAll("User 3 JSON assertions", () -> assertEquals(3, user3Json.get("id").asInt()),

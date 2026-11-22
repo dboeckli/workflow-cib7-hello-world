@@ -2,36 +2,28 @@ package ch.bpm.workflow.example.common.bpm.variable.token;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import spinjar.com.fasterxml.jackson.core.JsonParser;
-import spinjar.com.fasterxml.jackson.databind.DeserializationContext;
-import spinjar.com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
+import spinjar.tools.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.json.JsonMapper;
 
 import static ch.bpm.workflow.example.common.bpm.variable.token.TokenStatus.RUNNING;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TokenVariableDeserializerTest {
 
-    private TokenVariableDeserializer deserializer;
-
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        deserializer = new TokenVariableDeserializer();
-        objectMapper = new ObjectMapper();
+        objectMapper = JsonMapper.builder().build();
     }
 
     @Test
-    void testDeserialize() throws IOException {
+    void testDeserialize() {
         // Given
         String json = "{\"status\":\"RUNNING\",\"input\":{\"inputVariable\":\"testInput\"}}";
-        JsonParser jsonParser = objectMapper.getFactory().createParser(json);
-        DeserializationContext ctxt = objectMapper.getDeserializationContext();
 
         // When
-        TokenVariable result = deserializer.deserialize(jsonParser, ctxt);
+        TokenVariable result = objectMapper.readValue(json, TokenVariable.class);
 
         // Then
         assertNotNull(result);
@@ -41,15 +33,13 @@ class TokenVariableDeserializerTest {
     }
 
     @Test
-    void testDeserializeWithTextualNode() throws IOException {
+    void testDeserializeWithTextualNode() {
         // Given
         String json = "\"" + "{\\\"status\\\":\\\"RUNNING\\\",\\\"input\\\":{\\\"inputVariable\\\":\\\"testInput\\\"}}"
                 + "\"";
-        JsonParser jsonParser = objectMapper.getFactory().createParser(json);
-        DeserializationContext ctxt = objectMapper.getDeserializationContext();
 
         // When
-        TokenVariable result = deserializer.deserialize(jsonParser, ctxt);
+        TokenVariable result = objectMapper.readValue(json, TokenVariable.class);
 
         // Then
         assertNotNull(result);
@@ -59,14 +49,12 @@ class TokenVariableDeserializerTest {
     }
 
     @Test
-    void testDeserializeWithInvalidStatus() throws IOException {
+    void testDeserializeWithInvalidStatus() {
         // Given
         String json = "{\"status\":\"INVALID\",\"input\":{\"inputVariable\":\"testInput\"}}";
-        JsonParser jsonParser = objectMapper.getFactory().createParser(json);
-        DeserializationContext ctxt = objectMapper.getDeserializationContext();
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            deserializer.deserialize(jsonParser, ctxt);
+            objectMapper.readValue(json, TokenVariable.class);
         });
 
         String expectedErrorMessage = "Invalid status: INVALID. Status should be one of STARTED, RUNNING, COMPLETED, BUSINESS_EXCEPTION, FINISHED";
