@@ -67,7 +67,7 @@
             "enabled": false
         },
         {
-            "description": "Stay on Spring Boot 3.x - ignore major version updates",
+            "description": "CIB seven 3.0 supports Spring Boot 4.1.x only; 4.2+ is listed on the Dependency Dashboard and its PR is only created after manual approval once a compatible CIB seven version is available",
             "matchDatasources": [
                 "maven"
             ],
@@ -76,9 +76,21 @@
                 "org.springframework.boot:*"
             ],
             "matchUpdateTypes": [
+                "minor",
                 "major"
             ],
-            "enabled": false
+            "dependencyDashboardApproval": true
+        },
+        {
+            "description": "springdoc 3.2.1+ targets Spring Boot 4.2; listed on the Dependency Dashboard and PR only created after manual approval once a compatible CIB seven version is available",
+            "matchDatasources": [
+                "maven"
+            ],
+            "matchPackageNames": [
+                "org.springdoc:*"
+            ],
+            "matchCurrentVersion": "<=3.2.0",
+            "dependencyDashboardApproval": true
         },
         {
             "description": "Resolve ch.guru.springframework.apifirst Maven packages on GitHub Packages",

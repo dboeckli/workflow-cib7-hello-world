@@ -1,6 +1,7 @@
 package ch.bpm.workflow.example.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ class ActuatorInfoTest {
     @Autowired
     BuildProperties buildProperties;
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder().build();
 
     @Test
     void actuatorInfoTest() throws Exception {

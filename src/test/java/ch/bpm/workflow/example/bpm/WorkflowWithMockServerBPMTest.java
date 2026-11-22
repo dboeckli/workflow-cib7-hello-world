@@ -7,9 +7,9 @@ import ch.guru.springframework.apifirst.client.CustomerApi;
 import ch.guru.springframework.apifirst.model.AddressDto;
 import ch.guru.springframework.apifirst.model.CustomerDto;
 import ch.guru.springframework.apifirst.model.NameDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.JsonNode;
+import spinjar.tools.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cibseven.bpm.engine.ProcessEngine;
@@ -62,7 +62,7 @@ import static org.mockserver.model.HttpResponse.response;
         "camunda.bpm.generate-unique-process-engine-name=true",
         "camunda.bpm.generate-unique-process-application-name=true",
         "spring.datasource.hikari.jdbc-url=jdbc:h2:mem:WorkflowWithMockServerBPMTest",
-        "spring.datasource.generate-unique-name=true" })
+        "spring.datasource.generate-unique-name=true", "camunda.bpm.client.disable-backoff-strategy=true" })
 @Testcontainers
 @Deployment(resources = "process.bpmn")
 @Slf4j
@@ -95,8 +95,7 @@ class WorkflowWithMockServerBPMTest {
     @Autowired
     RestApiConfiguration restApiConfiguration;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = JsonMapper.builder().build();
 
     private MockServerClient mockServerClient;
 
@@ -126,8 +125,7 @@ class WorkflowWithMockServerBPMTest {
 
     @ParameterizedTest
     @MethodSource("happyPathTestParameters")
-    void shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName)
-            throws JsonProcessingException {
+    void shouldExecuteHappyPath(String inputVariable, String expectedActivity, String expectedName) {
         createExpectedMockserverResponse();
 
         // when
@@ -192,7 +190,7 @@ class WorkflowWithMockServerBPMTest {
                 () -> assertThat(processInstance).isWaitingAt("Activity_validate_input"));
     }
 
-    private void assertScriptVariables(ProcessInstance processInstance) throws JsonProcessingException {
+    private void assertScriptVariables(ProcessInstance processInstance) {
         String user1 = (String) runtimeService.getVariable(processInstance.getId(), "User01");
         String user2 = (String) runtimeService.getVariable(processInstance.getId(), "User02");
         JsonNode user1Json = objectMapper.readTree(user1);
@@ -203,7 +201,7 @@ class WorkflowWithMockServerBPMTest {
                 () -> assertEquals("Jane Smith", user2Json.get("name").asText()));
     }
 
-    private void assertUser3(ProcessInstance processInstance, String expectedName) throws JsonProcessingException {
+    private void assertUser3(ProcessInstance processInstance, String expectedName) {
         String user3 = (String) runtimeService.getVariable(processInstance.getId(), "User03");
         JsonNode user3Json = objectMapper.readTree(user3);
         assertAll("User 3 JSON assertions", () -> assertEquals(3, user3Json.get("id").asInt()),
@@ -269,13 +267,7 @@ class WorkflowWithMockServerBPMTest {
             .build();
         customers.add(customer1);
 
-        String customersJson;
-        try {
-            customersJson = objectMapper.writeValueAsString(customers);
-        }
-        catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to convert customers to JSON", e);
-        }
+        String customersJson = objectMapper.writeValueAsString(customers);
         mockServerClient.when(request().withMethod("GET").withPath("/v1/customers"))
             .respond(response().withStatusCode(200)
                 .withHeader("Content-Type", "application/json")

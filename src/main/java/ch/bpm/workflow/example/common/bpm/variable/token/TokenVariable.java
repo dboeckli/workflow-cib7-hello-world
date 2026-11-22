@@ -3,7 +3,7 @@ package ch.bpm.workflow.example.common.bpm.variable.token;
 import lombok.*;
 import spinjar.com.fasterxml.jackson.annotation.JsonCreator;
 import spinjar.com.fasterxml.jackson.annotation.JsonProperty;
-import spinjar.com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import spinjar.tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
 
