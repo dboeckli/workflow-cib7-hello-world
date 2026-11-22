@@ -6,10 +6,7 @@ public enum LogMessage {
 
     // System
     READING_CONFIG_CLASS(10001, "[{}] Reading configuration from {} config map: {}"),
-    RECEIVED_REFRESH_EVENT_FOR_CONFIG_MAP(10002, "[{}] Received Refresh event for Config Map configuration: {}"),
-
-    JACKSON_CONFIG_START(10006, "[{}] ### JacksonDataFormatConfigurator configure started."),
-    JACKSON_CONFIG_MODULES(10007, "[{}] ### Registered module: {}, version: {}");
+    RECEIVED_REFRESH_EVENT_FOR_CONFIG_MAP(10002, "[{}] Received Refresh event for Config Map configuration: {}");
 
     private final int id;
 

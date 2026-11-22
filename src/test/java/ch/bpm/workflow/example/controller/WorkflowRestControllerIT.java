@@ -1,6 +1,7 @@
 package ch.bpm.workflow.example.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,7 @@ class WorkflowRestControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = JsonMapper.builder().build();
 
     @Test
     void startProcessWithEmptyInput() throws Exception {

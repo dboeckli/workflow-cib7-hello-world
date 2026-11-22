@@ -1,23 +1,22 @@
 package ch.bpm.workflow.example.common.bpm.variable.token;
 
-import spinjar.com.fasterxml.jackson.core.JsonParser;
-import spinjar.com.fasterxml.jackson.databind.DeserializationContext;
-import spinjar.com.fasterxml.jackson.databind.JsonDeserializer;
-import spinjar.com.fasterxml.jackson.databind.JsonNode;
-import spinjar.com.fasterxml.jackson.databind.ObjectMapper;
+import spinjar.tools.jackson.core.JsonParser;
+import spinjar.tools.jackson.databind.DeserializationContext;
+import spinjar.tools.jackson.databind.JsonNode;
+import spinjar.tools.jackson.databind.ValueDeserializer;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-class TokenVariableDeserializer extends JsonDeserializer<TokenVariable> {
+class TokenVariableDeserializer extends ValueDeserializer<TokenVariable> {
 
     @Override
-    public TokenVariable deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
-        ObjectMapper mapper = (ObjectMapper) parser.getCodec();
-        JsonNode node = mapper.readTree(parser);
+    public TokenVariable deserialize(JsonParser parser, DeserializationContext ctxt) {
+        JsonNode node = ctxt.readTree(parser);
         if (node.isTextual()) {
-            node = mapper.readTree(node.asText());
+            try (JsonParser nestedParser = ctxt.createParser(node.asString())) {
+                node = ctxt.readTree(nestedParser);
+            }
         }
 
         String statusString = node.get("status").asText();
@@ -31,8 +30,7 @@ class TokenVariableDeserializer extends JsonDeserializer<TokenVariable> {
             throw new IllegalArgumentException(
                     "Invalid status: " + statusString + ". Status should be one of " + validStatuses, e);
         }
-        JsonNode inputNode = node.get("input");
-        Input input = mapper.treeToValue(inputNode, Input.class);
+        Input input = ctxt.readTreeAsValue(node.get("input"), Input.class);
 
         return new TokenVariable(input, statusString);
     }

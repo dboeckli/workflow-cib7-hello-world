@@ -75,6 +75,10 @@ logging:
     org.springframework.ldap: DEBUG
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
   info:
     build:
       enabled: true
