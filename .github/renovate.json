@@ -67,7 +67,7 @@
             "enabled": false
         },
         {
-            "description": "CIB seven 3.0 supports Spring Boot 4.1.x only (Jackson 3.1); hold 4.2+ until CIB seven 3.1",
+            "description": "CIB seven 3.0 supports Spring Boot 4.1.x only; 4.2+ is listed on the Dependency Dashboard and its PR is only created after manual approval once a compatible CIB seven version is available",
             "matchDatasources": [
                 "maven"
             ],
@@ -75,17 +75,22 @@
                 "org.springframework.boot:spring-boot-starter-parent",
                 "org.springframework.boot:*"
             ],
-            "allowedVersions": "/^4\\.1\\./"
+            "matchUpdateTypes": [
+                "minor",
+                "major"
+            ],
+            "dependencyDashboardApproval": true
         },
         {
-            "description": "springdoc 3.2.1+ targets Spring Boot 4.2; hold at 3.2.0 for CIB seven 3.0",
+            "description": "springdoc 3.2.1+ targets Spring Boot 4.2; listed on the Dependency Dashboard and PR only created after manual approval once a compatible CIB seven version is available",
             "matchDatasources": [
                 "maven"
             ],
             "matchPackageNames": [
                 "org.springdoc:*"
             ],
-            "allowedVersions": "/^3\\.2\\.0$/"
+            "matchCurrentVersion": "<=3.2.0",
+            "dependencyDashboardApproval": true
         },
         {
             "description": "Resolve ch.guru.springframework.apifirst Maven packages on GitHub Packages",
